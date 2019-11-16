@@ -3,3 +3,5 @@
 .idea/markdown-navigator.xml
 .idea/workspace.xml
 .idea/misc.xml
+*.xml
+parser.log

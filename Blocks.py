@@ -1,9 +1,10 @@
 
-class Block(self):
+
+class Block():
 
     def __init__(self):
 
-        self.csys = None
-        self.points = None
-        self.tcp = None
+        self.csys = []
+        self.coordinates = []
+        self.tcp = []
         self.commands = []
