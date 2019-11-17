@@ -1,8 +1,6 @@
 from Blocks import Block
 from svgpathtools import *
-from svg_to_coord import svg_to_np
-import ezdxf
-import svg.path
+
 
 def print_entity(e):
     print("LINE on layer: %s\n" % e.dxf.layer)
@@ -16,9 +14,12 @@ class svgBlock(Block):
         self.filepath = "path"
         self.scale = 1
         self.origin = []
-        self.tolerance = 0.1
+        self.tolerance = 1
 
         self.paths = []
+
+        self.use_colour = True
+        self.use_opacity = True
 
     def load(self):
         # loads an svg file, puts the points into self.coordinates
@@ -42,14 +43,21 @@ class svgBlock(Block):
             amount = length / self.tolerance
             print(amount)
             div = 1 / amount
+            print(attributes[i])
 
             j = 0
             while j <= 1:
                 point = p.point(j)
-                coords.append(point)
-                print("point parsed")
-                print(point)
-                print(j)
+
+                x = point.real
+                y = point.imag
+
+                xy_coord = [x,y]
+
+                coords.append(xy_coord)
+                #print("point parsed")
+                #print(point)
+                #print(j)
                 j += div
 
             ob_list.append(coords)
@@ -61,9 +69,9 @@ class svgBlock(Block):
 
 
 
-        np_paths = svg_to_np(self.filepath)
+        #np_paths = svg_to_np(self.filepath)
 
-        print("np:  ", np_paths)
+        #print("np:  ", np_paths)
 
         return paths
 
@@ -73,7 +81,7 @@ class svgBlock(Block):
 
 
 testblock = svgBlock()
-testblock.filepath = "Test05.svg"
+testblock.filepath = "gradient03.svg"
 
 
 
