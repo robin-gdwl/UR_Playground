@@ -5,3 +5,5 @@
 .idea/misc.xml
 *.xml
 parser.log
+.idea/workspace.xml
+.idea/misc.xml
