@@ -3,6 +3,40 @@ import numpy as np
 import matplotlib.pyplot as plt
 from xml.dom import minidom
 
+class Movement:
+
+    def __init__(self):
+        self.coordinates = []
+        self.colours = []
+        self.opacities = []
+
+
+class Gradient:
+
+    def __init__(self, id):
+        self.id = id
+        self.stop_offsets = []
+        self.colors = []
+        self.opacities = []
+
+    def check_lengths(self):
+        a = len(self.stop_offsets)
+        b = len(self.colors)
+        c = len(self.opacities)
+
+        if a ==b and b == c:
+            return True
+        else:
+            return False
+
+    def color_at_param(self, param):
+        color = None
+        return color
+
+    def opacity_at_param(self, param):
+        opacity = None
+        return opacity
+
 class SVGParse:
 
     def __init__(self, filepath, tolerance):
@@ -30,12 +64,17 @@ class SVGParse:
             div = 1 / amount
             print(p_attributes)
 
+            # TODO: check if these two if statements need .value or something
             if "opacity" in p_attributes.values() :
                 print("opacity detected")
+                opacity = p_attributes["opacity"]
             else:
                 print("no opacity")
 
-            stroke = p_attributes["stroke"]
+            if "stroke" in p_attributes.values() :
+                stroke = p_attributes["stroke"]
+            else:
+                stroke = ""
 
             if "url" in stroke:
                 print("gradient in p")
@@ -72,9 +111,16 @@ class SVGParse:
 
         # print("np:  ", np_paths)
 
+        # TODO: nicely package the different things you need from a gradient:
+        # id, params, colours, opacities
+
         return ob_list
 
         #return list
+        '''
+        list includes:
+        [[(x,y),param,colour,opacity]]
+        '''
 
     def get_color(self, param, colour):
         pass
@@ -86,28 +132,32 @@ class SVGParse:
         xml_file = minidom.parse(self.path)
         gradients = xml_file.getElementsByTagName("linearGradient")
 
-
-        print(gradients)
+        gradient_instances = []
 
         for g in gradients:
             print("g:", g)
             id = g.attributes["id"].value
-            #g_xml = g.toxml()
+            grad = Gradient(id)
 
             stops = g.getElementsByTagName("stop")
             for stop in stops:
                 offset = stop.attributes["offset"].value
+                grad.stop_offsets.append((offset))
+
                 style = stop.attributes["style"].value
-
-
 
                 col_desc = "stop-color:"
                 if style.find(col_desc) != -1:
                     color_ind = style.index(col_desc) + len(col_desc)
                     color_val = style[color_ind: color_ind + 7]
-                else:
-                    color_val = None
-                print(color_val)
+                    color_val= color_val.lstrip("#")
+                else:  # not sure if this is necessary, as a gradient stop should always have color
+                    color_val = 000000
+
+                color_rgb = tuple(int(color_val[i:i + 2], 16) for i in (0, 2, 4))
+                grad.colors.append(color_rgb)
+                print("color  ", color_rgb)
+
 
                 opa_desc = "stop-opacity:"
                 if style.find(opa_desc) != -1:
@@ -115,23 +165,24 @@ class SVGParse:
                     opa_val = style[opa_ind: opa_ind + 7]
                 else:
                     opa_val = 1
-                print(opa_val)
+                grad.opacities.append(opa_val)
+                print("opacity  ",opa_val)
 
-                print(offset , style)
+            print(grad.check_lengths())
             print("s: ", stops)
 
 
             #stop = g.childNodes
             print(g.attributes)
-            #print(g.toxml())
+
+            gradient_instances.append(grad)
+            print(gradient_instances)
 
 
+        return gradient_instances
 
 
-        return gradients
-
-
-testfile = "gradient05.svg"
+testfile = "gradient03.svg"
 coords = SVGParse(testfile,20)
 coords = coords.convert_to_coords()
 
