@@ -7,8 +7,22 @@ class Movement:
 
     def __init__(self):
         self.coordinates = []
-        self.colours = []
+        self.colors = []
         self.opacities = []
+
+    def check_lengths(self):
+        a = len(self.coordinates)
+        b = len(self.colors)
+        c = len(self.opacities)
+
+        if a == b and b == c:
+            return True
+        else:
+            print("different lengths detected")
+            print("coordinates: ", len(self.coordinates))
+            print("colors: ", len(self.colors))
+            print("opacities: ", len(self.opacities))
+            return False
 
 
 class Gradient:
@@ -38,6 +52,14 @@ class Gradient:
         return opacity
 
 class SVGParse:
+    '''
+    gets an svg file
+    parses all paths
+    creates gradient objects
+    creates a movement-object for each path
+        - Lines become
+    returns list of movement objects
+    '''
 
     def __init__(self, filepath, tolerance):
         self.path = filepath
