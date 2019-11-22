@@ -26,6 +26,7 @@ class SVGParse:
         paths, attributes = svgpathtools.svg2paths(self.path)
 
         for p_index, p in enumerate(paths):
+            print("----"*45)
 
             p_attributes = attributes[p_index]  # current path's attributes
 
@@ -33,13 +34,15 @@ class SVGParse:
 
             self.movements.append(motion_object)
 
+        return self.movements
+
 
 
     def interpolate_path(self,path,attributes):
 
         movement = MoveColOpa() # each path has one movement object
         length = path.length(error=self.tol)
-        amount = length / self.tol
+        amount = int(length / self.tol)
         div = 1 / amount
 
         movement.coordinates = self.get_pts_on_path(path,div)
@@ -48,6 +51,8 @@ class SVGParse:
 
         # TODO: implement opacities on path
         movement.opacities = self.opacities_on_path(path, attributes, div, amount)
+
+        return movement
 
 
 
@@ -72,22 +77,27 @@ class SVGParse:
 
         return coords
 
+
     def color_on_path(self,path, attributes, stepsize, amount):
 
 
         colors = []
         coltype, value = self.get_color(attributes)
 
+
         if coltype == "stroke":
+            value = value.lstrip("#")
             color = tuple(int(value[i:i + 2], 16) for i in (0, 2, 4))  # converts the Hex color value to rgb
 
-            colors = [color] * amount
+            # TODO: find out why you need to add 1 to the amount
+            colors = [color] * (amount+1)
+
 
         elif coltype == "gradient":
             gradient_id = value
 
             for g in self.gradients:  # find which gradient is used in the stroke
-                if g.value == gradient_id:
+                if g.id == gradient_id:
                     gradient = g
                     break
             j = 0
@@ -98,10 +108,11 @@ class SVGParse:
                 j += stepsize
 
         else:  # what to do if there is neither a stroke color nor a gradient
-            colors = [[0,0,0]] * amount
+            default_color = [0,0,0]
+            colors = [default_color for x in range(amount)]
+            #colors = [default_color] * amount
 
         return colors
-
 
     def get_color(self,attributes):
         # finds out what defines the color of the path, returns the type of color (stroke-color or gradient or none)
@@ -113,9 +124,10 @@ class SVGParse:
             p_stroke_bool = True
             p_stroke = attributes["stroke"]
 
+
         else:
             p_stroke_bool = False
-            p_stroke = None
+            p_stroke = ""
 
         # check if there is a gradient
         if "url" in p_stroke:
@@ -140,17 +152,16 @@ class SVGParse:
 
         # movement.stroke = p_stroke
 
-
-
     def color_at_param(self,gradient, param):
-
+        print("---"*25)
+        print("looking for color at param ")
         color = []
-        # here I need a function which finds between which indexes of the stop-offset list the param lies
-        # 0, 1, 2, 3.5, 6.8, 20
-        # 2.3
         stops = gradient.stop_offsets
+        print("stops:  ", stops)
+
         clrs = gradient.colors
         for idx, offset in enumerate(stops) :
+            print("parsing all offsets.... current offset: ", offset, "at index:  ", idx, "of: ", len(stops)-1)
             print("offset: ", offset)
             print("param: ", param)
             if idx < (len(stops) - 1):
@@ -161,6 +172,7 @@ class SVGParse:
                 return clrs[idx]
             elif param >= offset and param >= stops[idx + 1]:
                 continue
+
             elif param >= offset and param <= stops[idx + 1]:
                 para_1 = offset
                 para_2 = stops[idx +1]
@@ -184,6 +196,94 @@ class SVGParse:
                 print("param = next offset")
                 return clrs[idx + 1]
 
+
+    def opacities_on_path(self, path, attributes, stepsize, amount):
+
+        overall_opa = self.get_path_opacity(path, attributes)
+        opacities =[]
+
+        coltype, value = self.get_color(attributes)  # simply checks again  if the path has a gradient
+        # TODO: avoid checking gradient twice
+
+        if coltype == "gradient":
+
+            gradient_id = value
+            for g in self.gradients:  # find which gradient is used in the stroke
+                if g.id == gradient_id:
+                    gradient = g
+                    break
+
+            j = 0
+            while j <= 1:
+                opacity = self.opacity_at_param(gradient, j)
+
+                opacities.append(opacity)
+                j += stepsize
+
+        else:
+            print("amount:  ", amount)
+            # TODO: find out why you need to add 1 to the amount
+            opacities = [1] * (amount+1)
+
+        for opa_value in opacities:
+            opa_value *= overall_opa
+
+        return opacities
+
+
+
+    def get_path_opacity(self,path,attributes): # get the overall opacity of a path
+        if "opacity" in attributes.keys():
+            opacity = float(attributes["opacity"])
+            print("opacity value present: ", opacity)
+        else:
+            print("no opacity value for path")
+            opacity = 1
+        return opacity
+
+    def opacity_at_param(self,gradient, param):
+        print("---" * 19)
+        print("looking for opacity at param ")
+
+        stops = gradient.stop_offsets
+        opas = gradient.opacities
+
+
+        for idx, offset in enumerate(stops):
+            print("parsing all offsets.... current offset: ", offset, "at index:  ", idx, "of: ", len(stops) - 1)
+
+            print("offset: ", offset)
+            print("param: ", param)
+            if idx < (len(stops) - 1):
+                print("next offset: ", stops[idx + 1])
+
+            if param == offset:
+                print("param = offset")
+                return opas[idx]
+            elif param >= offset and param >= stops[idx + 1]:
+                continue
+            elif offset <= param <= stops[idx + 1]:
+                para_1 = offset
+                para_2 = stops[idx + 1]
+                position = (param - para_1) / (para_2 - para_1)
+                print("pos: ", position)
+
+                opa_1 = opas[idx] # this is one float
+                opa_2 = opas[idx + 1]
+                print(type(opa_1))
+                print(type(opa_2))
+
+                opacity = ((opa_2 - opa_1) * position) + opa_1
+
+                print(type(opacity))
+                print("current param opacity:  ", opacity)
+
+                return opacity
+
+            elif param == stops[idx + 1]:
+                print("param = next offset")
+                return opas[idx + 1]
+
     def get_gradients(self):
         xml_file = minidom.parse(self.path)
         gradients = xml_file.getElementsByTagName("linearGradient")
@@ -196,7 +296,7 @@ class SVGParse:
             grad = Gradient(id)
 
             stops = g.getElementsByTagName("stop")
-            for stop in stops:
+            for i, stop in enumerate(stops):
                 offset = stop.attributes["offset"].value
                 offset = float(offset)
                 grad.stop_offsets.append((offset))
@@ -220,10 +320,18 @@ class SVGParse:
                 if style.find(opa_desc) != -1:
                     opa_ind = style.index(opa_desc) + len(opa_desc)
                     opa_val = style[opa_ind: opa_ind + 7]
+                    opa_val = float(opa_val)
                 else:
                     opa_val = 1
                 grad.opacities.append(opa_val)
                 print("opacity  ",opa_val)
+
+                if i == (len(stops)-1) and offset < 1:
+                    print("last stop offset is not at 100% ")
+
+                    grad.stop_offsets.append(1)
+                    grad.opacities.append(opa_val)
+                    grad.colors.append(color_rgb)
 
             print(grad.check_lengths())
             print("s: ", stops)
@@ -237,11 +345,6 @@ class SVGParse:
 
 
         return gradient_instances
-
-
-
-
-
 
 
 
@@ -291,3 +394,29 @@ class Gradient:
         else:
             return False
 
+
+testfile = "gradient07.svg"
+parsed_file = SVGParse(testfile,20)
+movements = parsed_file.convert_to_movements()
+
+for movement in movements:
+    print("coordinates  ", movement.coordinates)
+    print("colors  ", movement.colors)
+    print("opacities  ", movement.opacities)
+    print("stroke  ", movement.strokewidth)
+
+    print(movement.check_lengths())
+
+print(movements)
+x = []
+y = []
+
+
+'''for path in coords:
+    for subpath in path:
+        x.append(subpath[0])
+        y.append(subpath[1])
+
+plt.scatter(x, y)
+plt.show()
+'''
