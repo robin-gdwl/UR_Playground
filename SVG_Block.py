@@ -15,6 +15,7 @@ class svgBlock(Block):
         self.scale = 1
         self.origin = []
         self.tolerance = 1
+        self.travel_z = 0.05
 
         self.paths = []
 

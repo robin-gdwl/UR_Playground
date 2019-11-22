@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from xml.dom import minidom
 
-class Movement:
+class MoveColOpa:
 
     """Movement objects have:
     List of coordinate
@@ -59,9 +59,11 @@ class Gradient:
         for idx, offset in enumerate(stops) :
             print("offset: ", offset)
             print("param: ", param)
-            print("next offset: ", stops[idx + 1])
+            if idx < (len(stops) - 1):
+                print("next offset: ", stops[idx + 1])
 
             if param == offset :
+                print("param = offset")
                 return clrs[idx]
             elif param >= offset and param >= stops[idx + 1]:
                 continue
@@ -85,6 +87,7 @@ class Gradient:
                 return color
 
             elif param == stops[idx + 1]:
+                print("param = next offset")
                 return clrs[idx + 1]
 
 
@@ -97,7 +100,46 @@ class Gradient:
         return color
 
     def opacity_at_param(self, param):
-        opacity = None
+        opacity = []
+        # here I need a function which finds between which indexes of the stop-offset list the param lies
+        # 0, 1, 2, 3.5, 6.8, 20
+        # 2.3
+        stops = self.stop_offsets
+        opas = self.opacities
+        for idx, offset in enumerate(stops):
+            print("offset: ", offset)
+            print("param: ", param)
+            if idx < (len(stops) - 1):
+                print("next offset: ", stops[idx + 1])
+
+            if param == offset:
+                print("param = offset")
+                return clrs[idx]
+            elif param >= offset and param >= stops[idx + 1]:
+                continue
+            elif param >= offset and param <= stops[idx + 1]:
+                para_1 = offset
+                para_2 = stops[idx + 1]
+                position = (param - para_1) / (para_2 - para_1)
+                print("pos: ", position)
+
+                col_1 = clrs[idx]
+                col_2 = clrs[idx + 1]
+
+                for val, rgb_val in enumerate(col_1):
+                    startval = rgb_val
+                    endval = col_2[val]
+                    interm_val = ((endval - startval) * position) + startval
+                    print(interm_val)
+                    color.append(interm_val)
+                print("param", param)
+                print("colour at param: ", color)
+                return color
+
+            elif param == stops[idx + 1]:
+                print("param = next offset")
+                return clrs[idx + 1]
+
         return opacity
 
 class SVGParse:
@@ -140,11 +182,7 @@ class SVGParse:
             print(p_attributes)
 
             # TODO: check if these two if statements need .value or something
-            if "opacity" in p_attributes.values() :
-                print("opacity detected")
-                opacity = p_attributes["opacity"]
-            else:
-                print("no opacity")
+
 
             if "stroke" in p_attributes.keys() :
                 stroke = p_attributes["stroke"]
@@ -160,11 +198,12 @@ class SVGParse:
                 print("grad id:  ",gradient_id)
                 gradient = self.get_gradients()
 
-                rand_params = [0,0.1,0.5,0.7,0.8,0.99]
+                """rand_params = [0,0.1,0.5,0.7,0.8,0.99]
                 gra = gradient[0]
+
                 for para in rand_params:
                     gra.color_at_param(para)
-                # TODO: color at param here
+                # TODO: color at param here"""
 
             else:
                 print("no gradient")
@@ -208,10 +247,17 @@ class SVGParse:
         '''
 
     def get_color(self, param, colour):
+
         pass
 
     def get_opacity(self, param, opacity):
-        pass
+        if "opacity" in p_attributes.values():
+            print("opacity detected")
+            opacity = p_attributes["opacity"]
+
+        else:
+            print("no opacity")
+
 
     def get_gradients(self):
         xml_file = minidom.parse(self.path)
