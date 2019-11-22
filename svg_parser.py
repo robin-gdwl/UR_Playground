@@ -5,6 +5,12 @@ from xml.dom import minidom
 
 class Movement:
 
+    """Movement objects have:
+    List of coordinate
+    List of corresponding colour for each coordinate (R,G,B)
+    List of corresponding opacities  """
+
+
     def __init__(self):
         self.coordinates = []
         self.colors = []
@@ -44,7 +50,50 @@ class Gradient:
             return False
 
     def color_at_param(self, param):
-        color = None
+        color = []
+        # here I need a function which finds between which indexes of the stop-offset list the param lies
+        # 0, 1, 2, 3.5, 6.8, 20
+        # 2.3
+        stops = self.stop_offsets
+        clrs = self.colors
+        for idx, offset in enumerate(stops) :
+            print("offset: ", offset)
+            print("param: ", param)
+            print("next offset: ", stops[idx + 1])
+
+            if param == offset :
+                return clrs[idx]
+            elif param >= offset and param >= stops[idx + 1]:
+                continue
+            elif param >= offset and param <= stops[idx + 1]:
+                para_1 = offset
+                para_2 = stops[idx +1]
+                position = (param - para_1) / (para_2 - para_1)
+                print("pos: ", position)
+
+                col_1 = clrs[idx]
+                col_2 = clrs[idx + 1]
+
+                for val, rgb_val in enumerate(col_1):
+                    startval = rgb_val
+                    endval = col_2[val]
+                    interm_val = ((endval - startval) * position) + startval
+                    print(interm_val)
+                    color.append(interm_val)
+                print("param", param)
+                print("colour at param: ", color)
+                return color
+
+            elif param == stops[idx + 1]:
+                return clrs[idx + 1]
+
+
+
+
+
+
+
+
         return color
 
     def opacity_at_param(self, param):
@@ -65,6 +114,7 @@ class SVGParse:
         self.path = filepath
         self.tol = tolerance
         self.gradients = self.get_gradients()
+        self.movements = []
 
 
     # make this a staticmethod ??
@@ -74,10 +124,13 @@ class SVGParse:
         paths, attributes = svgpathtools.svg2paths(self.path)
 
         i = 0
+        print("paths:", paths)
         for p in paths:
+
             coords = []
 
             p_attributes = attributes[i]
+            print(p_attributes)
 
             length = p.length(error=self.tol)
             #print("length:", length)
@@ -93,17 +146,25 @@ class SVGParse:
             else:
                 print("no opacity")
 
-            if "stroke" in p_attributes.values() :
+            if "stroke" in p_attributes.keys() :
                 stroke = p_attributes["stroke"]
             else:
                 stroke = ""
+
+            print("stroke: ", stroke)
 
             if "url" in stroke:
                 print("gradient in p")
                 gradient_id = stroke[stroke.find("(") + 1:stroke.find(")")]
                 gradient_id = gradient_id.strip("#")
-                print(gradient_id)
+                print("grad id:  ",gradient_id)
                 gradient = self.get_gradients()
+
+                rand_params = [0,0.1,0.5,0.7,0.8,0.99]
+                gra = gradient[0]
+                for para in rand_params:
+                    gra.color_at_param(para)
+                # TODO: color at param here
 
             else:
                 print("no gradient")
@@ -123,9 +184,11 @@ class SVGParse:
                 # print(j)
                 j += div
 
+
             ob_list.append(coords)
             #print("ob_list: ", ob_list)
             #print("i: ", i)
+
 
             i += 1
 
@@ -164,6 +227,7 @@ class SVGParse:
             stops = g.getElementsByTagName("stop")
             for stop in stops:
                 offset = stop.attributes["offset"].value
+                offset = float(offset)
                 grad.stop_offsets.append((offset))
 
                 style = stop.attributes["style"].value
@@ -204,7 +268,7 @@ class SVGParse:
         return gradient_instances
 
 
-testfile = "gradient03.svg"
+testfile = "gradient08.svg"
 coords = SVGParse(testfile,20)
 coords = coords.convert_to_coords()
 
