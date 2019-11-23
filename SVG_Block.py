@@ -1,5 +1,7 @@
 from Blocks import Block
 from svgpathtools import *
+import svg_parser
+import time
 
 
 def print_entity(e):
@@ -13,78 +15,124 @@ class svgBlock(Block):
 
         self.filepath = "path"
         self.scale = 1
-        self.origin = []
+        self.origin = []  # (x,y,z,rx,ry,rz) csys
         self.tolerance = 1
         self.travel_z = 0.05
+        self.depth = 0.05
 
-        self.paths = []
+        self.path_movements = []
+        self.coordinates = [] # these will be the (x,y,z,rx,ry,rz) coordinates after all trnasformations from opacity and colour are applied
 
         self.use_colour = True
+        self.color_effect = 1
+
         self.use_opacity = True
+        self.opacity_effect = 1
 
     def load(self):
-        # loads an svg file, puts the points into self.coordinates
+        # loads an svg file, puts the movements into self.path_movements
+        # translates color and opacity values into the corresponding transformations
 
-        ob_list = []
-        paths, attributes= svg2paths(self.filepath)
+        start_time = time.time()
+        parsed_file = svg_parser.SVGParse(self.filepath, 20)
+        movements = parsed_file.convert_to_movements()
 
-        print("paths: ",paths)
-        print(attributes)
-        #print(file_att)
+        self.path_movements = movements
 
+        end_time = time.time() - start_time
 
-        i = 0
-        for p in paths:
-            coords = []
-            print(p)
-            mid = p.point(0.5)
-            print(mid)
-            length = p.length(error= self.tolerance)
-            print("length:", length)
-            amount = length / self.tolerance
-            print(amount)
-            div = 1 / amount
-            print(attributes[i])
+        print(" loaded in ", end_time)
+        print(self.path_movements)
+        print(vars(self.path_movements[0]))
 
-            j = 0
-            while j <= 1:
-                point = p.point(j)
+        self.add_values()
 
-                x = point.real
-                y = point.imag
+        self.scale_xy()
+        self.apply_depth()
+        self.apply_rotation()
 
-                xy_coord = [x,y]
-
-                coords.append(xy_coord)
-                #print("point parsed")
-                #print(point)
-                #print(j)
-                j += div
-
-            ob_list.append(coords)
-            print("ob_list: ", ob_list)
-            print("i: ",i)
-
-            i += 1
+        print("final coords:  ",self.coordinates)
+        #return paths
 
 
+    def add_values(self):
+        # this function puts the coordinates of the path_movements into self.coordinates and adds 4 zeros (z-value,3x rotation value)
+        for m_idx, movement in enumerate(self.path_movements):
+            full_coords = []
+            for c_idx, coordinates in enumerate(movement.coordinates):
+                x = coordinates[0]
+                y = coordinates[1]
+                full_coords.append([x,y,0,0,0,0])
+
+            self.coordinates.append(full_coords)
+
+    def scale_xy(self):
+        for m_idx, movement in enumerate(self.path_movements):
+            #move_coords = []
+            for c_idx, coordinates in enumerate(movement.coordinates):
+                new_x = coordinates[0] * self.scale
+                new_y = coordinates[1] * self.scale
+
+                self.coordinates[m_idx][c_idx][0] = new_x
+                self.coordinates[m_idx][c_idx][1] = new_y
+
+        print(self.coordinates)
 
 
-        #np_paths = svg_to_np(self.filepath)
 
-        #print("np:  ", np_paths)
+    def apply_rotation(self):
+        if self.use_colour == False:
+            rotation = [0,0,0]
 
-        return paths
+            for m_idx, movement in enumerate(self.path_movements):
+                for c_idx, coordinates in enumerate(movement.coordinates):
 
-    def internalise(self):
-        # IDEA: internalise the file somehow to make it independant from the filepath when loading the program
+                    #self.coordinates[m_idx][c_idx][3,4,5] = rotation[0,1,2]
+                    insert_pos = [3,4,5]
+                    for x, y in zip(insert_pos, rotation):
+                        self.coordinates[m_idx][c_idx][x] = y
+
+        else:
+
+            for m_idx, movement in enumerate(self.path_movements):
+                for c_idx, coordinates in enumerate(movement.coordinates):
+                    rotation = movement.colors[c_idx]
+                    # TODO: convert from RGB to rad-rotation
+                    insert_pos = [3, 4, 5]
+                    for x, y in zip(insert_pos, rotation):
+                        self.coordinates[m_idx][c_idx][x] = y
+
+
+    def apply_depth(self):
+        if self.use_opacity == False:
+            depth = self.depth
+            for m_idx, movement in enumerate(self.path_movements):
+                for c_idx, coordinates in enumerate(movement.coordinates):
+                    self.coordinates[m_idx][c_idx][2] = depth
+
+        else:
+            for m_idx, movement in enumerate(self.path_movements):
+                for c_idx, coordinates in enumerate(movement.coordinates):
+                    depth = movement.opacity[c_idx]
+                    # TODO: convert from opacity value to depth value depending on self.depth
+                    self.coordinates[m_idx][c_idx][2] = depth
+
+
+    def add_travel(self):
+        pass
+
+    def change_travel(self):
         pass
 
 
+
+    """def internalise(self):
+        # IDEA: internalise the file somehow to make it independant from the filepath when loading the program
+        pass"""
+
+
 testblock = svgBlock()
-testblock.filepath = "gradient03.svg"
-
-
+testblock.filepath = "gradient10.svg"
 
 paths = testblock.load()
 
