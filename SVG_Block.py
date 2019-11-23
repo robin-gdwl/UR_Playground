@@ -14,7 +14,7 @@ class svgBlock(Block):
     def __init__(self):
 
         self.filepath = "path"
-        self.scale = 1
+        self.scale = 0.5
         self.origin = []  # (x,y,z,rx,ry,rz) csys
         self.tolerance = 1
         self.travel_z = 0.05
@@ -52,11 +52,20 @@ class svgBlock(Block):
         self.apply_rotation()
 
         print("final coords:  ",self.coordinates)
+
+        print(len(self.coordinates))
+        x= 0
+        for path in self.coordinates:
+            print(len(path))
+            x+= len(path)
+        print(x)
         #return paths
 
 
     def add_values(self):
-        # this function puts the coordinates of the path_movements into self.coordinates and adds 4 zeros (z-value,3x rotation value)
+        """this function puts the coordinates of the path_movements into self.coordinates
+            adds 4 zeros (z-value,3x rotation value)
+            this should only be done once"""
         for m_idx, movement in enumerate(self.path_movements):
             full_coords = []
             for c_idx, coordinates in enumerate(movement.coordinates):
@@ -113,12 +122,14 @@ class svgBlock(Block):
         else:
             for m_idx, movement in enumerate(self.path_movements):
                 for c_idx, coordinates in enumerate(movement.coordinates):
-                    depth = movement.opacity[c_idx]
+                    depth = movement.opacities[c_idx]
                     # TODO: convert from opacity value to depth value depending on self.depth
                     self.coordinates[m_idx][c_idx][2] = depth
 
 
     def add_travel(self):
+        #TODO: how to add travel coordinates without destroying the indices of the self.coordinates in comparison to the movement object?
+
         pass
 
     def change_travel(self):
@@ -132,7 +143,7 @@ class svgBlock(Block):
 
 
 testblock = svgBlock()
-testblock.filepath = "gradient10.svg"
+testblock.filepath = "gradient11.svg"
 
 paths = testblock.load()
 

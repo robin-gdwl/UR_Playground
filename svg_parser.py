@@ -285,6 +285,7 @@ class SVGParse:
                 return opas[idx + 1]
 
     def get_gradients(self):
+        # TODO: add possibility for radial gradients
         xml_file = minidom.parse(self.path)
         gradients = xml_file.getElementsByTagName("linearGradient")
 
