@@ -49,7 +49,6 @@ class SVGParse:
 
         movement.colors = self.color_on_path(path, attributes, div, amount)
 
-        # TODO: implement opacities on path
         movement.opacities = self.opacities_on_path(path, attributes, div, amount)
 
         return movement
@@ -221,14 +220,14 @@ class SVGParse:
                 j += stepsize
 
         else:
-            print("amount:  ", amount)
+            print("applying opacitiesthis many times:  ", amount)
             # TODO: find out why you need to add 1 to the amount
             opacities = [1] * (amount+1)
 
-        for opa_value in opacities:
-            opa_value *= overall_opa
+        adjusted_opa = [i * overall_opa for i in opacities]
+        #print(adjusted_opa)
 
-        return opacities
+        return adjusted_opa
 
 
 
