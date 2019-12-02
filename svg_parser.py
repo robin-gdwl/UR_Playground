@@ -395,7 +395,7 @@ class Gradient:
             return False
 
 
-testfile = "gradient07.svg"
+"""testfile = "gradient07.svg"
 parsed_file = SVGParse(testfile,20)
 movements = parsed_file.convert_to_movements()
 
@@ -410,7 +410,7 @@ for movement in movements:
 print(movements)
 x = []
 y = []
-
+"""
 
 '''for path in coords:
     for subpath in path:

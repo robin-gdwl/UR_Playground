@@ -14,9 +14,10 @@ def print_entity(e):
 class svgBlock(Block):
 
     def __init__(self):
+        super(svgBlock, self).__init__()
 
         self.filepath = "path"
-        self.scale = 0.001
+        self.scale = 0.0005
         self.origin = []  # (x,y,z,rx,ry,rz) csys
         self.tolerance = 10
         self.travel_z = 0.3
@@ -123,6 +124,7 @@ class svgBlock(Block):
                         if y == 0:
                             y = 1
                         y = 255 / y   # converts the rgb value from 0-255 to 0-1
+                        y *= 0.001
                         y = self.max_rotation * y  # multiplies
 
                         self.coordinates[m_idx][c_idx][x] = y
@@ -142,6 +144,7 @@ class svgBlock(Block):
                     depth = movement.opacities[c_idx]
                     #print("depth found, applying")
                     #print(depth)
+                    depth *= 0.1
                     # TODO: convert from opacity value to depth value depending on self.depth
                     self.coordinates[m_idx][c_idx][2] = depth
 
@@ -182,10 +185,7 @@ class svgBlock(Block):
         pass"""
 
 
-testblock = svgBlock()
-testblock.filepath = "Test03.svg"
 
-paths = testblock.load()
 
 #parse = bezier2polynomial(paths[2])
 #print(poly)

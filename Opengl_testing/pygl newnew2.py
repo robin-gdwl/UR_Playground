@@ -44,6 +44,7 @@
 
 import sys
 import math
+import numpy as np
 
 from PyQt5.QtCore import pyqtSignal, QPoint, QSize, Qt
 from PyQt5.QtGui import QColor, QOpenGLVersionProfile
@@ -153,7 +154,11 @@ class GLWidget(QOpenGLWidget):
         self.gl.initializeOpenGLFunctions()
 
         self.setClearColor(self.trolltechPurple.darker())
+        self.object = self.makeObject()
+
         self.object = self.makePointObject(self.points)
+        # self.object = self.drawGrid()
+        # self.object = self.makeObject()
         self.gl.glShadeModel(self.gl.GL_FLAT)
         self.gl.glEnable(self.gl.GL_DEPTH_TEST)
         self.gl.glEnable(self.gl.GL_CULL_FACE)
@@ -162,11 +167,29 @@ class GLWidget(QOpenGLWidget):
         self.gl.glClear(
                 self.gl.GL_COLOR_BUFFER_BIT | self.gl.GL_DEPTH_BUFFER_BIT)
         self.gl.glLoadIdentity()
-        self.gl.glTranslated(0.0, 0.0, -10.0)
+        self.gl.glTranslated(-0.2, -0.4, -10)
         self.gl.glRotated(self.xRot / 16.0, 1.0, 0.0, 0.0)
         self.gl.glRotated(self.yRot / 16.0, 0.0, 1.0, 0.0)
         self.gl.glRotated(self.zRot / 16.0, 0.0, 0.0, 1.0)
         self.gl.glCallList(self.object)
+        self.drawGrid()
+
+    def drawGrid(self):
+        self.gl.glPushMatrix()
+        print("drawing grid")
+        # color = [255.0/255, 57.0/255, 0.0/255]
+        color = [8.0/255, 108.0/255, 162.0/255]
+        self.gl.glMaterialfv(self.gl.GL_FRONT, self.gl.GL_AMBIENT_AND_DIFFUSE, color);
+        step = 50
+        num = 15
+        for i in np.arange(-num, num+1):
+            self.gl.glBegin(self.gl.GL_LINES)
+            self.gl.glVertex3f(i*step, -num * step, 0)
+            self.gl.glVertex3f(i*step, num*step, 0)
+            self.gl.glVertex3f(-num * step, i*step, 0)
+            self.gl.glVertex3f(num*step, i*step, 0)
+            self.gl.glEnd()
+        self.gl.glPopMatrix()
 
     def resizeGL(self, width, height):
         side = min(width, height)
