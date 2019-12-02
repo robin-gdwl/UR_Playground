@@ -45,8 +45,14 @@ class URPlayground(QMainWindow):
 
     def setupUI(self):
         #self.setCentralWidget(self.RB)
+        #preview = self.RB
+        self.widgetP = self.widgetPreview
+        self.layoutP = QHBoxLayout(self)
+        self.widgetP.setLayout(self.layoutP)
+        self.layoutP.addWidget(self.RB)
+        #self.hbox.addWidget(self.RB)
 
-        self.glwdgtPreview.
+        #self.glwdgtPreview.
         self.btnSelectFile.clicked.connect(self.openFileNameDialog)
         self.btnLoadFile.clicked.connect(self.LoadFile)
         self.btnSend.clicked.connect(self.Run)
