@@ -8,6 +8,8 @@ from OpenGL import GLU
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from numpy import array, arange
+import numpy as np
+import math3d as m3d
 from STLFile import *
 # from ConfigRobot import *
 from GlobalFunc import *
@@ -38,6 +40,7 @@ class GLWidget(QOpenGLWidget):
         print("All done.")
 
         self.listPoints = np.array([[0,0,0]])
+        self.listCoords = np.array([[0,0,0]])
         self.AllList = np.array([self.listPoints])
         self.stt = np.array([])
         self.color=np.array([0])
@@ -104,11 +107,15 @@ class GLWidget(QOpenGLWidget):
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_NORMALIZE)
         # glEnable(GL_BLEND);
-        glClearColor(0.0, 0.0, 0.0, 1.0)
+        glClearColor(1, 1, 1, 1.0)
 
     def drawGL(self):
-        print("drawingGL")
+        #print("drawingGL")
         glPushMatrix()
+        #glClearColor(1, 1, 1, 1)
+
+        #self.makePointObject(1)
+
 
         if self.isDrawGrid:
             self.drawGrid()
@@ -162,6 +169,8 @@ class GLWidget(QOpenGLWidget):
         glRotated(+90.0, 1.0, 0.0, 0.0)
         self.drawGL()
         self.DrawPoint([255.0/255, 255.0/255, 255.0/255.0], 1.5)
+        self.DrawCoords([255.0 / 255, 255.0 / 255, 255.0 / 255.0], 4)
+        #self.makePointObject(1)
         glPopMatrix()
 
     def DrawPoint(self, color, size):
@@ -176,6 +185,76 @@ class GLWidget(QOpenGLWidget):
                 glVertex3f(self.listPoints[i+1][0], self.listPoints[i+1][1], self.listPoints[i+1][2])
                 glEnd()
         glPopMatrix()
+
+    def DrawCoords(self, color, size):
+        #print("draw coords")
+
+        glPushMatrix()
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
+        glPointSize(size);
+        for i in np.arange(len(self.listCoords)-1):
+            if i == 0:
+                continue
+            # if self.color[i] == 1:
+            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [0, 0, 0]);
+            glBegin(GL_LINES);
+            glVertex3f(self.listCoords[i][0], self.listCoords[i][1], self.listCoords[i][2])
+            glVertex3f(self.listCoords[i+1][0], self.listCoords[i+1][1], self.listCoords[i+1][2])
+            glEnd()
+        glPopMatrix()
+
+    def loadSVG(self,block,size):
+        print("loading svg")
+        self.listCoords = np.array([[0,0,0]])
+
+        glPushMatrix()
+        coordinates = block.coordinates_travel
+
+        for i, path in enumerate(coordinates):
+            print("loading path",i,path)
+            for j,coord in enumerate(path):
+                print(coord)
+                csys = m3d.Transform(block.csys)
+                t = csys * m3d.Transform(coord)
+                pose = t.pose_vector
+                print("pose", pose)
+                self.listCoords = np.append(self.listCoords,[pose[:3]],axis=0)
+                #print(j,"listCoords:", self.listCoords)
+
+
+        print("listCoords:", self.listCoords)
+        glPopMatrix()
+
+    def makePointObject(self,block):
+        glPushMatrix()
+        glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
+        print("makie points")
+        #genList = glGenLists(1)
+        #glNewList(genList, self.gl.GL_COMPILE)
+
+        #glClearColor(0, 0, 1, 1)
+        #glColor3f(0.40, 0.0, 1.0)
+        glPointSize(20)
+        glBegin(GL_POINTS)
+        self.setupColor([105.0 / 255, 180.0 / 255, 0 / 255])
+        #glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [1.0, 1.0, 1.0]);
+        #glColor3f(0.40, 1, 1.0)
+        glVertex3f(0,0,0)
+        glVertex3f(100,10,10)
+        glVertex3f(50,500,500)
+        glVertex3f(100,100,1000)
+
+        glEnd()
+
+        #self.drawGL()
+        glPopMatrix()
+        #self.update()
+
+
+        #self.gl.glEnd()
+        #self.gl.glEndList()
+
+        #return genList
 
     def resizeGL(self, width, height):
         print("resize")

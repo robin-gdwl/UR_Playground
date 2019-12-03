@@ -148,6 +148,7 @@ class GLWidget(QOpenGLWidget):
             self.update()
 
     def initializeGL(self):
+        print("init gl")
         version_profile = QOpenGLVersionProfile()
         version_profile.setVersion(2, 0)
         self.gl = self.context().versionFunctions(version_profile)

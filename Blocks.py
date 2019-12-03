@@ -6,7 +6,8 @@ class Block():
 
     def __init__(self):
 
-        self.csys = [0.6,0,0.3,0,pi,0]
+        #self.csys = [0.6,0,0.3,0,pi,0]
+        self.csys = [100,0,200,0.3*pi,0.5*pi,pi]
         self.coordinates = []
         self.tcp = [0,0,0,0,0,0]
         self.a = 0.1

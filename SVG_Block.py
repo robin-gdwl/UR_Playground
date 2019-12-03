@@ -17,11 +17,11 @@ class svgBlock(Block):
         super(svgBlock, self).__init__()
 
         self.filepath = "path"
-        self.scale = 0.0005
+        self.scale = 1.05
         self.origin = []  # (x,y,z,rx,ry,rz) csys
         self.tolerance = 10
-        self.travel_z = 0.3
-        self.depth = 0.05
+        self.travel_z = 15
+        self.depth = 15
         self.max_rotation = 1/8 * 2*pi
 
         self.path_movements = []
@@ -165,7 +165,7 @@ class svgBlock(Block):
                 # TODO: change the start and end coords by the travel depth
 
                 motion.insert(0, start_coords)
-                motion.insert(-1, end_coords)
+                motion.append(end_coords)
                 # print(motion)
 
             #print(self.coordinates_travel)

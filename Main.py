@@ -28,7 +28,7 @@ class URPlayground(QMainWindow):
     def __init__(self, *args):
         super(URPlayground, self).__init__(*args)
 
-        loadUi("UR_playground_mainwindow.ui",self)
+        loadUi("UR_playground_mainwindow03.ui",self)
         self.objRB = Robot()
         self.RB = DrawRB.GLWidget(self, self.objRB)
         self.program = Program()
@@ -46,6 +46,7 @@ class URPlayground(QMainWindow):
     def setupUI(self):
         #self.setCentralWidget(self.RB)
         #preview = self.RB
+
         self.widgetP = self.widgetPreview
         self.layoutP = QHBoxLayout(self)
         self.widgetP.setLayout(self.layoutP)
@@ -54,8 +55,20 @@ class URPlayground(QMainWindow):
 
         #self.glwdgtPreview.
         self.btnSelectFile.clicked.connect(self.openFileNameDialog)
-        self.btnLoadFile.clicked.connect(self.LoadFile)
+
         self.btnSend.clicked.connect(self.Run)
+        self.valOriginX.connect(self.svgblock.csys[0])
+
+    def ShowAbout(self):
+        msg = QMessageBox()
+        msg.setIcon(QMessageBox.Information)
+        msg.setText("UR Playground")
+        msg.setInformativeText("UR_Playground is a software tool to facilitate explorative and artistic work with universal robots. Developed at BURG Giebichenstein University of ARt and Design Halle, Germany. \
+            \n\nCode by: Robin Godwyll building on top of \"Robot Simulator\" by Nguyen Van Khuong\
+            \nSource code: https://github.com/boundlessmaking/UR_Playground\
+            \nVideo demo: https://tinyurl.com/robot-simulation-python-opengl")
+        msg.setWindowTitle("About UR_Playground")
+        msg.exec_()
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -64,6 +77,8 @@ class URPlayground(QMainWindow):
         # self.processLoadFile.setValue(0)
         self.valFileName.setText(self.fileName)
         self.svgblock.filepath = self.fileName
+        self.svgblock.load()
+        self.RB.loadSVG(self.svgblock,20)
         #self.valueStatus.setText("None...")
 
     """def LoadFile(self):
@@ -129,6 +144,7 @@ class URPlayground(QMainWindow):
         self.svgblock.load()
 
     def Run(self):
+
         print("run")
         pass
 
