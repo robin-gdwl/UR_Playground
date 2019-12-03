@@ -60,6 +60,15 @@ class URPlayground(QMainWindow):
 
         print(type(svgBlock))
         self.valOriginX.textChanged.connect(self.updateSVG)
+        self.valOriginY.textChanged.connect(self.updateSVG)
+        self.valOriginZ.textChanged.connect(self.updateSVG)
+        self.valOriginRx.textChanged.connect(self.updateSVG)
+        self.valOriginRy.textChanged.connect(self.updateSVG)
+        self.valOriginRz.textChanged.connect(self.updateSVG)
+        self.valPlunge.textChanged.connect(self.updateSVG)
+        self.valMove.textChanged.connect(self.updateSVG)
+        self.valScale.textChanged.connect(self.updateSVG)
+        self.valTolerance.textChanged.connect(self.updateSVG)
         # other signals form linetext: returnPressed,
 
     def ShowAbout(self):
@@ -160,18 +169,21 @@ class URPlayground(QMainWindow):
         block = self.svgblock
         print(vars(self.svgblock))
         #block.coordinates_travel = self.valTravel
-        block.travel_z = self.valMove.text()
-        block.depth = self.valPlunge.text()
-        block.tolerance = self.valTolerance.text()
-        block.scale = self.valScale.text()
+        block.travel_z = float(self.valMove.text())
+        block.depth = float(self.valPlunge.text())
+        block.tolerance = float(self.valTolerance.text())
+        block.scale = float(self.valScale.text())
 
-        origin = [self.valOriginX.text(),
-                  self.valOriginY.text(),
-                  self.valOriginZ.text(),
-                  self.valOriginRx.text(),
-                  self.valOriginRy.text(),
-                  self.valOriginRz.text()]
+        origin = [float(self.valOriginX.text()),
+                  float(self.valOriginY.text()),
+                  float(self.valOriginZ.text()),
+                  float(self.valOriginRx.text()),
+                  float(self.valOriginRy.text()),
+                  float(self.valOriginRz.text())]
         block.csys = origin
+
+        self.RB.loadSVG(self.svgblock, 20)
+        self.RB.DrawCoords([0,1,1,1],10)
 
         print(vars(self.svgblock))
 

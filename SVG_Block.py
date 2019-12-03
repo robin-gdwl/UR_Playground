@@ -90,6 +90,7 @@ class svgBlock(Block):
         for m_idx, movement in enumerate(self.path_movements):
             #move_coords = []
             for c_idx, coordinates in enumerate(movement.coordinates):
+                print(type(self.scale))
                 new_x = coordinates[0] * self.scale
                 new_y = coordinates[1] * self.scale
 

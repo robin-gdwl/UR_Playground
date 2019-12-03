@@ -26,7 +26,7 @@ class GLWidget(QOpenGLWidget):
         self.xRot = -2584
         self.yRot = 1376
         self.zRot = 0.0
-        self.z_zoom = -3500
+        self.z_zoom = -3000
         self.xTran = 0
         self.yTran = 0
         self.isDrawGrid = True;
@@ -204,6 +204,8 @@ class GLWidget(QOpenGLWidget):
         glPopMatrix()
 
     def loadSVG(self,block,size):
+        # TODO: make a new method that just updates and doesnt need to reload the entire file
+        block.load()
         print("loading svg")
         self.listCoords = np.array([[0,0,0]])
 
@@ -217,12 +219,12 @@ class GLWidget(QOpenGLWidget):
                 csys = m3d.Transform(block.csys)
                 t = csys * m3d.Transform(coord)
                 pose = t.pose_vector
-                print("pose", pose)
+                #print("pose", pose)
                 self.listCoords = np.append(self.listCoords,[pose[:3]],axis=0)
                 #print(j,"listCoords:", self.listCoords)
 
 
-        print("listCoords:", self.listCoords)
+        #print("listCoords:", self.listCoords)
         glPopMatrix()
 
     def makePointObject(self,block):
