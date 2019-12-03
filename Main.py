@@ -57,7 +57,10 @@ class URPlayground(QMainWindow):
         self.btnSelectFile.clicked.connect(self.openFileNameDialog)
 
         self.btnSend.clicked.connect(self.Run)
-        self.valOriginX.connect(self.svgblock.csys[0])
+
+        print(type(svgBlock))
+        self.valOriginX.textChanged.connect(self.updateSVG)
+        # other signals form linetext: returnPressed,
 
     def ShowAbout(self):
         msg = QMessageBox()
@@ -69,6 +72,7 @@ class URPlayground(QMainWindow):
             \nVideo demo: https://tinyurl.com/robot-simulation-python-opengl")
         msg.setWindowTitle("About UR_Playground")
         msg.exec_()
+
 
     def openFileNameDialog(self):
         options = QFileDialog.Options()
@@ -140,15 +144,36 @@ class URPlayground(QMainWindow):
                 self.valueStatus.setText("Some points is missing")
 """
 
-    def LoadFile(self):
-        self.svgblock.load()
+    """def LoadFile(self):
+        self.svgblock.load()"""
+
 
     def Run(self):
 
         print("run")
         pass
 
+    def updateSVG(self):
+        print("updating svg settings")
 
+
+        block = self.svgblock
+        print(vars(self.svgblock))
+        #block.coordinates_travel = self.valTravel
+        block.travel_z = self.valMove.text()
+        block.depth = self.valPlunge.text()
+        block.tolerance = self.valTolerance.text()
+        block.scale = self.valScale.text()
+
+        origin = [self.valOriginX.text(),
+                  self.valOriginY.text(),
+                  self.valOriginZ.text(),
+                  self.valOriginRx.text(),
+                  self.valOriginRy.text(),
+                  self.valOriginRz.text()]
+        block.csys = origin
+
+        print(vars(self.svgblock))
 
 
 class Program:
@@ -166,7 +191,7 @@ class Program:
     def load_block(self, block):
 
         self.block_list.append(block)
-        print("Blocklost:" + str(self.block_list))
+        print("Blocklist:" + str(self.block_list))
 
         pass
 
