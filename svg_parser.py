@@ -169,6 +169,7 @@ class SVGParse:
             if idx < (len(stops) - 1):
                 print("next offset: ", stops[idx + 1])
 
+            #TODO:add case if param is smaller than first stop
             if param == offset :
                 print("param = offset")
                 return clrs[idx]
@@ -289,62 +290,143 @@ class SVGParse:
     def get_gradients(self):
         # TODO: add possibility for radial gradients
         xml_file = minidom.parse(self.path)
-        gradients = xml_file.getElementsByTagName("linearGradient")
+        lin_gradients = xml_file.getElementsByTagName("linearGradient")
+        rad_gradients = xml_file.getElementsByTagName("radialGradient")
 
         gradient_instances = []
 
-        for g in gradients:
-            print("g:", g)
-            id = g.attributes["id"].value
-            grad = Gradient(id)
+        if len(lin_gradients) > 0:
+            for g in lin_gradients:
+                print("g:", g)
+                id = g.attributes["id"].value
+                grad = Gradient(id)
 
-            stops = g.getElementsByTagName("stop")
-            for i, stop in enumerate(stops):
-                offset = stop.attributes["offset"].value
-                offset = float(offset)
-                grad.stop_offsets.append((offset))
+                stops = g.getElementsByTagName("stop")
+                for i, stop in enumerate(stops):
+                    offset = stop.attributes["offset"].value
+                    offset = float(offset)
+                    grad.stop_offsets.append((offset))
 
-                style = stop.attributes["style"].value
+                    style = stop.attributes["style"].value
 
-                col_desc = "stop-color:"
-                if style.find(col_desc) != -1:
-                    color_ind = style.index(col_desc) + len(col_desc)
-                    color_val = style[color_ind: color_ind + 7]
-                    color_val= color_val.lstrip("#")
-                else:  # not sure if this is necessary, as a gradient stop should always have color
-                    color_val = 000000
+                    col_desc = "stop-color:"
+                    if style.find(col_desc) != -1:
+                        color_ind = style.index(col_desc) + len(col_desc)
+                        color_val = style[color_ind: color_ind + 7]
+                        color_val= color_val.lstrip("#")
+                    else:  # not sure if this is necessary, as a gradient stop should always have color
+                        color_val = 000000
 
-                color_rgb = tuple(int(color_val[i:i + 2], 16) for i in (0, 2, 4))
-                grad.colors.append(color_rgb)
-                print("color  ", color_rgb)
-
-
-                opa_desc = "stop-opacity:"
-                if style.find(opa_desc) != -1:
-                    opa_ind = style.index(opa_desc) + len(opa_desc)
-                    opa_val = style[opa_ind: opa_ind + 7]
-                    opa_val = float(opa_val)
-                else:
-                    opa_val = 1
-                grad.opacities.append(opa_val)
-                print("opacity  ",opa_val)
-
-                if i == (len(stops)-1) and offset < 1:
-                    print("last stop offset is not at 100% ")
-
-                    grad.stop_offsets.append(1)
-                    grad.opacities.append(opa_val)
+                    color_rgb = tuple(int(color_val[i:i + 2], 16) for i in (0, 2, 4))
                     grad.colors.append(color_rgb)
-
-            print(grad.check_lengths())
-            print("s: ", stops)
+                    print("color  ", color_rgb)
 
 
-            #stop = g.childNodes
-            print(g.attributes)
+                    opa_desc = "stop-opacity:"
+                    if style.find(opa_desc) != -1:
+                        opa_ind = style.index(opa_desc) + len(opa_desc)
+                        opa_val = style[opa_ind: opa_ind + 7]
+                        opa_val = float(opa_val)
+                    else:
+                        opa_val = 1
+                    grad.opacities.append(opa_val)
+                    print("opacity  ",opa_val)
 
-            gradient_instances.append(grad)
-            print(gradient_instances)
+                    if i == (len(stops)-1) and offset < 1:
+                        print("last stop offset is not at 100% ")
+
+                        grad.stop_offsets.append(1)
+                        grad.opacities.append(opa_val)
+                        grad.colors.append(color_rgb)
+
+                print(grad.check_lengths())
+                print("s: ", stops)
+
+
+                #stop = g.childNodes
+                print(g.attributes)
+
+                gradient_instances.append(grad)
+                print(gradient_instances)
+
+        if len(rad_gradients) > 0:
+            """Radial gradients are parsed similarly to linear ones, with the difference that they mirrored once:
+            If a radial gradient has 3 stops they will be saved in this manner: stop3,stop2,stop1,stop1,stop2,stop3
+            """
+            for g in rad_gradients:
+                print("g:", g)
+                id = g.attributes["id"].value
+                grad = Gradient(id)
+
+                stops = g.getElementsByTagName("stop")
+                for i, stop in enumerate(stops):
+                    offset = stop.attributes["offset"].value
+                    offset = float(offset)
+                    grad.stop_offsets.append((offset))
+
+                    style = stop.attributes["style"].value
+
+                    col_desc = "stop-color:"
+                    if style.find(col_desc) != -1:
+                        color_ind = style.index(col_desc) + len(col_desc)
+                        color_val = style[color_ind: color_ind + 7]
+                        color_val= color_val.lstrip("#")
+                    else:  # not sure if this is necessary, as a gradient stop should always have color
+                        color_val = 000000
+
+                    color_rgb = tuple(int(color_val[i:i + 2], 16) for i in (0, 2, 4))
+                    grad.colors.append(color_rgb)
+                    print("color  ", color_rgb)
+
+
+                    opa_desc = "stop-opacity:"
+                    if style.find(opa_desc) != -1:
+                        opa_ind = style.index(opa_desc) + len(opa_desc)
+                        opa_val = style[opa_ind: opa_ind + 7]
+                        opa_val = float(opa_val)
+                    else:
+                        opa_val = 1
+                    grad.opacities.append(opa_val)
+                    print("opacity  ",opa_val)
+
+                    if i == (len(stops)-1) and offset < 1:
+                        print("last stop offset is not at 100% ")
+
+                        grad.stop_offsets.append(1)
+                        grad.opacities.append(opa_val)
+                        grad.colors.append(color_rgb)
+
+                """the following is horribly unpythonic. all of this should be done in the functions above."""
+
+                mir_stops = grad.stop_offsets
+                mir_opac = grad.opacities
+                mir_colors = grad.colors
+
+                mir_stops.reverse()
+                mir_opac.reverse()
+                mir_colors.reverse()
+
+                for stop_off in mir_stops:
+                    stop_off = (1 - stop_off) / 2
+
+                mir_stops_reverse = mir_stops[::-1]
+                for stop_off in mir_stops_reverse:
+                    stop_off = 1 - stop_off
+
+                mir_stops.extend(mir_stops_reverse)
+                mir_opac.extend(mir_opac[::-1])
+                mir_colors.extend(mir_colors[::-1])
+
+                print(grad.check_lengths())
+                print("s: ", stops)
+
+
+                #stop = g.childNodes
+                print(g.attributes)
+
+                gradient_instances.append(grad)
+                print(gradient_instances)
+
 
 
         return gradient_instances

@@ -233,7 +233,7 @@ class GLWidget(QOpenGLWidget):
     def makePointObject(self,block):
         glPushMatrix()
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
-        print("makie points")
+        print("make points")
         #genList = glGenLists(1)
         #glNewList(genList, self.gl.GL_COMPILE)
 
@@ -281,7 +281,7 @@ class GLWidget(QOpenGLWidget):
 
     def drawGrid(self):
         glPushMatrix()
-        print("drawing grid")
+        #print("drawing grid")
         # color = [255.0/255, 57.0/255, 0.0/255]
         color = [8.0/255, 108.0/255, 162.0/255]
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);

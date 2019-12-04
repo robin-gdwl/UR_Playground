@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="86467f9e-506a-4495-a0c1-67a875042cfb" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Main.py" afterPath="$PROJECT_DIR$/Main.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SVG_Block.py" afterPath="$PROJECT_DIR$/SVG_Block.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OpenGLControl.py" afterPath="$PROJECT_DIR$/OpenGLControl.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/svg_parser.py" afterPath="$PROJECT_DIR$/svg_parser.py" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,14 +18,29 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Main.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="89">
+            <state relative-caret-position="-149">
               <caret line="103" column="9" lean-forward="true" selection-start-line="103" selection-start-column="9" selection-end-line="103" selection-end-column="9" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="210">
+                <caret line="14" column="9" lean-forward="false" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+                <folding />
+              </first_editor>
+              <second_editor>
+                <js_state />
+              </second_editor>
             </state>
           </provider>
         </entry>
@@ -54,12 +67,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="svg_parser.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="svg_parser.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/svg_parser.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2925">
-              <caret line="47" column="22" lean-forward="false" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
-              <folding />
+            <state relative-caret-position="376">
+              <caret line="417" column="51" lean-forward="true" selection-start-line="417" selection-start-column="51" selection-end-line="417" selection-end-column="51" />
+              <folding>
+                <element signature="e#8820#10886#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -67,8 +82,8 @@
       <file leaf-file-name="OpenGLControl.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/OpenGLControl.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="208" column="30" lean-forward="false" selection-start-line="208" selection-start-column="30" selection-end-line="208" selection-end-column="30" />
+            <state relative-caret-position="480">
+              <caret line="235" column="18" lean-forward="false" selection-start-line="235" selection-start-column="18" selection-end-line="235" selection-end-column="18" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -120,19 +135,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pygl newnew2.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Opengl_testing/pygl newnew2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="106">
-              <caret line="148" column="0" lean-forward="true" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
-              <folding>
-                <element signature="e#2058#2068#0" expanded="true" />
-                <element signature="e#4008#21283#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
@@ -165,10 +167,10 @@
       <find>setupcolo</find>
       <find>update</find>
       <find>self.tol</find>
-      <find>Truechang</find>
       <find>tolerance</find>
-      <find>tol</find>
       <find>update(</find>
+      <find>tol</find>
+      <find>Truechang</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -195,11 +197,12 @@
         <option value="$USER_HOME$/Py_virtualenvs/UR_playground_venv02/lib/python3.6/site-packages/urx/ursecmon.py" />
         <option value="$USER_HOME$/Py_virtualenvs/UR_playground_venv02/lib/python3.6/site-packages/urx/urrobot.py" />
         <option value="$PROJECT_DIR$/Opengl_testing/pygl newnew2.py" />
-        <option value="$PROJECT_DIR$/OpenGLControl.py" />
         <option value="$PROJECT_DIR$/Blocks.py" />
         <option value="$PROJECT_DIR$/SVG_Block.py" />
-        <option value="$PROJECT_DIR$/svg_parser.py" />
         <option value="$PROJECT_DIR$/Main.py" />
+        <option value="$PROJECT_DIR$/README.md" />
+        <option value="$PROJECT_DIR$/OpenGLControl.py" />
+        <option value="$PROJECT_DIR$/svg_parser.py" />
       </list>
     </option>
   </component>
@@ -323,18 +326,6 @@
       </pane>
       <pane id="Scope" />
     </panes>
-  </component>
-  <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
-  </component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/svg_testfiles" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/Opengl_testing" />
-    </key>
   </component>
   <component name="RunManager" selected="Python.Main">
     <configuration default="false" name="new" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -580,115 +571,7 @@
     <option name="remove_strategy" value="false" />
   </component>
   <component name="TaskManager">
-    <task active="true" id="Default" summary="Default task">
-      <changelist id="86467f9e-506a-4495-a0c1-67a875042cfb" name="Default" comment="" />
-      <created>1573820170691</created>
-      <option name="number" value="Default" />
-      <option name="presentableId" value="Default" />
-      <updated>1573820170691</updated>
-    </task>
-    <task id="LOCAL-00001" summary="Implemented def colour_at_param">
-      <created>1574423456854</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1574423456854</updated>
-    </task>
-    <task id="LOCAL-00002" summary="restructured the svg parser">
-      <created>1574447414644</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1574447414646</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Fixed numerous bugs on the svg parser">
-      <created>1574453147760</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1574453147760</updated>
-    </task>
-    <task id="LOCAL-00004" summary="SVG-Block functions. &#10;&#10;one step closer to actually making this work, good job">
-      <created>1574468164430</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1574468164430</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Further work on SVG-Block&#10; &#10; next: figure out how to do the travel offset &#10;">
-      <created>1574471372798</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1574471372798</updated>
-    </task>
-    <task id="LOCAL-00006" summary="3d plotting tests">
-      <created>1574613204021</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1574613204021</updated>
-    </task>
-    <task id="LOCAL-00007" summary="UI integration 01">
-      <created>1575323184367</created>
-      <option name="number" value="00007" />
-      <option name="presentableId" value="LOCAL-00007" />
-      <option name="project" value="LOCAL" />
-      <updated>1575323184367</updated>
-    </task>
-    <task id="LOCAL-00008" summary="UI integration 02">
-      <created>1575325435773</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1575325435774</updated>
-    </task>
-    <task id="LOCAL-00009" summary="UI integration 03">
-      <created>1575387788002</created>
-      <option name="number" value="00009" />
-      <option name="presentableId" value="LOCAL-00009" />
-      <option name="project" value="LOCAL" />
-      <updated>1575387788002</updated>
-    </task>
-    <task id="LOCAL-00010" summary="UI integration 03.02">
-      <created>1575387815674</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1575387815674</updated>
-    </task>
-    <task id="LOCAL-00011" summary="UI integration 04">
-      <created>1575397165875</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1575397165875</updated>
-    </task>
-    <task id="LOCAL-00012" summary="UI integration 05">
-      <created>1575417569132</created>
-      <option name="number" value="00012" />
-      <option name="presentableId" value="LOCAL-00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1575417569132</updated>
-    </task>
-    <task id="LOCAL-00013" summary="UI integration 06">
-      <created>1575419659763</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1575419659763</updated>
-    </task>
-    <option name="localTasksCounter" value="14" />
     <servers />
-  </component>
-  <component name="TodoView">
-    <todo-panel id="selected-file">
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
-    <todo-panel id="all">
-      <are-packages-shown value="true" />
-      <is-autoscroll-to-source value="true" />
-    </todo-panel>
   </component>
   <component name="ToolWindowManager">
     <frame x="53" y="23" width="1162" height="877" extended-state="0" />
@@ -741,23 +624,6 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
-  <component name="VcsManagerConfiguration">
-    <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="false" />
-    <MESSAGE value="Implemented def colour_at_param" />
-    <MESSAGE value="restructured the svg parser" />
-    <MESSAGE value="Fixed numerous bugs on the svg parser" />
-    <MESSAGE value="SVG-Block functions. &#10;&#10;one step closer to actually making this work, good job" />
-    <MESSAGE value="Further work on SVG-Block&#10; &#10; next: figure out how to do the travel offset &#10;" />
-    <MESSAGE value="3d plotting tests" />
-    <MESSAGE value="UI integration 01" />
-    <MESSAGE value="UI integration 02" />
-    <MESSAGE value="UI integration 03" />
-    <MESSAGE value="UI integration 03.02" />
-    <MESSAGE value="UI integration 04" />
-    <MESSAGE value="UI integration 05" />
-    <MESSAGE value="UI integration 06" />
-    <option name="LAST_COMMIT_MESSAGE" value="UI integration 06" />
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
@@ -765,20 +631,17 @@
           <url>file://$PROJECT_DIR$/svg_parser.py</url>
           <line>41</line>
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/svg_parser.py</url>
+          <line>355</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/svg_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/svgparse_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -831,7 +694,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="22" column="20" lean-forward="true" selection-start-line="22" selection-start-column="20" selection-end-line="22" selection-end-column="20" />
-          <folding />
+          <folding>
+            <element signature="e#8820#10886#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -1053,7 +918,7 @@
         <state relative-caret-position="106">
           <caret line="148" column="0" lean-forward="true" selection-start-line="148" selection-start-column="0" selection-end-line="148" selection-end-column="0" />
           <folding>
-            <element signature="e#2058#2068#0" expanded="true" />
+            <element signature="e#2058#2068#0" expanded="false" />
             <element signature="e#4008#21283#0" expanded="false" />
           </folding>
         </state>
@@ -1113,18 +978,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/svg_parser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2925">
-          <caret line="47" column="22" lean-forward="false" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
-          <folding />
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="210">
+            <caret line="14" column="9" lean-forward="false" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+            <folding />
+          </first_editor>
+          <second_editor>
+            <js_state />
+          </second_editor>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/OpenGLControl.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="208" column="30" lean-forward="false" selection-start-line="208" selection-start-column="30" selection-end-line="208" selection-end-column="30" />
+        <state relative-caret-position="480">
+          <caret line="235" column="18" lean-forward="false" selection-start-line="235" selection-start-column="18" selection-end-line="235" selection-end-column="18" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
@@ -1133,10 +1003,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Main.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="89">
+        <state relative-caret-position="-149">
           <caret line="103" column="9" lean-forward="true" selection-start-line="103" selection-start-column="9" selection-end-line="103" selection-end-column="9" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/svg_parser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="376">
+          <caret line="417" column="51" lean-forward="true" selection-start-line="417" selection-start-column="51" selection-end-line="417" selection-end-column="51" />
+          <folding>
+            <element signature="e#8820#10886#0" expanded="false" />
           </folding>
         </state>
       </provider>
