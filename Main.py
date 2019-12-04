@@ -92,70 +92,6 @@ class URPlayground(QMainWindow):
         self.svgblock.filepath = self.fileName
         self.svgblock.load()
         self.RB.loadSVG(self.svgblock,20)
-        #self.valueStatus.setText("None...")
-
-    """def LoadFile(self):
-        #self.UpdateData(1)
-        #self.UpdateData(2)
-        if self.fileName == None:
-            self.valueStatus.setText("Error: file is not found")
-        else:
-            self.count = 0
-            self.RB.listPoints = np.array([[0,0,0]])
-            self.RB.color=np.array([0])
-            self.AllPoints = np.array([[None, None, None]])
-            self.AllJVars = np.array([[None, None, None, None]])
-            self.toolstatus = np.array([None])
-
-            #self.valueStatus.setText("Processing...")
-            # self.processLoadFile.setValue(30)
-            listPoint = LoadGCode(self.fileName, self.objRB.EVars[0], self.objRB.EVars[1], self.objRB.EVars[2])
-            self.update()
-            trj = Trajectory()
-            listPoint = np.insert(listPoint, 0, [self.objRB.EVars[0], self.objRB.EVars[1], self.objRB.EVars[2], 0], axis = 0)
-            listPoint = np.append(listPoint, [[self.objRB.EVars[0], self.objRB.EVars[1], self.objRB.EVars[2], 0]], axis = 0)
-            toolstt_tmp = np.array([None])
-            trj.SetSpTime(0.1)
-            for i in np.arange(len(listPoint)-1):
-                p1 = listPoint[i][:3]
-                p2 = listPoint[i+1][:3]
-                if i==0 or i == len(listPoint)-2:
-                    trj.SetPoint(p1,p2,100)
-                else:
-                    trj.SetPoint(p1, p2, 100)
-                points = trj.Calculate()
-                if points[0] == False:
-                    pass
-                else:
-                    self.AllPoints = np.append(self.AllPoints, points[1], axis = 0)
-                    self.toolstatus = np.append(self.toolstatus, [listPoint[i+1][3]]*len(points[1]))
-
-            self.toolstatus = np.delete(self.toolstatus, 0)
-            self.AllPoints = np.delete(self.AllPoints, 0, axis = 0)
-            toolstt_tmp = np.delete(toolstt_tmp, 0)
-            q1P = self.objRB.q1P
-            q2P = self.objRB.q2P
-            for p in self.AllPoints:
-                EVars = np.append(p, [self.objRB.EVars[3], self.objRB.EVars[4], self.objRB.EVars[5]])
-                JVar = self.objRB.CalInvPositionEx(EVars, q1P, q2P)
-                if JVar[0] == False:
-                    break
-                self.AllJVars = np.append(self.AllJVars, [JVar[1]], axis = 0)
-                q2P = q1P
-                q1P = JVar[1]
-
-            self.AllJVars = np.delete(self.AllJVars, 0, axis = 0)
-            # self.processLoadFile.setValue(100)
-
-            if len(self.AllJVars) == len(self.AllPoints):
-                self.valueStatus.setText("All done")
-            else:
-                self.valueStatus.setText("Some points is missing")
-"""
-
-    """def LoadFile(self):
-        self.svgblock.load()"""
-
 
     def Run(self):
 
@@ -165,6 +101,7 @@ class URPlayground(QMainWindow):
     def updateSVG(self):
         print("updating svg settings")
 
+        # TODO: ?
 
         block = self.svgblock
         print(vars(self.svgblock))
@@ -172,7 +109,7 @@ class URPlayground(QMainWindow):
         block.travel_z = float(self.valMove.text())
         block.depth = float(self.valPlunge.text())
         block.tolerance = float(self.valTolerance.text())
-        block.scale = float(self.valScale.text())
+        block.scale = float(self.valScale.text()) / 100
 
         origin = [float(self.valOriginX.text()),
                   float(self.valOriginY.text()),
@@ -184,6 +121,8 @@ class URPlayground(QMainWindow):
 
         self.RB.loadSVG(self.svgblock, 20)
         self.RB.DrawCoords([0,1,1,1],10)
+        self.RB.paintGL()
+        self.RB.update()
 
         print(vars(self.svgblock))
 
@@ -246,13 +185,3 @@ sys.exit(app.exec_())
 #Program = Program()
 #Block = svgBlock()
 #Program.load_block(Block)
-
-"""
-
-testblock = svgBlock()
-testblock.filepath = "Test03.svg"
-paths = testblock.load()
-
-TESTPROG = Program()
-TESTPROG.load_block(testblock)
-TESTPROG.run()"""

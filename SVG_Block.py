@@ -17,11 +17,11 @@ class svgBlock(Block):
         super(svgBlock, self).__init__()
 
         self.filepath = "path"
-        self.scale = 1.05
+        self.scale = 1
         self.origin = []  # (x,y,z,rx,ry,rz) csys
         self.tolerance = 10
-        self.travel_z = 15
-        self.depth = 15
+        self.travel_z = 0
+        self.depth = 0
         self.max_rotation = 1/8 * 2*pi
 
         self.path_movements = []
@@ -70,6 +70,14 @@ class svgBlock(Block):
 
         print(self.coordinates_travel)
 
+    def update(self):
+        """used to update the block, mainly remakes self.coordinates_travel"""
+        self.add_values()
+
+        self.scale_xy()
+        self.apply_depth()
+        self.apply_rotation()
+        self.add_travel()
 
     def add_values(self):
         """this function puts the coordinates of the path_movements into self.coordinates
@@ -179,17 +187,6 @@ class svgBlock(Block):
     def change_travel(self):
         pass
 
-
-
-    """def internalise(self):
-        # IDEA: internalise the file somehow to make it independant from the filepath when loading the program
-        pass"""
-
-
-
-
-#parse = bezier2polynomial(paths[2])
-#print(poly)
 
 
 

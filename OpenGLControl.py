@@ -110,7 +110,7 @@ class GLWidget(QOpenGLWidget):
         glClearColor(1, 1, 1, 1.0)
 
     def drawGL(self):
-        #print("drawingGL")
+        print("drawingGL")
         glPushMatrix()
         #glClearColor(1, 1, 1, 1)
 
@@ -158,6 +158,7 @@ class GLWidget(QOpenGLWidget):
         glPopMatrix()
 
     def paintGL(self):
+        print("painting gl")
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
         glPushMatrix()
@@ -168,12 +169,14 @@ class GLWidget(QOpenGLWidget):
         glRotated(self.zRot/16.0, 0.0, 0.0, 1.0)
         glRotated(+90.0, 1.0, 0.0, 0.0)
         self.drawGL()
-        self.DrawPoint([255.0/255, 255.0/255, 255.0/255.0], 1.5)
+        #self.DrawPoint([255.0/255, 255.0/255, 255.0/255.0], 1.5)
         self.DrawCoords([255.0 / 255, 255.0 / 255, 255.0 / 255.0], 4)
         #self.makePointObject(1)
         glPopMatrix()
+        #self.update() # dont do this otherwise it will update multiple times a second
 
     def DrawPoint(self, color, size):
+        print("drawPoint")
         glPushMatrix()
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
         glPointSize(size);
@@ -187,7 +190,7 @@ class GLWidget(QOpenGLWidget):
         glPopMatrix()
 
     def DrawCoords(self, color, size):
-        #print("draw coords")
+        print("draw coords")
 
         glPushMatrix()
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
@@ -204,8 +207,8 @@ class GLWidget(QOpenGLWidget):
         glPopMatrix()
 
     def loadSVG(self,block,size):
-        # TODO: make a new method that just updates and doesnt need to reload the entire file
-        block.load()
+        # DONE? TODO: make a new method that just updates and doesnt need to reload the entire file
+        block.update()
         print("loading svg")
         self.listCoords = np.array([[0,0,0]])
 
