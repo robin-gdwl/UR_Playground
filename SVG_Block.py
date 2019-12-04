@@ -19,7 +19,7 @@ class svgBlock(Block):
         self.filepath = "path"
         self.scale = 1
         self.origin = []  # (x,y,z,rx,ry,rz) csys
-        self.tolerance = 10
+        self.tolerance = 5
         self.travel_z = 0
         self.depth = 0
         self.max_rotation = 1/8 * 2*pi
@@ -39,7 +39,7 @@ class svgBlock(Block):
         # translates color and opacity values into the corresponding transformations
 
         start_time = time.time()
-        parsed_file = svg_parser.SVGParse(self.filepath, 20)
+        parsed_file = svg_parser.SVGParse(self.filepath, self.tolerance)
         movements = parsed_file.convert_to_movements()
 
         self.path_movements = movements

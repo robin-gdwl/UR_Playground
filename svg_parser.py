@@ -41,8 +41,11 @@ class SVGParse:
     def interpolate_path(self,path,attributes):
 
         movement = MoveColOpa() # each path has one movement object
-        length = path.length(error=self.tol)
+        length = path.length(error = self.tol)
+        # TODO: if tolerance is very high amount = 0 and div throws an error
         amount = int(length / self.tol)
+        if amount == 0:
+            amount = 2
         div = 1 / amount
 
         movement.coordinates = self.get_pts_on_path(path,div)

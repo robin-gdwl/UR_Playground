@@ -68,7 +68,7 @@ class URPlayground(QMainWindow):
         self.valPlunge.textChanged.connect(self.updateSVG)
         self.valMove.textChanged.connect(self.updateSVG)
         self.valScale.textChanged.connect(self.updateSVG)
-        self.valTolerance.textChanged.connect(self.updateSVG)
+        self.valTolerance.textChanged.connect(self.updateSVGtolerance)
         # other signals form linetext: returnPressed,
 
     def ShowAbout(self):
@@ -98,17 +98,26 @@ class URPlayground(QMainWindow):
         print("run")
         pass
 
+    def updateSVGtolerance(self):
+        block = self.svgblock
+        block.tolerance = float(self.valTolerance.text())
+        self.svgblock.load()
+        self.RB.loadSVG(self.svgblock, 20)
+        #self.RB.DrawCoords([0, 1, 1, 1], 10)
+        self.RB.paintGL()
+        self.RB.update()
+
     def updateSVG(self):
         print("updating svg settings")
 
-        # TODO: ?
+        # TODO:
 
         block = self.svgblock
         print(vars(self.svgblock))
         #block.coordinates_travel = self.valTravel
         block.travel_z = float(self.valMove.text())
         block.depth = float(self.valPlunge.text())
-        block.tolerance = float(self.valTolerance.text())
+        # block.tolerance = float(self.valTolerance.text()) # this does not do anything, svg needs to be fulla reloaded
         block.scale = float(self.valScale.text()) / 100
 
         origin = [float(self.valOriginX.text()),
@@ -120,7 +129,7 @@ class URPlayground(QMainWindow):
         block.csys = origin
 
         self.RB.loadSVG(self.svgblock, 20)
-        self.RB.DrawCoords([0,1,1,1],10)
+        #self.RB.DrawCoords([0,1,1,1],10)
         self.RB.paintGL()
         self.RB.update()
 
