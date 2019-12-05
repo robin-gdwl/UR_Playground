@@ -12,23 +12,29 @@ ___
 
 ### to do:
 - [ ] parse
+    - [ ] plunge depth
+    - [ ]
 
 - [ ] visualise
-    - [ ] add origin point in visualisation
+    - [x] add origin point in visualisation
     - [ ] change robot model
     - [ ] load environment
-    -
+
 
 - [ ] simulate
     - [ ] everything
 
 - [ ] send
-    - [ ] connect button
-    - [ ] change units
+    - [x] connect button
+    - [x] change units
+    - [ ] add robot status
+    - [ ] connect to robot button
+    - [ ] test unit change
 
 - [ ] other
     - [ ] logging
     - [ ] connect logging to UI
+    - [ ] documentation
 
 - [ ] save
 

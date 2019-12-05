@@ -39,8 +39,10 @@ class GLWidget(QOpenGLWidget):
         self.model5 = loader('STLFile/tool.STL')
         print("All done.")
 
-        self.listPoints = np.array([[0,0,0]])
+        self.listPoints = np.array([[0,0,0]]) # not used atm will be used in the future
         self.listCoords = np.array([[0,0,0]])
+        self.specialPoints = np.array([[0,0,0]])
+
         self.AllList = np.array([self.listPoints])
         self.stt = np.array([])
         self.color=np.array([0])
@@ -169,7 +171,7 @@ class GLWidget(QOpenGLWidget):
         glRotated(self.zRot/16.0, 0.0, 0.0, 1.0)
         glRotated(+90.0, 1.0, 0.0, 0.0)
         self.drawGL()
-        #self.DrawPoint([255.0/255, 255.0/255, 255.0/255.0], 1.5)
+        self.DrawPoint([0/255, 0/255, 255.0/255.0], 15)
         self.DrawCoords([255.0 / 255, 255.0 / 255, 255.0 / 255.0], 4)
         #self.makePointObject(1)
         glPopMatrix()
@@ -177,23 +179,33 @@ class GLWidget(QOpenGLWidget):
 
     def DrawPoint(self, color, size):
         print("drawPoint")
+        print(self.specialPoints)
         glPushMatrix()
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
         glPointSize(size);
-        for i in np.arange(len(self.listPoints)-1):
-            if self.color[i] == 1:
+        for i,p in enumerate(self.specialPoints):
+            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [0, 0, 1.0]);
+            glBegin(GL_POINTS);
+            glVertex3f(p[0], p[1], p[2])
+            glEnd()
+
+
+            """if self.color[i] == 1:
                 glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [1.0, 1.0, 1.0]);
-                glBegin(GL_LINES);
+                glBegin(GL_POINTS);
                 glVertex3f(self.listPoints[i][0], self.listPoints[i][1], self.listPoints[i][2])
                 glVertex3f(self.listPoints[i+1][0], self.listPoints[i+1][1], self.listPoints[i+1][2])
-                glEnd()
+                glEnd()"""
         glPopMatrix()
+
 
     def DrawCoords(self, color, size):
         print("draw coords")
 
+
         glPushMatrix()
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
+        glLineWidth(size)
         glPointSize(size);
         for i in np.arange(len(self.listCoords)-1):
             if i == 0:
@@ -211,15 +223,20 @@ class GLWidget(QOpenGLWidget):
         block.update()
         print("loading svg")
         self.listCoords = np.array([[0,0,0]])
+        self.specialPoints = np.array([[0, 0, 0]])
 
         glPushMatrix()
         coordinates = block.coordinates_travel
+
+        csys = m3d.Transform(block.csys)
+        csys_vector = csys.pose_vector
+        self.specialPoints = np.append(self.specialPoints,[csys_vector[:3]],axis=0)
 
         for i, path in enumerate(coordinates):
             print("loading path",i,path)
             for j,coord in enumerate(path):
                 print(coord)
-                csys = m3d.Transform(block.csys)
+                #csys = m3d.Transform(block.csys)
                 t = csys * m3d.Transform(coord)
                 pose = t.pose_vector
                 #print("pose", pose)
@@ -280,6 +297,7 @@ class GLWidget(QOpenGLWidget):
         self.lastPos = event.pos()
 
     def drawGrid(self):
+        glLineWidth(1)
         glPushMatrix()
         #print("drawing grid")
         # color = [255.0/255, 57.0/255, 0.0/255]

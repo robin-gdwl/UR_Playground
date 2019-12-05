@@ -200,11 +200,11 @@ class Program:
 
 
     def runblockUR(self, block):
-        #self.robot.set_tcp(self.tcp)
+        self.robot.set_tcp(self.tcp)
         print(self.tcp, "tcp set")
 
         csys = m3d.Transform(block.csys)
-        #self.robot.set_csys(csys)
+        self.robot.set_csys(csys)
 
         print(block.csys, "csys set")
         print("sending coordinates", block.coordinates_travel)
@@ -212,9 +212,9 @@ class Program:
             print("converting path: ")
             converted_p = self.convert_path_units(path)
             print(path)
-            print("___"*40)
             print(converted_p)
-            #self.robot.movexs(block.command, converted_p, block.a, block.v, block.radius)
+            print("___" * 40)
+            self.robot.movexs(block.command, converted_p, block.a, block.v, block.radius)
 
     def connectUR(self):
         try:

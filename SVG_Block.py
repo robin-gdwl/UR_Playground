@@ -6,10 +6,10 @@ import time
 import copy
 
 
-def print_entity(e):
+"""def print_entity(e):
     print("LINE on layer: %s\n" % e.dxf.layer)
     print("start point: %s\n" % e.dxf.start)
-    print("end point: %s\n" % e.dxf.end)
+    print("end point: %s\n" % e.dxf.end)"""
 
 class svgBlock(Block):
 
@@ -141,7 +141,7 @@ class svgBlock(Block):
 
     def apply_depth(self):
         if self.use_opacity == False:
-            depth = self.depth
+            depth = -self.depth
             for m_idx, movement in enumerate(self.path_movements):
                 for c_idx, coordinates in enumerate(movement.coordinates):
                     self.coordinates[m_idx][c_idx][2] = depth
@@ -150,10 +150,10 @@ class svgBlock(Block):
             for m_idx, movement in enumerate(self.path_movements):
                 for c_idx, coordinates in enumerate(movement.coordinates):
                     #print(vars(movement))
-                    depth = movement.opacities[c_idx]
+                    #depth = movement.opacities[c_idx]
                     #print("depth found, applying")
                     #print(depth)
-                    depth *= 0.1
+                    depth = -self.depth * movement.opacities[c_idx] * self.opacity_effect
                     # TODO: convert from opacity value to depth value depending on self.depth
                     self.coordinates[m_idx][c_idx][2] = depth
 
@@ -161,15 +161,15 @@ class svgBlock(Block):
     def add_travel(self):
 
         if len(self.coordinates) > 0 :
-            print("coordintates found adding travel")
+            #print("coordintates found adding travel")
             self.coordinates_travel = self.coordinates
 
             for motion in self.coordinates_travel:
                 start_coords = copy.copy(motion[0])
                 end_coords = copy.copy(motion[-1])
 
-                start_coords[2] += self.travel_z
-                end_coords[2] += self.travel_z
+                start_coords[2] += self.travel_z + self.depth
+                end_coords[2] += self.travel_z + self.depth
 
                 # TODO: change the start and end coords by the travel depth
 
