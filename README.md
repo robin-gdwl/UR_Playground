@@ -12,12 +12,12 @@ ___
 
 ### to do:
 - [ ] parse
-    - [ ] plunge depth
+    - [x] plunge depth
     - [ ]
 
 - [ ] visualise
     - [x] add origin point in visualisation
-    - [ ] change robot model
+    - [X] change robot model
     - [ ] load environment
 
 
@@ -42,4 +42,4 @@ ___
     - [ ] create packages
       - [ ] Windows
       - [ ] Mac
-       - [ ] Linux
+      - [ ] (Linux)

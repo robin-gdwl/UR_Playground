@@ -1,18 +1,17 @@
 from Blocks import Block
-from math import pi,sqrt
+from math import pi
 from svgpathtools import *
 import svg_parser
 import time
 import copy
-
 
 """def print_entity(e):
     print("LINE on layer: %s\n" % e.dxf.layer)
     print("start point: %s\n" % e.dxf.start)
     print("end point: %s\n" % e.dxf.end)"""
 
-class svgBlock(Block):
 
+class svgBlock(Block):
     def __init__(self):
         super(svgBlock, self).__init__()
 
@@ -25,7 +24,7 @@ class svgBlock(Block):
         self.max_rotation = 1/8 * 2*pi
 
         self.path_movements = []
-        self.coordinates = [] # these will be the (x,y,z,rx,ry,rz) coordinates after all trnasformations from opacity and colour are applied
+        self.coordinates = []  # these will be the (x,y,z,rx,ry,rz) coordinates after all trnasformations from opacity and colour are applied
         self.coordinates_travel = []  # same as above but with the travel moves necessary to keep the same indices as the path_movements
 
         self.use_colour = True
@@ -37,7 +36,6 @@ class svgBlock(Block):
     def load(self):
         # loads an svg file, puts the movements into self.path_movements
         # translates color and opacity values into the corresponding transformations
-
         start_time = time.time()
         parsed_file = svg_parser.SVGParse(self.filepath, self.tolerance)
         movements = parsed_file.convert_to_movements()
@@ -51,20 +49,9 @@ class svgBlock(Block):
         print(vars(self.path_movements[0]))
 
         self.add_values()
-
         self.scale_xy()
         self.apply_depth()
         self.apply_rotation()
-
-
-
-        print(len(self.coordinates))
-        x= 0
-        for path in self.coordinates:
-            #print(len(path))
-            x+= len(path)
-        print(x)
-        #return paths
 
         self.add_travel()
 
@@ -96,7 +83,6 @@ class svgBlock(Block):
 
     def scale_xy(self):
         for m_idx, movement in enumerate(self.path_movements):
-            #move_coords = []
             for c_idx, coordinates in enumerate(movement.coordinates):
                 print(type(self.scale))
                 new_x = coordinates[0] * self.scale
@@ -104,25 +90,19 @@ class svgBlock(Block):
 
                 self.coordinates[m_idx][c_idx][0] = new_x
                 self.coordinates[m_idx][c_idx][1] = new_y
-
         print(self.coordinates)
 
-
-
     def apply_rotation(self):
+
         if self.use_colour == False:
             rotation = [0,0,0]
-
             for m_idx, movement in enumerate(self.path_movements):
                 for c_idx, coordinates in enumerate(movement.coordinates):
-
                     #self.coordinates[m_idx][c_idx][3,4,5] = rotation[0,1,2]
                     insert_pos = [3,4,5]
                     for x, y in zip(insert_pos, rotation):
                         self.coordinates[m_idx][c_idx][x] = y
-
         else:
-
             for m_idx, movement in enumerate(self.path_movements):
                 for c_idx, coordinates in enumerate(movement.coordinates):
                     rotation = movement.colors[c_idx]
@@ -137,7 +117,6 @@ class svgBlock(Block):
                         y = self.max_rotation * y  # multiplies
 
                         self.coordinates[m_idx][c_idx][x] = y
-
 
     def apply_depth(self):
         if self.use_opacity == False:
@@ -157,7 +136,6 @@ class svgBlock(Block):
                     # TODO: convert from opacity value to depth value depending on self.depth
                     self.coordinates[m_idx][c_idx][2] = depth
 
-
     def add_travel(self):
 
         if len(self.coordinates) > 0 :
@@ -170,19 +148,14 @@ class svgBlock(Block):
 
                 start_coords[2] += self.travel_z + self.depth
                 end_coords[2] += self.travel_z + self.depth
-
                 # TODO: change the start and end coords by the travel depth
 
                 motion.insert(0, start_coords)
                 motion.append(end_coords)
                 # print(motion)
-
             #print(self.coordinates_travel)
-
-
         else:
             print("no coordinates yet, load a file first")
-
 
     def change_travel(self):
         pass

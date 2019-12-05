@@ -10,7 +10,7 @@ from OpenGL.GLUT import *
 from numpy import array, arange
 import numpy as np
 import math3d as m3d
-from STLFile import *
+from STLFile import Loader
 # from ConfigRobot import *
 from GlobalFunc import *
 
@@ -31,12 +31,13 @@ class GLWidget(QOpenGLWidget):
         self.yTran = 0
         self.isDrawGrid = True;
         print("Loading stl files...")
-        self.model0 = loader('STLFile/Link0.STL')
-        self.model1 = loader('STLFile/Link1.STL')
-        self.model2 = loader('STLFile/Link2.STL')
-        self.model3 = loader('STLFile/Link3.STL')
-        self.model4 = loader('STLFile/Link4.STL')
-        self.model5 = loader('STLFile/tool.STL')
+        self.fullrobot = Loader("3DFiles/UR_lowres01_05.stl")
+        self.model0 = Loader('STLFile/Link0.STL')
+        self.model1 = Loader('STLFile/Link1.STL')
+        self.model2 = Loader('STLFile/Link2.STL')
+        self.model3 = Loader('STLFile/Link3.STL')
+        self.model4 = Loader('STLFile/Link4.STL')
+        self.model5 = Loader('STLFile/tool.STL')
         print("All done.")
 
         self.listPoints = np.array([[0,0,0]]) # not used atm will be used in the future
@@ -121,11 +122,15 @@ class GLWidget(QOpenGLWidget):
 
         if self.isDrawGrid:
             self.drawGrid()
-        self.setupColor([96.0 / 255, 96 / 255.0, 192.0 / 255])
-        self.model0.draw()
-        self.setupColor([169.0 / 255, 169.0 / 255, 169.0 / 255])
 
-        # Link1
+        #self.setupColor([96.0 / 255, 96 / 255.0, 192.0 / 255])
+        #self.model0.draw()
+        #self.setupColor([169.0 / 255, 169.0 / 255, 169.0 / 255])
+
+        # full robot
+        self.fullrobot.draw()
+
+        """# Link1
         glTranslatef(0.0, 0.0, self.objRobot.d[1]);
         glRotatef(RadToDeg(self.objRobot.JVars[0]), 0.0, 0.0, 1.0)
         glTranslatef(self.objRobot.a[1], 0.0, 0.0)
@@ -156,7 +161,7 @@ class GLWidget(QOpenGLWidget):
         glRotatef(RadToDeg(self.objRobot.alpha[4]), 1.0, 0.0, 0.0);
         self.model4.draw()
         self.setupColor([0.0/255, 180.0/255, 84.0/255])
-        self.model5.draw()
+        self.model5.draw()"""
         glPopMatrix()
 
     def paintGL(self):
@@ -198,10 +203,8 @@ class GLWidget(QOpenGLWidget):
                 glEnd()"""
         glPopMatrix()
 
-
     def DrawCoords(self, color, size):
         print("draw coords")
-
 
         glPushMatrix()
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);

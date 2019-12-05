@@ -4,25 +4,23 @@ import matplotlib.pyplot as plt
 from xml.dom import minidom
 
 
-
 class SVGParse:
-    '''
-    gets an svg file
+
+    """gets an svg file
     parses all paths
     creates gradient objects
     creates a movement-object for each path
         - Lines become
     returns list of movement objects
-    '''
+    """
 
     def __init__(self, filepath, tolerance):
         self.path = filepath
         self.tol = tolerance
-        self.gradients = self.get_gradients()
         self.movements = []
+        self.gradients = self.get_gradients()
 
     def convert_to_movements(self):
-
         paths, attributes = svgpathtools.svg2paths(self.path)
 
         for p_index, p in enumerate(paths):
@@ -36,10 +34,7 @@ class SVGParse:
 
         return self.movements
 
-
-
     def interpolate_path(self,path,attributes):
-
         movement = MoveColOpa() # each path has one movement object
         length = path.length(error = self.tol)
         # TODO: if tolerance is very high amount = 0 and div throws an error
@@ -49,18 +44,12 @@ class SVGParse:
         div = 1 / amount
 
         movement.coordinates = self.get_pts_on_path(path,div)
-
         movement.colors = self.color_on_path(path, attributes, div, amount)
-
         movement.opacities = self.opacities_on_path(path, attributes, div, amount)
 
         return movement
 
-
-
     def get_pts_on_path(self,path,stepsize):
-
-
         coords = []
         j = 0
         while j <= 1:
@@ -76,28 +65,20 @@ class SVGParse:
             # print(point)
             # print(j)
             j += stepsize
-
         return coords
 
-
     def color_on_path(self,path, attributes, stepsize, amount):
-
-
         colors = []
         coltype, value = self.get_color(attributes)
-
 
         if coltype == "stroke":
             value = value.lstrip("#")
             color = tuple(int(value[i:i + 2], 16) for i in (0, 2, 4))  # converts the Hex color value to rgb
-
             # TODO: find out why you need to add 1 to the amount
             colors = [color] * (amount+1)
 
-
         elif coltype == "gradient":
             gradient_id = value
-
             for g in self.gradients:  # find which gradient is used in the stroke
                 if g.id == gradient_id:
                     gradient = g
@@ -105,7 +86,6 @@ class SVGParse:
             j = 0
             while j <= 1:
                 color = self.color_at_param(gradient, j)
-
                 colors.append(color)
                 j += stepsize
 
@@ -113,19 +93,15 @@ class SVGParse:
             default_color = [0,0,0]
             colors = [default_color for x in range(amount)]
             #colors = [default_color] * amount
-
         return colors
 
     def get_color(self,attributes):
         # finds out what defines the color of the path, returns the type of color (stroke-color or gradient or none)
-
         # TODO: make this more pythonic
-
         # check if a stroke color or gradient is defined
         if "stroke" in attributes.keys():
             p_stroke_bool = True
             p_stroke = attributes["stroke"]
-
 
         else:
             p_stroke_bool = False
@@ -148,10 +124,6 @@ class SVGParse:
             return "stroke",p_stroke
         else:
             return "nocolor",0
-
-
-
-
         # movement.stroke = p_stroke
 
     def color_at_param(self,gradient, param):
@@ -169,7 +141,7 @@ class SVGParse:
             if idx < (len(stops) - 1):
                 print("next offset: ", stops[idx + 1])
 
-            #TODO:add case if param is smaller than first stop
+            # TODO:add case if param is smaller than first stop
             if param == offset :
                 print("param = offset")
                 return clrs[idx]
@@ -199,30 +171,26 @@ class SVGParse:
                 print("param = next offset")
                 return clrs[idx + 1]
 
-
     def opacities_on_path(self, path, attributes, stepsize, amount):
 
         overall_opa = self.get_path_opacity(path, attributes)
         opacities =[]
-
         coltype, value = self.get_color(attributes)  # simply checks again  if the path has a gradient
         # TODO: avoid checking gradient twice
 
         if coltype == "gradient":
-
             gradient_id = value
             for g in self.gradients:  # find which gradient is used in the stroke
                 if g.id == gradient_id:
                     gradient = g
                     break
-
             j = 0
+
             while j <= 1:
                 opacity = self.opacity_at_param(gradient, j)
 
                 opacities.append(opacity)
                 j += stepsize
-
         else:
             print("applying opacitiesthis many times:  ", amount)
             # TODO: find out why you need to add 1 to the amount
@@ -230,10 +198,7 @@ class SVGParse:
 
         adjusted_opa = [i * overall_opa for i in opacities]
         #print(adjusted_opa)
-
         return adjusted_opa
-
-
 
     def get_path_opacity(self,path,attributes): # get the overall opacity of a path
         if "opacity" in attributes.keys():
@@ -251,15 +216,13 @@ class SVGParse:
         stops = gradient.stop_offsets
         opas = gradient.opacities
 
-
         for idx, offset in enumerate(stops):
             print("parsing all offsets.... current offset: ", offset, "at index:  ", idx, "of: ", len(stops) - 1)
-
             print("offset: ", offset)
             print("param: ", param)
+
             if idx < (len(stops) - 1):
                 print("next offset: ", stops[idx + 1])
-
             if param == offset:
                 print("param = offset")
                 return opas[idx]
@@ -364,7 +327,6 @@ class SVGParse:
                     offset = stop.attributes["offset"].value
                     offset = float(offset)
                     grad.stop_offsets.append((offset))
-
                     style = stop.attributes["style"].value
 
                     col_desc = "stop-color:"
@@ -378,9 +340,8 @@ class SVGParse:
                     color_rgb = tuple(int(color_val[i:i + 2], 16) for i in (0, 2, 4))
                     grad.colors.append(color_rgb)
                     print("color  ", color_rgb)
-
-
                     opa_desc = "stop-opacity:"
+
                     if style.find(opa_desc) != -1:
                         opa_ind = style.index(opa_desc) + len(opa_desc)
                         opa_val = style[opa_ind: opa_ind + 7]
@@ -397,7 +358,8 @@ class SVGParse:
                         grad.opacities.append(opa_val)
                         grad.colors.append(color_rgb)
 
-                """the following is horribly unpythonic. all of this should be done in the functions above."""
+                """the following is horribly unpythonic.
+                all of this should be done in the functions above."""
 
                 mir_stops = grad.stop_offsets
                 mir_opac = grad.opacities
@@ -429,10 +391,7 @@ class SVGParse:
 
                 gradient_instances.append(grad)
                 print(gradient_instances)
-
         return gradient_instances
-
-
 
 class MoveColOpa:
 
@@ -479,7 +438,6 @@ class Gradient:
             return True
         else:
             return False
-
 
 """testfile = "gradient07.svg"
 parsed_file = SVGParse(testfile,20)

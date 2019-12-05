@@ -20,7 +20,6 @@ from Trajectory import *
 class BlockViewer():
     """gets a BLOCK object and uses its csys to place all points in space
     these points will later be displayed in the opengl window"""
-
     pass
 
 class URPlayground(QMainWindow):
@@ -33,8 +32,6 @@ class URPlayground(QMainWindow):
         self.RB = DrawRB.GLWidget(self, self.objRB)
         self.program = Program()
         self.svgblock = svgBlock()
-        #self.UpdateData(1)
-        #self.UpdateData(2)
 
         self.initialise_blocks()
         # TODO: this is bad, do it better with OOP:
@@ -55,7 +52,6 @@ class URPlayground(QMainWindow):
 
         #self.glwdgtPreview.
         self.btnSelectFile.clicked.connect(self.openFileNameDialog)
-
         self.btnSend.clicked.connect(self.program.run)
 
         print(type(svgBlock))
@@ -83,19 +79,21 @@ class URPlayground(QMainWindow):
         msg.setWindowTitle("About UR_Playground")
         msg.exec_()
 
-
     def openFileNameDialog(self):
         options = QFileDialog.Options()
-        options |= QFileDialog.DontUseNativeDialog
+        #options |= QFileDialog.DontUseNativeDialog
         self.fileName, _ = QFileDialog.getOpenFileName(self,"Openfile", "","SVG Files (*.svg);;All Files (*)", options=options)
         # self.processLoadFile.setValue(0)
-        self.valFileName.setText(self.fileName)
-        self.svgblock.filepath = self.fileName
-        self.svgblock.load()
-        self.RB.loadSVG(self.svgblock,20)
+        print(self.fileName)
+        if self.fileName != "":
+            self.valFileName.setText(self.fileName)
+            self.svgblock.filepath = self.fileName
+            self.svgblock.load()
+            self.RB.loadSVG(self.svgblock,20)
+        else:
+            print("no file selected ")
 
     def Run(self):
-
         print("run")
         pass
 
@@ -110,9 +108,6 @@ class URPlayground(QMainWindow):
 
     def updateSVG(self):
         print("updating svg settings")
-
-        # TODO:
-
 
         block = self.svgblock
         print(vars(self.svgblock))
@@ -141,8 +136,6 @@ class URPlayground(QMainWindow):
         print(vars(self.svgblock))
 
     def update_text(self,textfield,default=0):
-
-
         try:
             value = float(textfield.text())
         except:
@@ -182,11 +175,12 @@ class Program:
         for block in self.block_list:
             self.runblockUR(block)
 
-    def convert_path_units(self,path):
+    def convert_path_units(self, path_to_conv):
         """All variables in this Program are in mm, however urx uses meters.
-        This method converts between the two"""
+        This method converts between the two.
+        it is called inside of self.runblockUR right before the robot commands are sent"""
 
-        converted_path = path
+        converted_path = path_to_conv
 
         for i, coord in enumerate(converted_path):
             print(coord)

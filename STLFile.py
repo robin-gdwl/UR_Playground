@@ -15,7 +15,7 @@ class createpoint:
         glVertex3f(self.x,self.y,self.z)
 
 #class for a 3d face on a model
-class createtriangle:
+class CreateTriangle:
     points=None
     normal=None
 
@@ -39,8 +39,7 @@ class createtriangle:
     def cross_product(self,p1,p2):
         return (p1[1]*p2[2]-p2[1]*p1[2]) , (p1[2]*p2[0])-(p2[2]*p1[0]) , (p1[0]*p2[1])-(p2[0]*p1[1])
 
-
-class loader:
+class Loader:
     def __init__(self, filename):
         print("loading stl: ", filename)
         self.model=[]
@@ -97,7 +96,7 @@ class loader:
                 if words[0]=='endloop':
                     #make sure we got the correct number of values before storing
                     if len(triangle)==3:
-                        self.model.append(createtriangle(triangle[0],triangle[1],triangle[2],normal))
+                        self.model.append(CreateTriangle(triangle[0],triangle[1],triangle[2],normal))
         fp.close()
 
     #load binary stl file check wikipedia for the binary layout of the file
@@ -129,7 +128,7 @@ class loader:
                 new_tri=(n,p1,p2,p3)
 
                 if len(new_tri)==4:
-                    tri=createtriangle(p1,p2,p3,n)
+                    tri=CreateTriangle(p1,p2,p3,n)
                     self.model.append(tri)
                 count+=1
                 fp.read(2)
