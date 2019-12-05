@@ -353,6 +353,7 @@ class SVGParse:
             """Radial gradients are parsed similarly to linear ones, with the difference that they mirrored once:
             If a radial gradient has 3 stops they will be saved in this manner: stop3,stop2,stop1,stop1,stop2,stop3
             """
+            # make this a nice function so that it does not need to be repeated form above.
             for g in rad_gradients:
                 print("g:", g)
                 id = g.attributes["id"].value
@@ -406,28 +407,28 @@ class SVGParse:
                 mir_opac.reverse()
                 mir_colors.reverse()
 
-                for stop_off in mir_stops:
-                    stop_off = (1 - stop_off) / 2
+                for i, stop_off in enumerate(mir_stops):
+                    mir_stops[i] = (1 - stop_off) / 2
 
                 mir_stops_reverse = mir_stops[::-1]
-                for stop_off in mir_stops_reverse:
-                    stop_off = 1 - stop_off
+                for i, stop_off in enumerate(mir_stops_reverse):
+                    mir_stops_reverse[i] = 1 - stop_off
 
                 mir_stops.extend(mir_stops_reverse)
                 mir_opac.extend(mir_opac[::-1])
                 mir_colors.extend(mir_colors[::-1])
 
+                grad.stop_offsets = mir_stops
+                grad.opacities = mir_opac
+                grad.colors = mir_colors
+
                 print(grad.check_lengths())
                 print("s: ", stops)
 
-
-                #stop = g.childNodes
                 print(g.attributes)
 
                 gradient_instances.append(grad)
                 print(gradient_instances)
-
-
 
         return gradient_instances
 

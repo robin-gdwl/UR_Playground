@@ -56,10 +56,11 @@ class URPlayground(QMainWindow):
         #self.glwdgtPreview.
         self.btnSelectFile.clicked.connect(self.openFileNameDialog)
 
-        self.btnSend.clicked.connect(self.Run)
+        self.btnSend.clicked.connect(self.program.run)
 
         print(type(svgBlock))
-        self.valOriginX.textChanged.connect(self.updateSVG)
+        self.btnApplySettings.clicked.connect(self.updateSVG)
+        """self.valOriginX.textChanged.connect(self.updateSVG)
         self.valOriginY.textChanged.connect(self.updateSVG)
         self.valOriginZ.textChanged.connect(self.updateSVG)
         self.valOriginRx.textChanged.connect(self.updateSVG)
@@ -68,7 +69,7 @@ class URPlayground(QMainWindow):
         self.valPlunge.textChanged.connect(self.updateSVG)
         self.valMove.textChanged.connect(self.updateSVG)
         self.valScale.textChanged.connect(self.updateSVG)
-        self.valTolerance.textChanged.connect(self.updateSVGtolerance)
+        self.valTolerance.textChanged.connect(self.updateSVGtolerance)"""
         # other signals form linetext: returnPressed,
 
     def ShowAbout(self):
@@ -100,33 +101,37 @@ class URPlayground(QMainWindow):
 
     def updateSVGtolerance(self):
         block = self.svgblock
-        block.tolerance = float(self.valTolerance.text())
+        block.tolerance = self.update_text(self.valTolerance,10)
         self.svgblock.load()
-        self.RB.loadSVG(self.svgblock, 20)
+        #self.RB.loadSVG(self.svgblock, 20)
         #self.RB.DrawCoords([0, 1, 1, 1], 10)
-        self.RB.paintGL()
-        self.RB.update()
+        #self.RB.paintGL()
+        #self.RB.update()
 
     def updateSVG(self):
         print("updating svg settings")
 
         # TODO:
 
+
         block = self.svgblock
         print(vars(self.svgblock))
         #block.coordinates_travel = self.valTravel
-        block.travel_z = float(self.valMove.text())
-        block.depth = float(self.valPlunge.text())
+        block.travel_z = self.update_text(self.valMove)
+        block.depth = self.update_text(self.valPlunge)
         # block.tolerance = float(self.valTolerance.text()) # this does not do anything, svg needs to be fulla reloaded
-        block.scale = float(self.valScale.text()) / 100
+        block.scale = self.update_text(self.valScale,100) / 100
 
-        origin = [float(self.valOriginX.text()),
-                  float(self.valOriginY.text()),
-                  float(self.valOriginZ.text()),
-                  float(self.valOriginRx.text()),
-                  float(self.valOriginRy.text()),
-                  float(self.valOriginRz.text())]
-        block.csys = origin
+        new_origin = [self.update_text(self.valOriginX),
+                  self.update_text(self.valOriginY),
+                  self.update_text(self.valOriginZ),
+                  self.update_text(self.valOriginRx),
+                  self.update_text(self.valOriginRy),
+                  self.update_text(self.valOriginRz)]
+        block.csys = new_origin
+
+        if block.tolerance != self.valTolerance.text():
+            self.updateSVGtolerance()
 
         self.RB.loadSVG(self.svgblock, 20)
         #self.RB.DrawCoords([0,1,1,1],10)
@@ -134,6 +139,21 @@ class URPlayground(QMainWindow):
         self.RB.update()
 
         print(vars(self.svgblock))
+
+    def update_text(self,textfield,default=0):
+
+
+        try:
+            value = float(textfield.text())
+        except:
+            print("not a valid number value. value set to 0 instead")
+
+            value = default
+            textfield.setText(str(value))
+        print(value)
+
+
+        return value
 
 
 class Program:
@@ -145,6 +165,7 @@ class Program:
         self.robotIP = "192.168.178.20"
         #self.connectUR()
         self.block_list = []
+        self.units_in_meter = 1000  # urx uses meters this means all coordiante values will be divided by this to get the correct units
 
 
 
@@ -157,20 +178,43 @@ class Program:
 
     def run(self):
 
+        print("running program")
         for block in self.block_list:
             self.runblockUR(block)
 
+    def convert_path_units(self,path):
+        """All variables in this Program are in mm, however urx uses meters.
+        This method converts between the two"""
+
+        converted_path = path
+
+        for i, coord in enumerate(converted_path):
+            print(coord)
+            converted_path[i][0] = coord[0] / self.units_in_meter
+            converted_path[i][1] = coord[1] / self.units_in_meter
+            converted_path[i][2] = coord[2] / self.units_in_meter
+            print(coord)
+            print("--------")
+
+        return converted_path
+
+
     def runblockUR(self, block):
-        self.robot.set_tcp(self.tcp)
+        #self.robot.set_tcp(self.tcp)
         print(self.tcp, "tcp set")
 
         csys = m3d.Transform(block.csys)
-        self.robot.set_csys(csys)
+        #self.robot.set_csys(csys)
 
         print(block.csys, "csys set")
         print("sending coordinates", block.coordinates_travel)
         for path in block.coordinates_travel:
-            self.robot.movexs(block.command, path, block.a, block.v, block.radius)
+            print("converting path: ")
+            converted_p = self.convert_path_units(path)
+            print(path)
+            print("___"*40)
+            print(converted_p)
+            #self.robot.movexs(block.command, converted_p, block.a, block.v, block.radius)
 
     def connectUR(self):
         try:

@@ -11,10 +11,29 @@ robot-simulator
 ___
 
 ### to do:
-[] parse
-        .
-[] visualise
-[] simulate
-[] send
-[] save
+- [ ] parse
 
+- [ ] visualise
+    - [ ] add origin point in visualisation
+    - [ ] change robot model
+    - [ ] load environment
+    -
+
+- [ ] simulate
+    - [ ] everything
+
+- [ ] send
+    - [ ] connect button
+    - [ ] change units
+
+- [ ] other
+    - [ ] logging
+    - [ ] connect logging to UI
+
+- [ ] save
+
+- [ ] Package
+    - [ ] create packages
+      - [ ] Windows
+      - [ ] Mac
+       - [ ] Linux
