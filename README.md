@@ -14,7 +14,7 @@ ___
 - [ ] parse
     - [x] plunge depth
     - [x] rotation values conversion
-    - [ ] reverse plunge / move direction
+    - [ ] ~~reverse plunge / move direction~~
 
 
 - [ ] visualise
@@ -29,7 +29,7 @@ ___
     - [ ] everything
 
 - [ ] send
-    - [ ] change tcp orientation
+    - [x] change tcp orientation
     - [x] connect button
     - [x] change units
     - [ ] add robot status
@@ -50,6 +50,6 @@ ___
       - [ ] Mac
       - [ ] (Linux)
 
-- [ ] TEST
+- [x] TEST
 - [ ] TEST
 - [ ] Test !!!!
