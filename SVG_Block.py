@@ -148,8 +148,8 @@ class svgBlock(Block):
                 start_coords = copy.copy(motion[0])
                 end_coords = copy.copy(motion[-1])
 
-                start_coords[2] += self.travel_z + self.depth
-                end_coords[2] += self.travel_z + self.depth
+                start_coords[2] += self.travel_z - start_coords[2]
+                end_coords[2] += self.travel_z - end_coords[2]
 
                 motion.insert(0, start_coords)
                 motion.append(end_coords)

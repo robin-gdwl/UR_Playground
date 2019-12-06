@@ -138,6 +138,10 @@ class SVGParse:
             print("parsing all offsets.... current offset: ", offset, "at index:  ", idx, "of: ", len(stops)-1)
             print("offset: ", offset)
             print("param: ", param)
+            print(len(gradient.opacities))
+            print(len(clrs))
+            print(len(stops))
+
             if idx < (len(stops) - 1):
                 print("next offset: ", stops[idx + 1])
 
@@ -268,7 +272,6 @@ class SVGParse:
                 for i, stop in enumerate(stops):
                     offset = stop.attributes["offset"].value
                     offset = float(offset)
-                    grad.stop_offsets.append((offset))
 
                     style = stop.attributes["style"].value
 
@@ -281,6 +284,8 @@ class SVGParse:
                         color_val = 000000
 
                     color_rgb = tuple(int(color_val[i:i + 2], 16) for i in (0, 2, 4))
+
+                    grad.stop_offsets.append((offset))
                     grad.colors.append(color_rgb)
                     print("color  ", color_rgb)
 
@@ -294,6 +299,12 @@ class SVGParse:
                         opa_val = 1
                     grad.opacities.append(opa_val)
                     print("opacity  ",opa_val)
+
+                    if i == 0 and offset != 0:
+                        print("first offset not at 0")
+                        grad.stop_offsets.append(0)
+                        grad.colors.append(color_rgb)
+                        grad.opacities.append(opa_val)
 
                     if i == (len(stops)-1) and offset < 1:
                         print("last stop offset is not at 100% ")
