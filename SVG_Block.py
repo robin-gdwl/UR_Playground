@@ -22,7 +22,7 @@ class svgBlock(Block):
         self.tolerance = 5
         self.travel_z = 0
         self.depth = 0
-        self.max_rotation = 1/8
+        self.max_rotation = 1/8 * 360
 
         self.path_movements = []
         self.coordinates = []  # these will be the (x,y,z,rx,ry,rz) coordinates after all trnasformations from opacity and colour are applied
@@ -35,6 +35,7 @@ class svgBlock(Block):
         self.opacity_effect = 1
 
     def load(self):
+
         # loads an svg file, puts the movements into self.path_movements
         # translates color and opacity values into the corresponding transformations
         start_time = time.time()
@@ -56,7 +57,7 @@ class svgBlock(Block):
 
         self.add_travel()
 
-        print(self.coordinates_travel)
+        print("coordinates_travel in SVG_BLOCK load()",self.coordinates_travel)
 
     def update(self):
         """used to update the block, mainly remakes self.coordinates_travel"""
@@ -85,7 +86,7 @@ class svgBlock(Block):
     def scale_xy(self):
         for m_idx, movement in enumerate(self.path_movements):
             for c_idx, coordinates in enumerate(movement.coordinates):
-                print(type(self.scale))
+                #print(type(self.scale))
                 new_x = coordinates[0] * self.scale
                 new_y = coordinates[1] * self.scale
 
@@ -115,9 +116,8 @@ class svgBlock(Block):
                     insert_pos = [3, 4, 5]
                     for x, rot in zip(insert_pos, rotation):
                         rot = (rot - 127.5) / 127.5
-                        #rot = self.max_rotation * rot
-                        rot = rot * self.color_effect
-                        rot = DegToRad(rot) * self.max_rotation
+                        rot = rot * self.color_effect * self.max_rotation
+                        rot = DegToRad(rot)
 
                         self.coordinates[m_idx][c_idx][x] = rot
 

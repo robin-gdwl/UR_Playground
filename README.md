@@ -15,13 +15,15 @@ ___
     - [x] plunge depth
     - [x] rotation values conversion
     - [ ] ~~reverse plunge / move direction~~
+    - [ ] figure out how to parse inkscape svg files
 
 
 - [ ] visualise
     - [x] add origin point in visualisation
+    - [ ] add direction arrow(s) to visualisation
     - [X] change robot model
     - [x] make robot model responsive
-    - [ ] calibrate starting angles
+    - [x] calibrate starting angles
     - [ ] inverse kinematics
     - [ ] load environment
 
@@ -38,10 +40,15 @@ ___
     - [ ] thread / parallelise sending process to avoid freezing the program
 
 - [ ] other
+    - [ ] connect Tool length UI
+    - [ ] connect IP UI
+    - [ ] Connect UseColOpa UI + value
+    - [ ] connect speed / accell UI
     - [ ] logging
     - [ ] connect logging to UI
     - [ ] documentation
     - [ ] test rotation
+    - [ ] wrap functions into try/except statements to prevent crashing
 
 - [ ] save
 

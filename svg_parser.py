@@ -394,10 +394,10 @@ class SVGParse:
                 print(grad.check_lengths())
                 print("s: ", stops)
 
-                print(g.attributes)
+                #print(g.attributes)
 
                 gradient_instances.append(grad)
-                print(gradient_instances)
+                #print(gradient_instances)
         return gradient_instances
 
 class MoveColOpa:

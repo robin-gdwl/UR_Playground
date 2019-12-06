@@ -95,7 +95,7 @@ class URPlayground(QMainWindow):
     def Run(self):
         print("run")
         self.program.connectUR()
-        time.sleep(5)
+        time.sleep(2)
         self.program.run()
         self.program.disconnectUR()
         pass
@@ -184,15 +184,12 @@ class Program:
         This method converts between the two.
         it is called inside of self.runblockUR right before the robot commands are sent"""
 
-        converted_path = path_to_conv
+        converted_path = copy.copy(path_to_conv) # TODO: figure out if this is the right way to do this- I have not yet understood how data should be handled here
 
         for i, coord in enumerate(converted_path):
-            print(coord)
             converted_path[i][0] = coord[0] / self.units_in_meter
             converted_path[i][1] = coord[1] / self.units_in_meter
             converted_path[i][2] = coord[2] / self.units_in_meter
-            print(coord)
-            print("--------")
 
         return converted_path
 
@@ -200,7 +197,7 @@ class Program:
         self.robot.set_tcp(self.tcp)
         print(self.tcp, "tcp set")
 
-        csys = block.csys
+        csys = copy.copy(block.csys) # TODO: figure out if this is the right way to do this- I have not yet understood how data should be handled here
         csys[0] /= self.units_in_meter
         csys[1] /= self.units_in_meter
         csys[2] /= self.units_in_meter

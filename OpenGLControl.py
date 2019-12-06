@@ -121,6 +121,7 @@ class GLWidget(QOpenGLWidget):
             self.drawGrid()
 
         self.setupColor([0/ 255, 0 / 255.0, 200 / 255])
+        glRotatef(180, 0, 0, 1);
         self.model0.draw()
         # self.setupColor([169.0 / 255, 169.0 / 255, 169.0 / 255])
 
@@ -129,7 +130,7 @@ class GLWidget(QOpenGLWidget):
         glTranslatef(0.0, 0.0, self.objRobot.d[1]);
         glRotatef(RadToDeg(self.objRobot.JVars[0]), 0.0, 0.0, 1.0)
         glTranslatef(self.objRobot.a[1], 0.0, 0.0)
-        # glRotatef(RadToDeg(self.objRobot.alpha[1]), 1.0, 0.0, 0.0);
+        glRotatef(RadToDeg(self.objRobot.alpha[0]), 0, 0, 1);
         self.model1.draw()
 
         # Link2
@@ -137,7 +138,7 @@ class GLWidget(QOpenGLWidget):
         glTranslatef(0.0, 135.85,0);
         glRotatef(RadToDeg(self.objRobot.JVars[1]), 0.0, 1, 0)
         # glTranslatef(0, 0.0,self.objRobot.a[2])
-        glRotatef(RadToDeg(self.objRobot.alpha[2]), 0, 1, 0.0);
+        glRotatef(RadToDeg(self.objRobot.alpha[1]), 0, 1, 0.0);
         self.model2.draw()
 
         # Link3
@@ -145,7 +146,7 @@ class GLWidget(QOpenGLWidget):
         glTranslatef(0.0, -119.7, 425);
         glRotatef(RadToDeg(self.objRobot.JVars[2]), 0.0, 1, 0)
         # glTranslatef(self.objRobot.a[3], 0.0, 0.0)
-        glRotatef(RadToDeg(self.objRobot.alpha[3]), 0, 1, 0.0);
+        glRotatef(RadToDeg(self.objRobot.alpha[2]), 0, 1, 0.0);
         self.model3.draw()
 
         # Link4
@@ -153,7 +154,7 @@ class GLWidget(QOpenGLWidget):
         glTranslatef(0.0, 0.0, 392.25);
         glRotatef(RadToDeg(self.objRobot.JVars[3]), 0.0, 1, 0)
         # glTranslatef(self.objRobot.a[4], 0.0, 0.0)
-        glRotatef(RadToDeg(self.objRobot.alpha[4]), 1.0, 0.0, 0.0);
+        glRotatef(RadToDeg(self.objRobot.alpha[3]), 0, 1, 0.0);
         self.model4.draw()
         self.setupColor([0.0/255, 180.0/255, 84.0/255])
 
@@ -162,7 +163,7 @@ class GLWidget(QOpenGLWidget):
         glTranslatef(0, 93, 0);
         glRotatef(RadToDeg(self.objRobot.JVars[4]), 0.0, 0.0, 1.0)
         # glTranslatef(self.objRobot.a[5], 0.0, 0.0)
-        glRotatef(RadToDeg(self.objRobot.alpha[4]), 1.0, 0.0, 0.0);
+        glRotatef(RadToDeg(self.objRobot.alpha[4]), 0, 0, 1);
         self.model5.draw()
 
         # Link6
