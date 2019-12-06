@@ -106,17 +106,19 @@ class svgBlock(Block):
             for m_idx, movement in enumerate(self.path_movements):
                 for c_idx, coordinates in enumerate(movement.coordinates):
                     rotation = movement.colors[c_idx]
+                    #rot_x = rotation[0] /255
+                    #rot_y = rotation[1] /255
+                    #rot_z = rotation[2] /255
+                    #print(rot_x,rot_y,rot_z)
 
                     # TODO: convert from RGB to rad-rotation
                     insert_pos = [3, 4, 5]
-                    for x, y in zip(insert_pos, rotation):
-                        if y == 0:
-                            y = 1
-                        y = 255 / y   # converts the rgb value from 0-255 to 0-1
-                        y *= 0.001
-                        y = self.max_rotation * y  # multiplies
+                    for x, rot in zip(insert_pos, rotation):
+                        rot = (rot - 127.5) / 127.5
+                        rot = self.max_rotation * rot
+                        rot = rot * self.color_effect
 
-                        self.coordinates[m_idx][c_idx][x] = y
+                        self.coordinates[m_idx][c_idx][x] = rot
 
     def apply_depth(self):
         if self.use_opacity == False:
@@ -133,7 +135,7 @@ class svgBlock(Block):
                     #print("depth found, applying")
                     #print(depth)
                     depth = -self.depth * movement.opacities[c_idx] * self.opacity_effect
-                    # TODO: convert from opacity value to depth value depending on self.depth
+
                     self.coordinates[m_idx][c_idx][2] = depth
 
     def add_travel(self):
@@ -148,7 +150,6 @@ class svgBlock(Block):
 
                 start_coords[2] += self.travel_z + self.depth
                 end_coords[2] += self.travel_z + self.depth
-                # TODO: change the start and end coords by the travel depth
 
                 motion.insert(0, start_coords)
                 motion.append(end_coords)

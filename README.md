@@ -13,11 +13,15 @@ ___
 ### to do:
 - [ ] parse
     - [x] plunge depth
+    - [ ] rotation values conversion
     - [ ]
 
 - [ ] visualise
     - [x] add origin point in visualisation
     - [X] change robot model
+    - [x] make robot model responsive
+    - [ ] calibrate starting angles
+    - [ ] inverse kinematics
     - [ ] load environment
 
 
@@ -43,3 +47,7 @@ ___
       - [ ] Windows
       - [ ] Mac
       - [ ] (Linux)
+
+- [ ] TEST
+- [ ] TEST
+- [ ] Test !!!!

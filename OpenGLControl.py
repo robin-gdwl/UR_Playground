@@ -32,12 +32,13 @@ class GLWidget(QOpenGLWidget):
         self.isDrawGrid = True;
         print("Loading stl files...")
         self.fullrobot = Loader("3DFiles/UR_lowres01_05.stl")
-        self.model0 = Loader('STLFile/Link0.STL')
-        self.model1 = Loader('STLFile/Link1.STL')
-        self.model2 = Loader('STLFile/Link2.STL')
-        self.model3 = Loader('STLFile/Link3.STL')
-        self.model4 = Loader('STLFile/Link4.STL')
-        self.model5 = Loader('STLFile/tool.STL')
+        self.model0 = Loader('STLFile/UR5-0.STL')
+        self.model1 = Loader('STLFile/UR5-1.STL')
+        self.model2 = Loader('STLFile/UR5-2.STL')
+        self.model3 = Loader('STLFile/UR5-3.STL')
+        self.model4 = Loader('STLFile/UR5-4.STL')
+        self.model5 = Loader('STLFile/UR5-5.STL')
+        self.model6 = Loader('STLFile/UR5-6.STL')
         print("All done.")
 
         self.listPoints = np.array([[0,0,0]]) # not used atm will be used in the future
@@ -115,53 +116,63 @@ class GLWidget(QOpenGLWidget):
     def drawGL(self):
         print("drawingGL")
         glPushMatrix()
-        #glClearColor(1, 1, 1, 1)
-
-        #self.makePointObject(1)
-
 
         if self.isDrawGrid:
             self.drawGrid()
 
-        #self.setupColor([96.0 / 255, 96 / 255.0, 192.0 / 255])
-        #self.model0.draw()
-        #self.setupColor([169.0 / 255, 169.0 / 255, 169.0 / 255])
+        self.setupColor([0/ 255, 0 / 255.0, 200 / 255])
+        self.model0.draw()
+        # self.setupColor([169.0 / 255, 169.0 / 255, 169.0 / 255])
 
-        # full robot
-        self.fullrobot.draw()
-
-        """# Link1
+        # Link1
+        self.setupColor([0 / 255, 160 / 255.0, 60 / 255])
         glTranslatef(0.0, 0.0, self.objRobot.d[1]);
         glRotatef(RadToDeg(self.objRobot.JVars[0]), 0.0, 0.0, 1.0)
         glTranslatef(self.objRobot.a[1], 0.0, 0.0)
-        glRotatef(RadToDeg(self.objRobot.alpha[1]), 1.0, 0.0, 0.0);
+        # glRotatef(RadToDeg(self.objRobot.alpha[1]), 1.0, 0.0, 0.0);
         self.model1.draw()
 
-        #Link2
-        self.setupColor([90.0 / 255, 150.0 / 255, 9.0 / 255])
-        glTranslatef(0.0, 0.0, self.objRobot.d[2]);
-        glRotatef(RadToDeg(self.objRobot.JVars[1]), 0.0, 0.0, 1.0)
-        glTranslatef(self.objRobot.a[2], 0.0, 0.0)
-        glRotatef(RadToDeg(self.objRobot.alpha[2]), 1.0, 0.0, 0.0);
+        # Link2
+        self.setupColor([230 / 255, 0 / 255.0, 90 / 255])
+        glTranslatef(0.0, 135.85,0);
+        glRotatef(RadToDeg(self.objRobot.JVars[1]), 0.0, 1, 0)
+        # glTranslatef(0, 0.0,self.objRobot.a[2])
+        glRotatef(RadToDeg(self.objRobot.alpha[2]), 0, 1, 0.0);
         self.model2.draw()
 
-        #Link3
-        self.setupColor([255.0 / 255, 255.0 / 255, 9.0 / 255])
-        glTranslatef(0.0, 0.0, self.objRobot.d[3]);
-        glRotatef(RadToDeg(self.objRobot.JVars[2]), 0.0, 0.0, 1.0)
-        glTranslatef(self.objRobot.a[3], 0.0, 0.0)
-        glRotatef(RadToDeg(self.objRobot.alpha[3]), 1.0, 0.0, 0.0);
+        # Link3
+        self.setupColor([22 / 255, 222 / 255.0, 220 / 255])
+        glTranslatef(0.0, -119.7, 425);
+        glRotatef(RadToDeg(self.objRobot.JVars[2]), 0.0, 1, 0)
+        # glTranslatef(self.objRobot.a[3], 0.0, 0.0)
+        glRotatef(RadToDeg(self.objRobot.alpha[3]), 0, 1, 0.0);
         self.model3.draw()
 
-        #Link4
-        self.setupColor([105.0 / 255, 180.0 / 255, 0 / 255])
-        glTranslatef(0.0, 0.0, self.objRobot.d[4]);
-        glRotatef(RadToDeg(self.objRobot.JVars[3]), 0.0, 0.0, 1.0)
-        glTranslatef(self.objRobot.a[4], 0.0, 0.0)
+        # Link4
+        self.setupColor([10 / 255, 100 / 255.0, 150 / 255])
+        glTranslatef(0.0, 0.0, 392.25);
+        glRotatef(RadToDeg(self.objRobot.JVars[3]), 0.0, 1, 0)
+        # glTranslatef(self.objRobot.a[4], 0.0, 0.0)
         glRotatef(RadToDeg(self.objRobot.alpha[4]), 1.0, 0.0, 0.0);
         self.model4.draw()
         self.setupColor([0.0/255, 180.0/255, 84.0/255])
-        self.model5.draw()"""
+
+        # Link5
+        self.setupColor([0 / 255, 200 / 255.0, 180 / 255])
+        glTranslatef(0, 93, 0);
+        glRotatef(RadToDeg(self.objRobot.JVars[4]), 0.0, 0.0, 1.0)
+        # glTranslatef(self.objRobot.a[5], 0.0, 0.0)
+        glRotatef(RadToDeg(self.objRobot.alpha[4]), 1.0, 0.0, 0.0);
+        self.model5.draw()
+
+        # Link6
+        self.setupColor([2 / 255, 155/ 255.0, 210 / 255])
+        glTranslatef(0, 0, 94.65);
+        glRotatef(RadToDeg(self.objRobot.JVars[5]), 0.0, 1, 0)
+        # glTranslatef(self.objRobot.a[5], 0.0, 0.0)
+        glRotatef(RadToDeg(self.objRobot.alpha[5]), 1.0, 0.0, 0.0);
+        self.model6.draw()
+
         glPopMatrix()
 
     def paintGL(self):
@@ -178,9 +189,9 @@ class GLWidget(QOpenGLWidget):
         self.drawGL()
         self.DrawPoint([0/255, 0/255, 255.0/255.0], 15)
         self.DrawCoords([255.0 / 255, 255.0 / 255, 255.0 / 255.0], 4)
-        #self.makePointObject(1)
+        # self.makePointObject(1)
         glPopMatrix()
-        #self.update() # dont do this otherwise it will update multiple times a second
+        # self.update() # dont do this otherwise it will update multiple times a second
 
     def DrawPoint(self, color, size):
         print("drawPoint")
@@ -193,7 +204,6 @@ class GLWidget(QOpenGLWidget):
             glBegin(GL_POINTS);
             glVertex3f(p[0], p[1], p[2])
             glEnd()
-
 
             """if self.color[i] == 1:
                 glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [1.0, 1.0, 1.0]);
@@ -274,7 +284,6 @@ class GLWidget(QOpenGLWidget):
         #self.drawGL()
         glPopMatrix()
         #self.update()
-
 
         #self.gl.glEnd()
         #self.gl.glEndList()

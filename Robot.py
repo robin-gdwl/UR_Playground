@@ -12,7 +12,7 @@ class Robot(object):
         self.alpha = self.cf.alpha
         self.fwd = FwdKinematics()
         self.inv = InvKinematics()
-        self.JVars = self.cf.q_init[1:]
+        self.JVars = self.cf.q_init
         self.q1P = self.JVars
         self.q2P = self.JVars
         self.EVars = np.array([])

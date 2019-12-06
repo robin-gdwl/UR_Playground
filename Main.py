@@ -1,5 +1,4 @@
 import sys
-
 from Blocks import *
 #from RunBlock import Run
 from SVG_Block import *
@@ -192,7 +191,6 @@ class Program:
 
         return converted_path
 
-
     def runblockUR(self, block):
         self.robot.set_tcp(self.tcp)
         print(self.tcp, "tcp set")
@@ -221,8 +219,8 @@ class Program:
         pose= self.robot.get_pose()
         print(pose)
 
-        #self.robot.movej([0,-0.5*pi,-0.5*pi,-0.5*pi,0.5*pi,0],0.1,0.91)
-        #time.sleep(20)
+        # self.robot.movej([0,-0.5*pi,-0.5*pi,-0.5*pi,0.5*pi,0],0.1,0.91)
+        # time.sleep(20)
 
 app = QApplication(sys.argv)
 window = URPlayground()
