@@ -27,7 +27,7 @@ class svgBlock(Block):
         self.coordinates = []  # these will be the (x,y,z,rx,ry,rz) coordinates after all trnasformations from opacity and colour are applied
         self.coordinates_travel = []  # same as above but with the travel moves necessary to keep the same indices as the path_movements
 
-        self.use_colour = True
+        self.use_colour = False
         self.color_effect = 1
 
         self.use_opacity = True

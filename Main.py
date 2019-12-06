@@ -51,7 +51,7 @@ class URPlayground(QMainWindow):
 
         #self.glwdgtPreview.
         self.btnSelectFile.clicked.connect(self.openFileNameDialog)
-        self.btnSend.clicked.connect(self.program.run)
+        self.btnSend.clicked.connect(self.Run)
 
         print(type(svgBlock))
         self.btnApplySettings.clicked.connect(self.updateSVG)
@@ -94,6 +94,8 @@ class URPlayground(QMainWindow):
 
     def Run(self):
         print("run")
+        self.program.connectUR()
+        self.program.run()
         pass
 
     def updateSVGtolerance(self):
@@ -119,9 +121,9 @@ class URPlayground(QMainWindow):
         new_origin = [self.update_text(self.valOriginX),
                   self.update_text(self.valOriginY),
                   self.update_text(self.valOriginZ),
-                  self.update_text(self.valOriginRx),
-                  self.update_text(self.valOriginRy),
-                  self.update_text(self.valOriginRz)]
+                  self.update_text(self.valOriginRx, deg_to_rad=True),
+                  self.update_text(self.valOriginRy, deg_to_rad=True),
+                  self.update_text(self.valOriginRz, deg_to_rad=True)]
         block.csys = new_origin
 
         if block.tolerance != self.valTolerance.text():
@@ -134,9 +136,12 @@ class URPlayground(QMainWindow):
 
         print(vars(self.svgblock))
 
-    def update_text(self,textfield,default=0):
+    def update_text(self,textfield,default=0,deg_to_rad=False):
         try:
-            value = float(textfield.text())
+            if deg_to_rad:
+                value = DegToRad(float(textfield.text()))
+            else:
+                value = float(textfield.text())
         except:
             print("not a valid number value. value set to 0 instead")
 
@@ -149,7 +154,7 @@ class URPlayground(QMainWindow):
 class Program:
 
     def __init__(self):
-        self.tcp = (0,0,0,0,0,0)
+        self.tcp = (0,0,0,0,pi,0)
 
         self.robot = None
         self.robotIP = "192.168.178.20"
@@ -193,16 +198,24 @@ class Program:
         self.robot.set_tcp(self.tcp)
         print(self.tcp, "tcp set")
 
-        csys = m3d.Transform(block.csys)
+        csys = block.csys
+        csys[0] /= self.units_in_meter
+        csys[1] /= self.units_in_meter
+        csys[2] /= self.units_in_meter
+        print(csys)
+
+        csys = m3d.Transform(csys)
         self.robot.set_csys(csys)
+        print(csys)
+        coords_to_send = block.coordinates_travel
 
         print(block.csys, "csys set")
-        print("sending coordinates", block.coordinates_travel)
-        for path in block.coordinates_travel:
-            print("converting path: ")
+        print("sending coordinates", coords_to_send)
+        for i,path in enumerate(coords_to_send):
+            print("converting path " + str(i) + "of " + str(len(coords_to_send)) )
             converted_p = self.convert_path_units(path)
-            print(path)
-            print(converted_p)
+            #print(path)
+            #print(converted_p)
             print("___" * 40)
             self.robot.movexs(block.command, converted_p, block.a, block.v, block.radius)
 

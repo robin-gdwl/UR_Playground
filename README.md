@@ -13,8 +13,9 @@ ___
 ### to do:
 - [ ] parse
     - [x] plunge depth
-    - [ ] rotation values conversion
-    - [ ]
+    - [x] rotation values conversion
+    - [ ] reverse plunge / move direction
+
 
 - [ ] visualise
     - [x] add origin point in visualisation
@@ -28,11 +29,13 @@ ___
     - [ ] everything
 
 - [ ] send
+    - [ ] change tcp orientation
     - [x] connect button
     - [x] change units
     - [ ] add robot status
     - [ ] connect to robot button
-    - [ ] test unit change
+    - [x] test unit change
+    - [ ] thread / parallelise sending process to avoid freezing the program
 
 - [ ] other
     - [ ] logging

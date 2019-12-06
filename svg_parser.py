@@ -54,16 +54,12 @@ class SVGParse:
         j = 0
         while j <= 1:
             point = path.point(j)
-
-            x = point.real
+            x =  - point.real
             y = point.imag
 
             xy_coord = [x, y]
 
             coords.append(xy_coord)
-            # print("point parsed")
-            # print(point)
-            # print(j)
             j += stepsize
         return coords
 
