@@ -1,3 +1,4 @@
+from GlobalFunc import *
 from Blocks import Block
 from math import pi
 from svgpathtools import *
@@ -21,13 +22,13 @@ class svgBlock(Block):
         self.tolerance = 5
         self.travel_z = 0
         self.depth = 0
-        self.max_rotation = 1/8 * 2*pi
+        self.max_rotation = 1/8
 
         self.path_movements = []
         self.coordinates = []  # these will be the (x,y,z,rx,ry,rz) coordinates after all trnasformations from opacity and colour are applied
         self.coordinates_travel = []  # same as above but with the travel moves necessary to keep the same indices as the path_movements
 
-        self.use_colour = False
+        self.use_colour = True
         self.color_effect = 1
 
         self.use_opacity = True
@@ -111,12 +112,12 @@ class svgBlock(Block):
                     #rot_z = rotation[2] /255
                     #print(rot_x,rot_y,rot_z)
 
-                    # TODO: convert from RGB to rad-rotation
                     insert_pos = [3, 4, 5]
                     for x, rot in zip(insert_pos, rotation):
                         rot = (rot - 127.5) / 127.5
-                        rot = self.max_rotation * rot
+                        #rot = self.max_rotation * rot
                         rot = rot * self.color_effect
+                        rot = DegToRad(rot) * self.max_rotation
 
                         self.coordinates[m_idx][c_idx][x] = rot
 

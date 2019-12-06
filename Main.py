@@ -95,7 +95,9 @@ class URPlayground(QMainWindow):
     def Run(self):
         print("run")
         self.program.connectUR()
+        time.sleep(5)
         self.program.run()
+        self.program.disconnectUR()
         pass
 
     def updateSVGtolerance(self):
@@ -154,7 +156,7 @@ class URPlayground(QMainWindow):
 class Program:
 
     def __init__(self):
-        self.tcp = (0,0,0,0,pi,0)
+        self.tcp = (0,0,0,0,pi,0) # FIXME: this is a workaround, the direciton change should happen elsewhere
 
         self.robot = None
         self.robotIP = "192.168.178.20"
@@ -232,6 +234,8 @@ class Program:
 
         # self.robot.movej([0,-0.5*pi,-0.5*pi,-0.5*pi,0.5*pi,0],0.1,0.91)
         # time.sleep(20)
+    def disconnectUR(self):
+        self.robot.close()
 
 app = QApplication(sys.argv)
 window = URPlayground()

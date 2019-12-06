@@ -41,6 +41,7 @@ ___
     - [ ] logging
     - [ ] connect logging to UI
     - [ ] documentation
+    - [ ] test rotation
 
 - [ ] save
 
