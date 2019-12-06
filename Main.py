@@ -143,8 +143,6 @@ class URPlayground(QMainWindow):
             value = default
             textfield.setText(str(value))
         print(value)
-
-
         return value
 
 

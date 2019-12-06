@@ -278,7 +278,6 @@ class GLWidget(QOpenGLWidget):
         glVertex3f(100,10,10)
         glVertex3f(50,500,500)
         glVertex3f(100,100,1000)
-
         glEnd()
 
         #self.drawGL()

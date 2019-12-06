@@ -24,7 +24,6 @@ ___
     - [ ] inverse kinematics
     - [ ] load environment
 
-
 - [ ] simulate
     - [ ] everything
 
