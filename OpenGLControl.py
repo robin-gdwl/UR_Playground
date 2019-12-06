@@ -120,6 +120,9 @@ class GLWidget(QOpenGLWidget):
         if self.isDrawGrid:
             self.drawGrid()
 
+        glPopMatrix()
+        glPushMatrix()
+
         self.setupColor([0/ 255, 0 / 255.0, 200 / 255])
         glRotatef(180, 0, 0, 1);
         self.model0.draw()
