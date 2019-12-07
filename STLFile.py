@@ -1,6 +1,6 @@
 from OpenGL.GL import *
-from OpenGL.GLU import *
 import struct
+import logging
 
 #class for a 3d point
 class createpoint:
@@ -41,7 +41,8 @@ class CreateTriangle:
 
 class Loader:
     def __init__(self, filename):
-        print("loading stl: ", filename)
+        #print("loading stl: ", filename)
+        logging.debug("loading stl: " + str(filename))
         self.model=[]
         self.load_stl(filename)
     #return the faces of the triangles
@@ -68,10 +69,12 @@ class Loader:
         type=h[0:5]
         fp.close()
         if type==b'solid':
-            print ("reading stl file "+str(filename))
+            #print ("reading stl file "+str(filename))
+            logging.debug("reading stl file "+str(filename))
             self.load_text_stl(filename)
         else:
-            print ("reading binary stl file "+str(filename))
+            #print ("reading binary stl file "+str(filename))
+            logging.debug("reading binary stl file "+str(filename))
             self.load_binary_stl(filename)
   
     #read text stl match keywords to grab the points to build the model

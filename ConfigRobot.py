@@ -1,5 +1,6 @@
 from GlobalFunc import *
 import numpy as np
+import logging
 
 
 class ConfigRobot(object):
@@ -13,6 +14,8 @@ class ConfigRobot(object):
         self.alpha = DegToRad(np.array([0, 90, 0, 90, 0, 0]))
         #self.q_init = DegToRad(np.array([94, -162, -30, -78, 93, -184]))
         self.q_init = DegToRad(np.array([0,0,0,0,0,0]))
+        logging.debug("Created Robot with the following settings: ")
+        logging.debug(vars(self))
 
     def get_q_init(self):
         return self.q_init

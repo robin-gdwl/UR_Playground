@@ -30,7 +30,7 @@ class GLWidget(QOpenGLWidget):
         self.xTran = 0
         self.yTran = 0
         self.isDrawGrid = True;
-        print("Loading stl files...")
+        #print("Loading stl files...")
         self.fullrobot = Loader("3DFiles/UR_lowres01_05.stl")
         self.model0 = Loader('STLFile/UR5-0.STL')
         self.model1 = Loader('STLFile/UR5-1.STL')
@@ -39,7 +39,7 @@ class GLWidget(QOpenGLWidget):
         self.model4 = Loader('STLFile/UR5-4.STL')
         self.model5 = Loader('STLFile/UR5-5.STL')
         self.model6 = Loader('STLFile/UR5-6.STL')
-        print("All done.")
+        #print("All done.")
 
         self.listPoints = np.array([[0,0,0]]) # not used atm will be used in the future
         self.listCoords = np.array([[0,0,0]])
@@ -79,16 +79,16 @@ class GLWidget(QOpenGLWidget):
         self.update()
 
     def setZoom(self, zoom):
-        print("zooming")
+        #print("zooming")
         self.z_zoom = zoom
         self.update()
 
     def updateJoint(self):
-        print("updating joint")
+        #print("updating joint")
         self.update()
 
     def initializeGL(self):
-        print("initialising GL")
+        #print("initialising GL")
         lightPos = (5.0, 5.0, 10.0, 1.0)
         reflectance1 = (0.8, 0.1, 0.0, 1.0)
         reflectance2 = (0.0, 0.8, 0.2, 1.0)
@@ -114,7 +114,7 @@ class GLWidget(QOpenGLWidget):
         glClearColor(1, 1, 1, 1.0)
 
     def drawGL(self):
-        print("drawingGL")
+        #print("drawingGL")
         glPushMatrix()
 
         if self.isDrawGrid:
@@ -180,7 +180,7 @@ class GLWidget(QOpenGLWidget):
         glPopMatrix()
 
     def paintGL(self):
-        print("painting gl")
+        #print("painting gl")
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
         glPushMatrix()
@@ -198,8 +198,8 @@ class GLWidget(QOpenGLWidget):
         # self.update() # dont do this otherwise it will update multiple times a second
 
     def DrawPoint(self, color, size):
-        print("drawPoint")
-        print(self.specialPoints)
+        #print("drawPoint")
+        #print(self.specialPoints)
         glPushMatrix()
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
         glPointSize(size);
@@ -218,7 +218,7 @@ class GLWidget(QOpenGLWidget):
         glPopMatrix()
 
     def DrawCoords(self, color, size):
-        print("draw coords")
+        #print("draw coords")
 
         glPushMatrix()
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
@@ -238,7 +238,7 @@ class GLWidget(QOpenGLWidget):
     def loadSVG(self,block,size):
         # DONE? TODO: make a new method that just updates and doesnt need to reload the entire file
         block.update()
-        print("loading svg")
+        #print("loading svg")
         self.listCoords = np.array([[0,0,0]])
         self.specialPoints = np.array([[0, 0, 0]])
 
@@ -250,24 +250,24 @@ class GLWidget(QOpenGLWidget):
         self.specialPoints = np.append(self.specialPoints,[csys_vector[:3]],axis=0)
 
         for i, path in enumerate(coordinates):
-            print("loading path",i,path)
+            #print("loading path",i,path)
             for j,coord in enumerate(path):
-                print(coord)
+                #print(coord)
                 #csys = m3d.Transform(block.csys)
                 t = csys * m3d.Transform(coord)
                 pose = t.pose_vector
-                #print("pose", pose)
+                ##print("pose", pose)
                 self.listCoords = np.append(self.listCoords,[pose[:3]],axis=0)
-                #print(j,"listCoords:", self.listCoords)
+                ##print(j,"listCoords:", self.listCoords)
 
 
-        #print("listCoords:", self.listCoords)
+        ##print("listCoords:", self.listCoords)
         glPopMatrix()
 
     def makePointObject(self,block):
         glPushMatrix()
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
-        print("make points")
+        #print("make points")
         #genList = glGenLists(1)
         #glNewList(genList, self.gl.GL_COMPILE)
 
@@ -294,7 +294,7 @@ class GLWidget(QOpenGLWidget):
         #return genList
 
     def resizeGL(self, width, height):
-        print("resize")
+        #print("resize")
 
         side = min(width, height)
         if side < 0:
@@ -314,7 +314,7 @@ class GLWidget(QOpenGLWidget):
     def drawGrid(self):
         glLineWidth(1)
         glPushMatrix()
-        #print("drawing grid")
+        ##print("drawing grid")
         # color = [255.0/255, 57.0/255, 0.0/255]
         color = [8.0/255, 108.0/255, 162.0/255]
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);

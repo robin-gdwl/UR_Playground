@@ -1,29 +1,33 @@
 import sys
 from Blocks import *
-#from RunBlock import Run
-from SVG_Block import *
 import time
 import math3d as m3d
-from math import pi
 import urx
-
+import logging
+from SVG_Block import *
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
 from PyQt5.uic import *
-import OpenGLControl as DrawRB
 
 import OpenGLControl as DrawRB
 from Robot import *
 from Trajectory import *
 
 class BlockViewer():
-    """gets a BLOCK object and uses its csys to place all points in space
+    """
+    NOT USED ATM
+    gets a BLOCK object and uses its csys to place all points in space
     these points will later be displayed in the opengl window"""
     pass
+
+logging.basicConfig(filename= "UR_Playground.log", level=logging.DEBUG,
+                    format = "%(asctime)s:%(levelname)s:%(message)s")
+logging.info("___"*45)
+logging.info("UR_PLAYGROUND")
 
 class URPlayground(QMainWindow):
 
     def __init__(self, *args):
+        starttime = time.time()
         super(URPlayground, self).__init__(*args)
 
         loadUi("UR_playground_mainwindow03.ui",self)
@@ -34,14 +38,16 @@ class URPlayground(QMainWindow):
 
         self.initialise_blocks()
         # TODO: this is bad, do it better with OOP:
+        endtime = time.time()-starttime
+        logging.info("Window loaded in " + str(endtime))
 
     def initialise_blocks(self):
         # TODO: make this parametric/ dynamic (1)
+        logging.debug("initialising blocks: " + str(self.program.block_list))
         self.program.load_block(self.svgblock)
 
     def setupUI(self):
-        #self.setCentralWidget(self.RB)
-        #preview = self.RB
+        logging.debug("setting up the UI")
 
         self.widgetP = self.widgetPreview
         self.layoutP = QHBoxLayout(self)
@@ -53,7 +59,6 @@ class URPlayground(QMainWindow):
         self.btnSelectFile.clicked.connect(self.openFileNameDialog)
         self.btnSend.clicked.connect(self.Run)
 
-        print(type(svgBlock))
         self.btnApplySettings.clicked.connect(self.updateSVG)
         """self.valOriginX.textChanged.connect(self.updateSVG)
         self.valOriginY.textChanged.connect(self.updateSVG)
@@ -83,17 +88,22 @@ class URPlayground(QMainWindow):
         #options |= QFileDialog.DontUseNativeDialog
         self.fileName, _ = QFileDialog.getOpenFileName(self,"Openfile", "","SVG Files (*.svg);;All Files (*)", options=options)
         # self.processLoadFile.setValue(0)
-        print(self.fileName)
+        #print(self.fileName)
+        logging.debug("file to be loaded: " + str(self.filename))
+
         if self.fileName != "":
             self.valFileName.setText(self.fileName)
             self.svgblock.filepath = self.fileName
             self.svgblock.load()
             self.RB.loadSVG(self.svgblock,20)
         else:
-            print("no file selected ")
+            #print("no file selected ")
+            logging.info("no file selected")
 
     def Run(self):
-        print("run")
+        #print("run")
+        logging.info("running Program")
+
         self.program.connectUR()
         time.sleep(2)
         self.program.run()
@@ -110,7 +120,8 @@ class URPlayground(QMainWindow):
         #self.RB.update()
 
     def updateSVG(self):
-        print("updating svg settings")
+        #print("updating svg settings")
+        logging.info("Applying SVG Settings")
 
         block = self.svgblock
         print(vars(self.svgblock))
@@ -128,15 +139,17 @@ class URPlayground(QMainWindow):
                   self.update_text(self.valOriginRz, deg_to_rad=True)]
         block.csys = new_origin
 
-        if block.tolerance != self.valTolerance.text():
-            self.updateSVGtolerance()
+        try:
+            if block.tolerance != self.valTolerance.text():
+                self.updateSVGtolerance()
 
-        self.RB.loadSVG(self.svgblock, 20)
-        #self.RB.DrawCoords([0,1,1,1],10)
-        self.RB.paintGL()
-        self.RB.update()
+            self.RB.loadSVG(self.svgblock, 20)
+            self.RB.paintGL()
+            self.RB.update()
+        except:
+            logging.warning("No file loaded unable to apply SVG settings")
 
-        print(vars(self.svgblock))
+        #print(vars(self.svgblock))
 
     def update_text(self,textfield,default=0,deg_to_rad=False):
         try:
@@ -145,12 +158,15 @@ class URPlayground(QMainWindow):
             else:
                 value = float(textfield.text())
         except:
-            print("not a valid number value. value set to 0 instead")
-
             value = default
             textfield.setText(str(value))
-        print(value)
+            logging.info("Not a valid number in" + str(textfield) + " value set to " + str(default) + " instead")
+
+
         return value
+
+    def update_robot(self):
+        pass
 
 
 class Program:
@@ -163,19 +179,17 @@ class Program:
         #self.connectUR()
         self.block_list = []
         self.units_in_meter = 1000  # urx uses meters this means all coordiante values will be divided by this to get the correct units
-
-
+        logging.debug("Program class initiated")
 
     def load_block(self, block):
 
         self.block_list.append(block)
-        print("Blocklist:" + str(self.block_list))
-
-        pass
+        #print("Blocklist:" + str(self.block_list))
+        logging.debug("Blocklist:" + str(self.block_list))
 
     def run(self):
 
-        print("running program")
+        #print("running program")
         for block in self.block_list:
             self.runblockUR(block)
 
@@ -195,7 +209,8 @@ class Program:
 
     def runblockUR(self, block):
         self.robot.set_tcp(self.tcp)
-        print(self.tcp, "tcp set")
+        #print(self.tcp, "tcp set")
+        logging.debug("TCP set: " +str(self.tcp))
 
         csys = copy.copy(block.csys) # TODO: figure out if this is the right way to do this- I have not yet understood how data should be handled here
         csys[0] /= self.units_in_meter
@@ -205,29 +220,32 @@ class Program:
 
         csys = m3d.Transform(csys)
         self.robot.set_csys(csys)
-        print(csys)
+        logging.debug("CSYS set: " + str(csys))
         coords_to_send = block.coordinates_travel
 
-        print(block.csys, "csys set")
-        print("sending coordinates", coords_to_send)
+        #print(block.csys, "csys set")
+        #print("sending coordinates", coords_to_send)
+
         for i,path in enumerate(coords_to_send):
-            print("converting path " + str(i) + "of " + str(len(coords_to_send)) )
+            #print("converting path " + str(i) + "of " + str(len(coords_to_send)) )
+            logging.debug("converting path " + str(i) + "of " + str(len(coords_to_send)))
             converted_p = self.convert_path_units(path)
             #print(path)
             #print(converted_p)
-            print("___" * 40)
+            #print("___" * 40)
             self.robot.movexs(block.command, converted_p, block.a, block.v, block.radius)
 
     def connectUR(self):
         try:
             self.robot = urx.Robot(self.robotIP)
         except:
-            print("retrying to connect to robot")
+            #print("retrying to connect to robot")
+            logging.info(" Robot connection failed, retrying to connect to robot")
             time.sleep(1)
             self.connectUR()
 
         pose= self.robot.get_pose()
-        print(pose)
+        #print(pose)
 
         # self.robot.movej([0,-0.5*pi,-0.5*pi,-0.5*pi,0.5*pi,0],0.1,0.91)
         # time.sleep(20)

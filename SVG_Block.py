@@ -16,7 +16,7 @@ class svgBlock(Block):
     def __init__(self):
         super(svgBlock, self).__init__()
 
-        self.filepath = "path"
+        self.filepath = ""
         self.scale = 1
         self.origin = []  # (x,y,z,rx,ry,rz) csys
         self.tolerance = 5
