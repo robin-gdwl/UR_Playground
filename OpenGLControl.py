@@ -200,9 +200,7 @@ class GLWidget(QOpenGLWidget):
 
         if self.isDrawGrid:
             self.drawGrid()
-
         self.draw_robot()
-
 
     def paintGL(self):
         #print("painting gl")
@@ -285,7 +283,6 @@ class GLWidget(QOpenGLWidget):
                 self.listCoords = np.append(self.listCoords,[pose[:3]],axis=0)
                 #print(j,"listCoords:", self.listCoords)
 
-
         #print("listCoords:", self.listCoords)
         glPopMatrix()
 
@@ -315,7 +312,6 @@ class GLWidget(QOpenGLWidget):
 
         #self.gl.glEnd()
         #self.gl.glEndList()
-
         #return genList
 
     def resizeGL(self, width, height):

@@ -99,9 +99,11 @@ class URPlayground(QMainWindow):
             self.svgblock.filepath = self.fileName
             self.svgblock.load()
             self.RB.loadSVG(self.svgblock,20)
+            self.RB.update()
         else:
             #print("no file selected ")
             logging.info("no file selected")
+
 
     def Run(self):
         #print("run")
@@ -125,6 +127,7 @@ class URPlayground(QMainWindow):
     def update_SVG(self):
         #print("updating svg settings")
         logging.info("Applying SVG Settings")
+        # TODO: make this so only changed values are actually changed
 
         block = self.svgblock
         print(vars(self.svgblock))
@@ -158,6 +161,7 @@ class URPlayground(QMainWindow):
         except:
             logging.warning("No file loaded (?) unable to apply SVG settings")
 
+        logging.debug(" finished applying SVG settings ----------------------------------")
         #print(vars(self.svgblock))
 
     def update_text(self,textfield,default=0,deg_to_rad=False):
@@ -184,11 +188,10 @@ class URPlayground(QMainWindow):
         self.program.robotIP = self.valRobotIP.text()  # does not use the self.update_text method as it is not a number
         self.program.tcp[2] = self.update_text(self.valToolLength)
         self.RB.toollength = self.update_text(self.valToolLength)
-        block.v = self.update_text(self.valSpeed)
-        block.a = self.update_text(self.valAccell)
+        block.v = self.update_text(self.valSpeed) / 100
+        block.a = self.update_text(self.valAccell) /100
 
-
-        pass
+        self.RB.update()
 
 
 class Program:
@@ -236,6 +239,22 @@ class Program:
 
         return converted_path
 
+    def convert_v_a(self, a, v, jointspeed = False):
+        """the values for velocity(speed) and accelleration are set in percent in the UI
+        this method multiplies the percentage with the maximum speed and acceleration values of the robot """
+        # TODO: the maximum speed and acceleration for a robot should be set in the ConfigRobot File not here
+
+        if jointspeed:
+            robot_accel = a * 0.349
+            robot_speed = v * 0.524
+
+        else:
+            robot_accel = a * 0.1
+            robot_speed = v * 0.1
+
+        return robot_accel, robot_speed
+
+
     def runblockUR(self, block):
 
         conv_tcp = self.convert_tcp_units()
@@ -253,6 +272,8 @@ class Program:
         logging.debug("CSYS set: " + str(csys))
         coords_to_send = block.coordinates_travel
 
+        acceleration, velocity = self.convert_v_a(block.a, block.v)
+
         #print(block.csys, "csys set")
         #print("sending coordinates", coords_to_send)
 
@@ -260,10 +281,11 @@ class Program:
             #print("converting path " + str(i) + "of " + str(len(coords_to_send)) )
             logging.debug("converting path " + str(i) + "of " + str(len(coords_to_send)))
             converted_p = self.convert_path_units(path)
+            logging.debug(block.command + str(acceleration) + str(velocity))
             #print(path)
             #print(converted_p)
             #print("___" * 40)
-            self.robot.movexs(block.command, converted_p, block.a, block.v, block.radius)
+            self.robot.movexs(block.command, converted_p, acceleration, velocity, block.radius)
 
     def connectUR(self, tries=0):
         logging.info("Connecting to UR-Robot")
@@ -282,11 +304,13 @@ class Program:
     def disconnectUR(self):
         self.robot.close()
 
-app = QApplication(sys.argv)
-window = URPlayground()
-window.setupUI()
-window.show()
-sys.exit(app.exec_())
-#Program = Program()
-#Block = svgBlock()
-#Program.load_block(Block)
+def main():
+    """main function that is executed on startup """
+    app = QApplication(sys.argv)
+    window = URPlayground()
+    window.setupUI()
+    window.show()
+    sys.exit(app.exec_())
+
+if __name__ == "__main__":
+    main()  # runs main function, creates UI etc.
