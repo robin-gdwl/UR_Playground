@@ -39,6 +39,8 @@ class URPlayground(QMainWindow):
         self.program = Program()
         self.svgblock = svgBlock()
 
+        self.setWindowTitle("UR_Playground")
+
         self.initialise_blocks()
         # TODO: this is bad, do it better with OOP:
         endtime = time.time()-starttime
@@ -65,6 +67,10 @@ class URPlayground(QMainWindow):
         self.ui.btnApplyRobotSettings.clicked.connect(self.update_robot)
         self.ui.btnApplySVGSettings.clicked.connect(self.update_SVG)
 
+        self.ui.checkPlatform.stateChanged.connect(self.toggle_platform)
+        self.ui.checkBoxes.stateChanged.connect(self.toggle_boxes)
+        self.ui.checkGrid.stateChanged.connect(self.toggle_grid)
+
         """self.valOriginX.textChanged.connect(self.updateSVG)
         self.valOriginY.textChanged.connect(self.updateSVG)
         self.valOriginZ.textChanged.connect(self.updateSVG)
@@ -76,6 +82,21 @@ class URPlayground(QMainWindow):
         self.valScale.textChanged.connect(self.updateSVG)
         self.valTolerance.textChanged.connect(self.updateSVGtolerance)"""
         # other signals form linetext: returnPressed,
+
+        self.update_SVG()
+        self.update_robot()
+
+    def toggle_platform(self):
+        self.RB.isDrawEnv = self.ui.checkPlatform.isChecked()
+        self.RB.update()
+
+    def toggle_boxes(self):
+        self.RB.isDrawBox = self.ui.checkBoxes.isChecked()
+        self.RB.update()
+
+    def toggle_grid(self):
+        self.RB.isDrawGrid = self.ui.checkGrid.isChecked()
+        self.RB.update()
 
     def ShowAbout(self):
         msg = QMessageBox()
@@ -101,6 +122,7 @@ class URPlayground(QMainWindow):
             self.ui.valFileName.setText(self.fileName)
             self.svgblock.filepath = self.fileName
             self.svgblock.load()
+            self.update_SVG()
             self.RB.loadSVG(self.svgblock,20)
             self.RB.update()
         else:
@@ -175,7 +197,7 @@ class URPlayground(QMainWindow):
                 logging.debug("Target value is in radians")
             else:
                 value = float(textfield.text())
-            textfield.setText(str(value))
+            #textfield.setText(str(value))
         except:
             value = default
             textfield.setText(str(value))
@@ -252,8 +274,8 @@ class Program:
             robot_speed = v * 0.524
 
         else:
-            robot_accel = a * 0.1
-            robot_speed = v * 0.1
+            robot_accel = a * 1
+            robot_speed = v * 1
 
         return robot_accel, robot_speed
 
@@ -273,11 +295,15 @@ class Program:
         csys = m3d.Transform(csys)
         self.robot.set_csys(csys)
         logging.debug("CSYS set: " + str(csys))
-        coords_to_send = block.coordinates_travel
+
+        coords_to_send = copy.copy(block.coordinates_travel) # TODO FIX THIS!!
+
 
         acceleration, velocity = self.convert_v_a(block.a, block.v)
 
-        #print(block.csys, "csys set")
+        logging.info("TCP set: " +str(conv_tcp)+ "CSYS set: " + str(csys))
+
+        print(block.csys, "csys set")
         #print("sending coordinates", coords_to_send)
 
         for i,path in enumerate(coords_to_send):
@@ -286,9 +312,14 @@ class Program:
             converted_p = self.convert_path_units(path)
             logging.debug(block.command + str(acceleration) + str(velocity))
             #print(path)
-            #print(converted_p)
-            #print("___" * 40)
-            self.robot.movexs(block.command, converted_p, acceleration, velocity, block.radius)
+            print(converted_p)
+            print("___" * 40)
+            try:
+                self.robot.movexs(block.command, converted_p, acceleration, velocity, block.radius / self.units_in_meter)
+                print("executing path")
+            except:
+                print("something went wrong at robot")
+                break
 
     def connectUR(self, tries=0):
         logging.info("Connecting to UR-Robot")

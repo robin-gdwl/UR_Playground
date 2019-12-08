@@ -25,7 +25,8 @@ ___
     - [x] make robot model responsive
     - [x] calibrate starting angles
     - [ ] inverse kinematics
-    - [ ] load environment
+    - [x] load environment
+    - [ ] give possibility to load own environments
 
 - [ ] simulate
     - [ ] everything
@@ -40,12 +41,14 @@ ___
     - [ ] connect to robot button
     - [x] test unit change
     - [ ] thread / parallelise sending process to avoid freezing the program
+    - [ ] add option to stop robot
 
 - [ ] other
     - [x] connect Tool length UI
     - [x] connect IP UI
     - [x] Connect UseColOpa UI + value
     - [x] connect speed / accell UI
+    - [ ]
     - [ ] logging
     - [ ] connect logging to UI
     - [ ] documentation

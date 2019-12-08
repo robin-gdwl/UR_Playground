@@ -30,15 +30,19 @@ class GLWidget(QOpenGLWidget):
         self.xTran = 0
         self.yTran = 0
         self.isDrawGrid = True;
+        self.isDrawEnv = True
+        self.isDrawBox = True
         #print("Loading stl files...")
         #self.fullrobot = Loader("3DFiles/UR_lowres01_05.stl")
-        self.model0 = Loader('STLFile/UR5-0.STL')
-        self.model1 = Loader('STLFile/UR5-1.STL')
-        self.model2 = Loader('STLFile/UR5-2.STL')
-        self.model3 = Loader('STLFile/UR5-3.STL')
-        self.model4 = Loader('STLFile/UR5-4.STL')
-        self.model5 = Loader('STLFile/UR5-5.STL')
-        self.model6 = Loader('STLFile/UR5-6.STL')
+        self.model0 = Loader('UR5-0.STL')
+        self.model1 = Loader('UR5-1.STL')
+        self.model2 = Loader('UR5-2.STL')
+        self.model3 = Loader('UR5-3.STL')
+        self.model4 = Loader('UR5-4.STL')
+        self.model5 = Loader('UR5-5.STL')
+        self.model6 = Loader('UR5-6.STL')
+        self.modelplatform = Loader('env_platform01.stl')
+        self.modelboxes = Loader('env_boxes01.stl')
         self.toollength = 0  # TODO: could this be done differently, without this extra property?
         #print("All done.")
 
@@ -98,7 +102,7 @@ class GLWidget(QOpenGLWidget):
         ambientLight = [0.7, 0.7, 0.7, 1.0]
         diffuseLight = [0.7, 0.8, 0.8, 1.0]
         specularLight = [0.4, 0.4, 0.4, 1.0]
-        positionLight = [20.0, 20.0, 20.0, 0.0]
+        positionLight = [20, 20, -30, 0.0]
 
         glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
         glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight)
@@ -118,7 +122,7 @@ class GLWidget(QOpenGLWidget):
         """draws a line with a point at the end representing the tool attached to the robot
         The length of the tool can be set in the Robot settings in the UI """
 
-        self.setupColor([10 / 255, 200 / 255.0, 250 / 255])
+        self.setupColor([25 / 255, 99 / 255.0, 94 / 255])
         glLineWidth(6)
         glBegin(GL_LINES);
         glVertex3f(0, 0, 0)
@@ -134,13 +138,13 @@ class GLWidget(QOpenGLWidget):
     def draw_robot(self):
         glPushMatrix()
 
-        self.setupColor([0 / 255, 0 / 255.0, 200 / 255])
+        self.setupColor([1 / 255, 141 / 255.0, 133 / 255])
         glRotatef(180, 0, 0, 1);
         self.model0.draw()
         # self.setupColor([169.0 / 255, 169.0 / 255, 169.0 / 255])
 
         # Link1
-        self.setupColor([0 / 255, 160 / 255.0, 60 / 255])
+        self.setupColor([25 / 255, 99 / 255.0, 94 / 255])
         glTranslatef(0.0, 0.0, self.objRobot.d[1]);
         glRotatef(RadToDeg(self.objRobot.JVars[0]), 0.0, 0.0, 1.0)
         glTranslatef(self.objRobot.a[1], 0.0, 0.0)
@@ -148,7 +152,7 @@ class GLWidget(QOpenGLWidget):
         self.model1.draw()
 
         # Link2
-        self.setupColor([230 / 255, 0 / 255.0, 90 / 255])
+        self.setupColor([1 / 255, 142 / 255.0, 133 / 255])
         glTranslatef(0.0, 135.85, 0);
         glRotatef(RadToDeg(self.objRobot.JVars[1]), 0.0, 1, 0)
         # glTranslatef(0, 0.0,self.objRobot.a[2])
@@ -156,7 +160,7 @@ class GLWidget(QOpenGLWidget):
         self.model2.draw()
 
         # Link3
-        self.setupColor([22 / 255, 222 / 255.0, 220 / 255])
+        self.setupColor([25 / 255, 99 / 255.0, 94 / 255])
         glTranslatef(0.0, -119.7, 425);
         glRotatef(RadToDeg(self.objRobot.JVars[2]), 0.0, 1, 0)
         # glTranslatef(self.objRobot.a[3], 0.0, 0.0)
@@ -164,7 +168,7 @@ class GLWidget(QOpenGLWidget):
         self.model3.draw()
 
         # Link4
-        self.setupColor([10 / 255, 100 / 255.0, 150 / 255])
+        self.setupColor([1 / 255, 142 / 255.0, 133 / 255])
         glTranslatef(0.0, 0.0, 392.25);
         glRotatef(RadToDeg(self.objRobot.JVars[3]), 0.0, 1, 0)
         # glTranslatef(self.objRobot.a[4], 0.0, 0.0)
@@ -173,7 +177,7 @@ class GLWidget(QOpenGLWidget):
         self.setupColor([0.0 / 255, 180.0 / 255, 84.0 / 255])
 
         # Link5
-        self.setupColor([0 / 255, 200 / 255.0, 180 / 255])
+        self.setupColor([25 / 255, 99 / 255.0, 94 / 255])
         glTranslatef(0, 93, 0);
         glRotatef(RadToDeg(self.objRobot.JVars[4]), 0.0, 0.0, 1.0)
         # glTranslatef(self.objRobot.a[5], 0.0, 0.0)
@@ -181,7 +185,7 @@ class GLWidget(QOpenGLWidget):
         self.model5.draw()
 
         # Link6
-        self.setupColor([2 / 255, 155 / 255.0, 210 / 255])
+        self.setupColor([1 / 255, 142 / 255.0, 133 / 255])
         glTranslatef(0, 0, 94.65);
         glRotatef(RadToDeg(self.objRobot.JVars[5]), 0.0, 1, 0)
         # glTranslatef(self.objRobot.a[5], 0.0, 0.0)
@@ -194,16 +198,36 @@ class GLWidget(QOpenGLWidget):
 
         glPopMatrix()
 
+    def drawEnv(self):
+        glPushMatrix()
+        glEnable(GL_BLEND)
+        self.setupColor([175 / 255, 58 / 255.0, 35 / 255])
+        #glRotatef(180, 0, 0, 1);
+        self.modelplatform.draw()
+        glPopMatrix()
+
+    def drawBox(self):
+        glPushMatrix()
+        glEnable(GL_BLEND)
+        self.setupColor([219 / 255, 77 / 255.0, 46 / 255])
+        #glRotatef(180, 0, 0, 1);
+        self.modelboxes.draw()
+        glPopMatrix()
 
     def drawGL(self):
-        logging.debug("drawGL - redrawing Grid and Robot")
+        #logging.debug("drawGL - redrawing Grid and Robot")
 
         if self.isDrawGrid:
             self.drawGrid()
+        if self.isDrawEnv:
+            self.drawEnv()
+        if self.isDrawBox:
+            self.drawBox()
+
         self.draw_robot()
 
     def paintGL(self):
-        print("painting gl")
+        #print("painting gl")
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
         glPushMatrix()

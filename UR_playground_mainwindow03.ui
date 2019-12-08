@@ -91,7 +91,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>0</string>
+                 <string>50</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -170,7 +170,7 @@
                <set>Qt::ImhDigitsOnly</set>
               </property>
               <property name="text">
-               <string>192.168.172.22</string>
+               <string>192.168.178.20</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -184,7 +184,7 @@
             <item row="1" column="1">
              <widget class="QLineEdit" name="valAccell">
               <property name="text">
-               <string>10</string>
+               <string>75</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -208,7 +208,7 @@
             <item row="0" column="1">
              <widget class="QLineEdit" name="valSpeed">
               <property name="text">
-               <string>10</string>
+               <string>90</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -358,30 +358,10 @@
               </property>
               <item>
                <layout class="QGridLayout" name="Origin_2">
-                <item row="0" column="5">
-                 <widget class="QLineEdit" name="valOriginZ">
-                  <property name="inputMethodHints">
-                   <set>Qt::ImhDigitsOnly</set>
-                  </property>
+                <item row="1" column="6">
+                 <widget class="QLabel" name="label_12">
                   <property name="text">
-                   <string>0</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2">
-                 <widget class="QLabel" name="label_7">
-                  <property name="text">
-                   <string>X</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="4">
-                 <widget class="QLabel" name="label_8">
-                  <property name="text">
-                   <string>Y</string>
+                   <string>Rz</string>
                   </property>
                  </widget>
                 </item>
@@ -389,6 +369,13 @@
                  <widget class="QLabel" name="label_10">
                   <property name="text">
                    <string>Rx</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="6">
+                 <widget class="QLabel" name="label_9">
+                  <property name="text">
+                   <string>Z</string>
                   </property>
                  </widget>
                 </item>
@@ -406,17 +393,30 @@
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="6">
-                 <widget class="QLabel" name="label_9">
+                <item row="0" column="4">
+                 <widget class="QLabel" name="label_8">
                   <property name="text">
-                   <string>Z</string>
+                   <string>Y</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="6">
-                 <widget class="QLabel" name="label_12">
+                <item row="0" column="2">
+                 <widget class="QLabel" name="label_7">
                   <property name="text">
-                   <string>Rz</string>
+                   <string>X</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="5">
+                 <widget class="QLineEdit" name="valOriginZ">
+                  <property name="inputMethodHints">
+                   <set>Qt::ImhDigitsOnly</set>
+                  </property>
+                  <property name="text">
+                   <string>45</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -426,20 +426,7 @@
                    <set>Qt::ImhDigitsOnly</set>
                   </property>
                   <property name="text">
-                   <string>0</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="5">
-                 <widget class="QLineEdit" name="valOriginRz">
-                  <property name="inputMethodHints">
-                   <set>Qt::ImhDigitsOnly</set>
-                  </property>
-                  <property name="text">
-                   <string>0</string>
+                   <string>-200</string>
                   </property>
                   <property name="alignment">
                    <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -459,16 +446,10 @@
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="3">
-                 <widget class="QLineEdit" name="valOriginY">
-                  <property name="inputMethodHints">
-                   <set>Qt::ImhDigitsOnly</set>
-                  </property>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_4">
                   <property name="text">
-                   <string>0</string>
-                  </property>
-                  <property name="alignment">
-                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                   <string>Origin Position</string>
                   </property>
                  </widget>
                 </item>
@@ -485,10 +466,29 @@
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0">
-                 <widget class="QLabel" name="label_4">
+                <item row="0" column="3">
+                 <widget class="QLineEdit" name="valOriginY">
+                  <property name="inputMethodHints">
+                   <set>Qt::ImhDigitsOnly</set>
+                  </property>
                   <property name="text">
-                   <string>Origin Position</string>
+                   <string>-300</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="5">
+                 <widget class="QLineEdit" name="valOriginRz">
+                  <property name="inputMethodHints">
+                   <set>Qt::ImhDigitsOnly</set>
+                  </property>
+                  <property name="text">
+                   <string>180</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
                   </property>
                  </widget>
                 </item>
@@ -562,7 +562,7 @@
                  <set>Qt::ImhDigitsOnly</set>
                 </property>
                 <property name="text">
-                 <string>0</string>
+                 <string>45</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -593,7 +593,7 @@
                  <set>Qt::ImhDigitsOnly</set>
                 </property>
                 <property name="text">
-                 <string>0</string>
+                 <string>50</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -664,7 +664,7 @@
                  <set>Qt::ImhDigitsOnly</set>
                 </property>
                 <property name="text">
-                 <string>10</string>
+                 <string>12</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -687,7 +687,7 @@
                  </size>
                 </property>
                 <property name="text">
-                 <string>5</string>
+                 <string>3</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -844,6 +844,9 @@
                <widget class="QCheckBox" name="checkUseOpacity">
                 <property name="text">
                  <string>Use Opacity (depth)</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -1125,6 +1128,40 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
+            <layout class="QGridLayout" name="gridLayout_9">
+             <item row="3" column="0">
+              <widget class="QCheckBox" name="checkGrid">
+               <property name="text">
+                <string>Show Grid</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QCheckBox" name="checkPlatform">
+               <property name="text">
+                <string>Show Platform</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QCheckBox" name="checkBoxes">
+               <property name="text">
+                <string>Show Boxes</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
             <layout class="QGridLayout" name="gridLayout_7">
              <item row="0" column="0">
               <widget class="QPushButton" name="pushButton_2">
@@ -1147,13 +1184,6 @@
               </widget>
              </item>
             </layout>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="checkBox_3">
-             <property name="text">
-              <string>Show Grid</string>
-             </property>
-            </widget>
            </item>
            <item>
             <spacer name="verticalSpacer">
@@ -1259,7 +1289,6 @@
   <tabstop>btnSend</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>horizontalSlider</tabstop>
-  <tabstop>checkBox_3</tabstop>
   <tabstop>comboBox_2</tabstop>
   <tabstop>btnConnect</tabstop>
   <tabstop>textBrowser</tabstop>
