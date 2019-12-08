@@ -50,7 +50,7 @@ ___
     - [x] connect IP UI
     - [x] Connect UseColOpa UI + value
     - [x] connect speed / accell UI
-    - [ ]
+    - [ ] add whatis to UI elements
     - [ ] logging
     - [ ] connect logging to UI
     - [ ] documentation

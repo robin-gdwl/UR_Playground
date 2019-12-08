@@ -28,7 +28,7 @@ logging.info("UR_PLAYGROUND")
 class URPlayground(QMainWindow):
 
     def __init__(self, *args):
-        starttime = time.time()
+        self.starttime = time.time()
         super(URPlayground, self).__init__(*args)
 
         #loadUi("UR_playground_mainwindow03.ui",self)
@@ -42,8 +42,9 @@ class URPlayground(QMainWindow):
         self.setWindowTitle("UR_Playground")
 
         self.initialise_blocks()
+        #self.make_log()
         # TODO: this is bad, do it better with OOP:
-        endtime = time.time()-starttime
+        endtime = time.time()-self.starttime
         logging.info("Window loaded in " + str(endtime))
 
     def initialise_blocks(self):
@@ -85,6 +86,18 @@ class URPlayground(QMainWindow):
 
         self.update_SVG()
         self.update_robot()
+        self.make_log()
+
+        endtime = time.time() - self.starttime
+        logging.info("Window loaded in " + str(endtime))
+
+    def make_log(self):
+        logTextBox = QTextEditLogger(self.ui.txtLog)
+        # You can format what is printed to text box
+        logTextBox.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s',"%H:%M:%S"))
+        logging.getLogger().addHandler(logTextBox)
+        # You can control the logging level
+        logging.getLogger().setLevel(logging.INFO)
 
     def toggle_platform(self):
         self.RB.isDrawEnv = self.ui.checkPlatform.isChecked()
@@ -135,10 +148,13 @@ class URPlayground(QMainWindow):
         logging.info("running Program")
 
         self.program.connectUR()
-        time.sleep(2)
-        self.program.run()
-        self.program.disconnectUR()
-        pass
+        time.sleep(1)
+        if self.program.is_connected == True:
+            self.program.run()
+            self.program.disconnectUR()
+        else:
+            #logging.info("No Robot connected try again")
+            pass
 
     def updateSVGtolerance(self):
         block = self.svgblock
@@ -218,6 +234,15 @@ class URPlayground(QMainWindow):
 
         self.RB.update()
 
+class QTextEditLogger(logging.Handler):
+    def __init__(self, textwidget):
+        super().__init__()
+        self.widget = textwidget
+        self.widget.setReadOnly(True)
+
+    def emit(self, record):
+        msg = self.format(record)
+        self.widget.appendPlainText(msg)
 
 class Program:
 
@@ -225,6 +250,7 @@ class Program:
         self.tcp = [0,0,0,0,pi,0] # FIXME: this is a workaround, the direciton change should happen elsewhere
 
         self.robot = None
+        self.is_connected = False
         self.robotIP = "192.168.178.20"
         #self.connectUR()
         self.block_list = []
@@ -238,7 +264,6 @@ class Program:
         logging.debug("Blocklist:" + str(self.block_list))
 
     def run(self):
-
         #print("running program")
         for block in self.block_list:
             self.runblockUR(block)
@@ -290,20 +315,19 @@ class Program:
         csys[0] /= self.units_in_meter
         csys[1] /= self.units_in_meter
         csys[2] /= self.units_in_meter
-        print(csys)
+        #print(csys)
 
         csys = m3d.Transform(csys)
         self.robot.set_csys(csys)
         logging.debug("CSYS set: " + str(csys))
 
-        coords_to_send = copy.copy(block.coordinates_travel) # TODO FIX THIS!!
-
+        coords_to_send = copy.copy(block.coordinates_travel)
 
         acceleration, velocity = self.convert_v_a(block.a, block.v)
 
         logging.info("TCP set: " +str(conv_tcp)+ "CSYS set: " + str(csys))
 
-        print(block.csys, "csys set")
+        #print(block.csys, "csys set")
         #print("sending coordinates", coords_to_send)
 
         for i,path in enumerate(coords_to_send):
@@ -315,28 +339,44 @@ class Program:
             print(converted_p)
             print("___" * 40)
             try:
+                logging.info("Sending move commands. First coordinate:  " + str(converted_p[0]))
+                time.sleep(0.01)
                 self.robot.movexs(block.command, converted_p, acceleration, velocity, block.radius / self.units_in_meter)
                 print("executing path")
             except:
                 print("something went wrong at robot")
+                logging.info("Something went wrong while sending commands to the robot")
                 break
 
-    def connectUR(self, tries=0):
+    def connectUR(self, tries=1):
+        max_tries = 3
         logging.info("Connecting to UR-Robot")
         try:
             self.robot = urx.Robot(self.robotIP)
+            logging.debug("successfully connected to robot")
+            self.is_connected = True
         except:
             #print("retrying to connect to robot")
             logging.info(" Robot connection failed, retrying to connect to robot. Tries: " + str(tries))
-            #time.sleep(0)
-            tries += 1
-            self.connectUR(tries)
+            time.sleep(3)
+            if tries < max_tries:
+                tries += 1
+                self.connectUR(tries)
+            else:
+                logging.info("failed to connect after " +str(max_tries)+" tries. Please check your connection")
 
-        pose= self.robot.get_pose()
+        try:
+            pose= self.robot.get_pose()
+        except:
+            pass
         #print(pose)
 
     def disconnectUR(self):
-        self.robot.close()
+        try:
+            self.is_connected = False
+            self.robot.close()
+        except:
+            pass
 
 def main():
     """main function that is executed on startup """

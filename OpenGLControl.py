@@ -29,7 +29,7 @@ class GLWidget(QOpenGLWidget):
         self.z_zoom = -3000
         self.xTran = 0
         self.yTran = 0
-        self.isDrawGrid = True;
+        self.isDrawGrid = False;
         self.isDrawEnv = True
         self.isDrawBox = True
         #print("Loading stl files...")
@@ -361,10 +361,10 @@ class GLWidget(QOpenGLWidget):
         glPushMatrix()
         #print("drawing grid")
         # color = [255.0/255, 57.0/255, 0.0/255]
-        color = [8.0/255, 108.0/255, 162.0/255]
+        color = [255/255, 162/255, 162.0/255]
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-        step = 50
-        num = 15
+        step = 100
+        num = 10
         for i in arange(-num, num+1):
             glBegin(GL_LINES)
             glVertex3f(i*step, -num * step, 0)
