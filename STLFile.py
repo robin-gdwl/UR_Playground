@@ -1,3 +1,4 @@
+import os, sys
 from OpenGL.GL import *
 import struct
 import logging
@@ -64,6 +65,9 @@ class Loader:
     #load stl file detects if the file is a text file or binary file
     def load_stl(self,filename):
         #read start of file to determine if its a binay stl file or a ascii stl file
+
+        #filename = os.path.join(os.path.dirname(sys.executable), filename)  # https://stackoverflow.com/a/9554023/12210262
+        #filename = os.path.join(os.environ['_MEIPASS'], filename)
         fp=open(filename,'rb')
         h=fp.read(80)
         type=h[0:5]
@@ -79,6 +83,8 @@ class Loader:
   
     #read text stl match keywords to grab the points to build the model
     def load_text_stl(self,filename):
+        #filename = os.path.join(os.path.dirname(sys.executable), filename)  # https://stackoverflow.com/a/9554023/12210262
+        #filename = os.path.join(os.environ['_MEIPASS'], filename)
         fp=open(filename,'r')
 
         for line in fp.readlines():

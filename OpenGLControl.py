@@ -196,14 +196,14 @@ class GLWidget(QOpenGLWidget):
 
 
     def drawGL(self):
-        #logging.debug("drawGL - redrawing Grid and Robot")
+        logging.debug("drawGL - redrawing Grid and Robot")
 
         if self.isDrawGrid:
             self.drawGrid()
         self.draw_robot()
 
     def paintGL(self):
-        #print("painting gl")
+        print("painting gl")
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
         glPushMatrix()
@@ -261,7 +261,7 @@ class GLWidget(QOpenGLWidget):
     def loadSVG(self,block,size):
         # DONE? TODO: make a new method that just updates and doesnt need to reload the entire file
         block.update()
-        #print("loading svg")
+        print("loading svg")
         self.listCoords = np.array([[0,0,0]])
         self.specialPoints = np.array([[0, 0, 0]])
 

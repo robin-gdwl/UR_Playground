@@ -1,6 +1,7 @@
 import sys
 from Blocks import *
 import time
+from URPGwindow import Ui_MainWindow
 import math3d as m3d
 import urx
 import logging
@@ -30,7 +31,9 @@ class URPlayground(QMainWindow):
         starttime = time.time()
         super(URPlayground, self).__init__(*args)
 
-        loadUi("UR_playground_mainwindow03.ui",self)
+        #loadUi("UR_playground_mainwindow03.ui",self)
+        self.ui = Ui_MainWindow()
+        self.ui.setupUi(self)
         self.objRB = Robot()
         self.RB = DrawRB.GLWidget(self, self.objRB)
         self.program = Program()
@@ -49,18 +52,18 @@ class URPlayground(QMainWindow):
     def setupUI(self):
         logging.debug("setting up the UI")
 
-        self.widgetP = self.widgetPreview
+        self.widgetP = self.ui.widgetPreview
         self.layoutP = QHBoxLayout(self)
         self.widgetP.setLayout(self.layoutP)
         self.layoutP.addWidget(self.RB)
         #self.hbox.addWidget(self.RB)
 
         #self.glwdgtPreview.
-        self.btnSelectFile.clicked.connect(self.openFileNameDialog)
-        self.btnSend.clicked.connect(self.Run)
+        self.ui.btnSelectFile.clicked.connect(self.openFileNameDialog)
+        self.ui.btnSend.clicked.connect(self.Run)
 
-        self.btnApplyRobotSettings.clicked.connect(self.update_robot)
-        self.btnApplySVGSettings.clicked.connect(self.update_SVG)
+        self.ui.btnApplyRobotSettings.clicked.connect(self.update_robot)
+        self.ui.btnApplySVGSettings.clicked.connect(self.update_SVG)
 
         """self.valOriginX.textChanged.connect(self.updateSVG)
         self.valOriginY.textChanged.connect(self.updateSVG)
@@ -95,7 +98,7 @@ class URPlayground(QMainWindow):
         logging.debug("file to be loaded: " + str(self.fileName))
 
         if self.fileName != "":
-            self.valFileName.setText(self.fileName)
+            self.ui.valFileName.setText(self.fileName)
             self.svgblock.filepath = self.fileName
             self.svgblock.load()
             self.RB.loadSVG(self.svgblock,20)
@@ -117,7 +120,7 @@ class URPlayground(QMainWindow):
 
     def updateSVGtolerance(self):
         block = self.svgblock
-        block.tolerance = self.update_text(self.valTolerance,10)
+        block.tolerance = self.update_text(self.ui.valTolerance,10)
         self.svgblock.load()
         #self.RB.loadSVG(self.svgblock, 20)
         #self.RB.DrawCoords([0, 1, 1, 1], 10)
@@ -132,27 +135,27 @@ class URPlayground(QMainWindow):
         block = self.svgblock
         print(vars(self.svgblock))
         #block.coordinates_travel = self.valTravel
-        block.travel_z = self.update_text(self.valMove)
-        block.depth = self.update_text(self.valPlunge)
+        block.travel_z = self.update_text(self.ui.valMove)
+        block.depth = self.update_text(self.ui.valPlunge)
         # block.tolerance = float(self.valTolerance.text()) # this does not do anything, svg needs to be fulla reloaded
-        block.scale = self.update_text(self.valScale,100) / 100
-        block.radius = self.update_text(self.valBlend)
+        block.scale = self.update_text(self.ui.valScale,100) / 100
+        block.radius = self.update_text(self.ui.valBlend)
 
-        block.use_colour = self.checkUseColor.isChecked()
-        block.use_opacity = self.checkUseOpacity.isChecked()
-        block.color_effect = self.update_text(self.valColorFactor, 100) / 100
-        block.opacity_effect = self.update_text(self.valOpacityFactor, 100) / 100
+        block.use_colour = self.ui.checkUseColor.isChecked()
+        block.use_opacity = self.ui.checkUseOpacity.isChecked()
+        block.color_effect = self.update_text(self.ui.valColorFactor, 100) / 100
+        block.opacity_effect = self.update_text(self.ui.valOpacityFactor, 100) / 100
 
-        new_origin = [self.update_text(self.valOriginX),
-                  self.update_text(self.valOriginY),
-                  self.update_text(self.valOriginZ),
-                  self.update_text(self.valOriginRx, deg_to_rad=True),
-                  self.update_text(self.valOriginRy, deg_to_rad=True),
-                  self.update_text(self.valOriginRz, deg_to_rad=True)]
+        new_origin = [self.update_text(self.ui.valOriginX),
+                  self.update_text(self.ui.valOriginY),
+                  self.update_text(self.ui.valOriginZ),
+                  self.update_text(self.ui.valOriginRx, deg_to_rad=True),
+                  self.update_text(self.ui.valOriginRy, deg_to_rad=True),
+                  self.update_text(self.ui.valOriginRz, deg_to_rad=True)]
         block.csys = new_origin
 
         try:
-            if block.tolerance != self.valTolerance.text():
+            if block.tolerance != self.ui.valTolerance.text():
                 self.updateSVGtolerance()
 
             self.RB.loadSVG(self.svgblock, 20)
@@ -185,11 +188,11 @@ class URPlayground(QMainWindow):
         logging.info("Applying Robot Settings")
 
         block = self.svgblock
-        self.program.robotIP = self.valRobotIP.text()  # does not use the self.update_text method as it is not a number
-        self.program.tcp[2] = self.update_text(self.valToolLength)
-        self.RB.toollength = self.update_text(self.valToolLength)
-        block.v = self.update_text(self.valSpeed) / 100
-        block.a = self.update_text(self.valAccell) /100
+        self.program.robotIP = self.ui.valRobotIP.text()  # does not use the self.update_text method as it is not a number
+        self.program.tcp[2] = self.update_text(self.ui.valToolLength)
+        self.RB.toollength = self.update_text(self.ui.valToolLength)
+        block.v = self.update_text(self.ui.valSpeed) / 100
+        block.a = self.update_text(self.ui.valAccell) /100
 
         self.RB.update()
 
