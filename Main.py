@@ -59,7 +59,9 @@ class URPlayground(QMainWindow):
         self.btnSelectFile.clicked.connect(self.openFileNameDialog)
         self.btnSend.clicked.connect(self.Run)
 
-        self.btnApplySettings.clicked.connect(self.updateSVG)
+        self.btnApplyRobotSettings.clicked.connect(self.update_robot)
+        self.btnApplySVGSettings.clicked.connect(self.update_SVG)
+
         """self.valOriginX.textChanged.connect(self.updateSVG)
         self.valOriginY.textChanged.connect(self.updateSVG)
         self.valOriginZ.textChanged.connect(self.updateSVG)
@@ -84,12 +86,13 @@ class URPlayground(QMainWindow):
         msg.exec_()
 
     def openFileNameDialog(self):
+
         options = QFileDialog.Options()
         #options |= QFileDialog.DontUseNativeDialog
         self.fileName, _ = QFileDialog.getOpenFileName(self,"Openfile", "","SVG Files (*.svg);;All Files (*)", options=options)
         # self.processLoadFile.setValue(0)
         #print(self.fileName)
-        logging.debug("file to be loaded: " + str(self.filename))
+        logging.debug("file to be loaded: " + str(self.fileName))
 
         if self.fileName != "":
             self.valFileName.setText(self.fileName)
@@ -119,7 +122,7 @@ class URPlayground(QMainWindow):
         #self.RB.paintGL()
         #self.RB.update()
 
-    def updateSVG(self):
+    def update_SVG(self):
         #print("updating svg settings")
         logging.info("Applying SVG Settings")
 
@@ -130,6 +133,12 @@ class URPlayground(QMainWindow):
         block.depth = self.update_text(self.valPlunge)
         # block.tolerance = float(self.valTolerance.text()) # this does not do anything, svg needs to be fulla reloaded
         block.scale = self.update_text(self.valScale,100) / 100
+        block.radius = self.update_text(self.valBlend)
+
+        block.use_colour = self.checkUseColor.isChecked()
+        block.use_opacity = self.checkUseOpacity.isChecked()
+        block.color_effect = self.update_text(self.valColorFactor, 100) / 100
+        block.opacity_effect = self.update_text(self.valOpacityFactor, 100) / 100
 
         new_origin = [self.update_text(self.valOriginX),
                   self.update_text(self.valOriginY),
@@ -147,32 +156,45 @@ class URPlayground(QMainWindow):
             self.RB.paintGL()
             self.RB.update()
         except:
-            logging.warning("No file loaded unable to apply SVG settings")
+            logging.warning("No file loaded (?) unable to apply SVG settings")
 
         #print(vars(self.svgblock))
 
     def update_text(self,textfield,default=0,deg_to_rad=False):
+        logging.debug("Setting values from " + str(textfield.objectName()) + ": " + str(textfield.text()))
         try:
             if deg_to_rad:
                 value = DegToRad(float(textfield.text()))
+                logging.debug("Target value is in radians")
             else:
                 value = float(textfield.text())
+            textfield.setText(str(value))
         except:
             value = default
             textfield.setText(str(value))
             logging.info("Not a valid number in" + str(textfield) + " value set to " + str(default) + " instead")
 
-
+        logging.debug("value set: " + str(value))
         return value
 
     def update_robot(self):
+        logging.info("Applying Robot Settings")
+
+        block = self.svgblock
+        self.program.robotIP = self.valRobotIP.text()  # does not use the self.update_text method as it is not a number
+        self.program.tcp[2] = self.update_text(self.valToolLength)
+        self.RB.toollength = self.update_text(self.valToolLength)
+        block.v = self.update_text(self.valSpeed)
+        block.a = self.update_text(self.valAccell)
+
+
         pass
 
 
 class Program:
 
     def __init__(self):
-        self.tcp = (0,0,0,0,pi,0) # FIXME: this is a workaround, the direciton change should happen elsewhere
+        self.tcp = [0,0,0,0,pi,0] # FIXME: this is a workaround, the direciton change should happen elsewhere
 
         self.robot = None
         self.robotIP = "192.168.178.20"
@@ -193,6 +215,13 @@ class Program:
         for block in self.block_list:
             self.runblockUR(block)
 
+    def convert_tcp_units(self):
+        converted_tcp = copy.copy(self.tcp)
+        converted_tcp[0] /= self.units_in_meter
+        converted_tcp[1] /= self.units_in_meter
+        converted_tcp[2] /= self.units_in_meter
+        return converted_tcp
+
     def convert_path_units(self, path_to_conv):
         """All variables in this Program are in mm, however urx uses meters.
         This method converts between the two.
@@ -208,9 +237,10 @@ class Program:
         return converted_path
 
     def runblockUR(self, block):
-        self.robot.set_tcp(self.tcp)
-        #print(self.tcp, "tcp set")
-        logging.debug("TCP set: " +str(self.tcp))
+
+        conv_tcp = self.convert_tcp_units()
+        self.robot.set_tcp(conv_tcp)
+        logging.debug("TCP set: " +str(conv_tcp))
 
         csys = copy.copy(block.csys) # TODO: figure out if this is the right way to do this- I have not yet understood how data should be handled here
         csys[0] /= self.units_in_meter
@@ -235,20 +265,20 @@ class Program:
             #print("___" * 40)
             self.robot.movexs(block.command, converted_p, block.a, block.v, block.radius)
 
-    def connectUR(self):
+    def connectUR(self, tries=0):
+        logging.info("Connecting to UR-Robot")
         try:
             self.robot = urx.Robot(self.robotIP)
         except:
             #print("retrying to connect to robot")
-            logging.info(" Robot connection failed, retrying to connect to robot")
-            time.sleep(1)
-            self.connectUR()
+            logging.info(" Robot connection failed, retrying to connect to robot. Tries: " + str(tries))
+            #time.sleep(0)
+            tries += 1
+            self.connectUR(tries)
 
         pose= self.robot.get_pose()
         #print(pose)
 
-        # self.robot.movej([0,-0.5*pi,-0.5*pi,-0.5*pi,0.5*pi,0],0.1,0.91)
-        # time.sleep(20)
     def disconnectUR(self):
         self.robot.close()
 

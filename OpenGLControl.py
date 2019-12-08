@@ -31,7 +31,7 @@ class GLWidget(QOpenGLWidget):
         self.yTran = 0
         self.isDrawGrid = True;
         #print("Loading stl files...")
-        self.fullrobot = Loader("3DFiles/UR_lowres01_05.stl")
+        #self.fullrobot = Loader("3DFiles/UR_lowres01_05.stl")
         self.model0 = Loader('STLFile/UR5-0.STL')
         self.model1 = Loader('STLFile/UR5-1.STL')
         self.model2 = Loader('STLFile/UR5-2.STL')
@@ -39,11 +39,12 @@ class GLWidget(QOpenGLWidget):
         self.model4 = Loader('STLFile/UR5-4.STL')
         self.model5 = Loader('STLFile/UR5-5.STL')
         self.model6 = Loader('STLFile/UR5-6.STL')
+        self.toollength = 0  # TODO: could this be done differently, without this extra property?
         #print("All done.")
 
         self.listPoints = np.array([[0,0,0]]) # not used atm will be used in the future
         self.listCoords = np.array([[0,0,0]])
-        self.specialPoints = np.array([[0,0,0]])
+        self.specialPoints = np.array([[0,0,0]])  # draws file origins in the preview
 
         self.AllList = np.array([self.listPoints])
         self.stt = np.array([])
@@ -113,17 +114,27 @@ class GLWidget(QOpenGLWidget):
         # glEnable(GL_BLEND);
         glClearColor(1, 1, 1, 1.0)
 
-    def drawGL(self):
-        #print("drawingGL")
+    def draw_tool(self):
+        """draws a line with a point at the end representing the tool attached to the robot
+        The length of the tool can be set in the Robot settings in the UI """
+
+        self.setupColor([10 / 255, 200 / 255.0, 250 / 255])
+        glLineWidth(6)
+        glBegin(GL_LINES);
+        glVertex3f(0, 0, 0)
+        glVertex3f(0, 0, self.toollength)
+        glEnd()
+        glPointSize(15);
+        glBegin(GL_POINTS)
+        glVertex3f(0,0, self.toollength)
+        glEnd()
+        pass
+
+
+    def draw_robot(self):
         glPushMatrix()
 
-        if self.isDrawGrid:
-            self.drawGrid()
-
-        glPopMatrix()
-        glPushMatrix()
-
-        self.setupColor([0/ 255, 0 / 255.0, 200 / 255])
+        self.setupColor([0 / 255, 0 / 255.0, 200 / 255])
         glRotatef(180, 0, 0, 1);
         self.model0.draw()
         # self.setupColor([169.0 / 255, 169.0 / 255, 169.0 / 255])
@@ -138,7 +149,7 @@ class GLWidget(QOpenGLWidget):
 
         # Link2
         self.setupColor([230 / 255, 0 / 255.0, 90 / 255])
-        glTranslatef(0.0, 135.85,0);
+        glTranslatef(0.0, 135.85, 0);
         glRotatef(RadToDeg(self.objRobot.JVars[1]), 0.0, 1, 0)
         # glTranslatef(0, 0.0,self.objRobot.a[2])
         glRotatef(RadToDeg(self.objRobot.alpha[1]), 0, 1, 0.0);
@@ -159,7 +170,7 @@ class GLWidget(QOpenGLWidget):
         # glTranslatef(self.objRobot.a[4], 0.0, 0.0)
         glRotatef(RadToDeg(self.objRobot.alpha[3]), 0, 1, 0.0);
         self.model4.draw()
-        self.setupColor([0.0/255, 180.0/255, 84.0/255])
+        self.setupColor([0.0 / 255, 180.0 / 255, 84.0 / 255])
 
         # Link5
         self.setupColor([0 / 255, 200 / 255.0, 180 / 255])
@@ -170,14 +181,28 @@ class GLWidget(QOpenGLWidget):
         self.model5.draw()
 
         # Link6
-        self.setupColor([2 / 255, 155/ 255.0, 210 / 255])
+        self.setupColor([2 / 255, 155 / 255.0, 210 / 255])
         glTranslatef(0, 0, 94.65);
         glRotatef(RadToDeg(self.objRobot.JVars[5]), 0.0, 1, 0)
         # glTranslatef(self.objRobot.a[5], 0.0, 0.0)
         glRotatef(RadToDeg(self.objRobot.alpha[5]), 1.0, 0.0, 0.0);
         self.model6.draw()
 
+        glTranslate(0, self.objRobot.d[5], 0)
+        glRotatef(90, -1, 0, 0)
+        self.draw_tool()
+
         glPopMatrix()
+
+
+    def drawGL(self):
+        #logging.debug("drawGL - redrawing Grid and Robot")
+
+        if self.isDrawGrid:
+            self.drawGrid()
+
+        self.draw_robot()
+
 
     def paintGL(self):
         #print("painting gl")
@@ -256,12 +281,12 @@ class GLWidget(QOpenGLWidget):
                 #csys = m3d.Transform(block.csys)
                 t = csys * m3d.Transform(coord)
                 pose = t.pose_vector
-                ##print("pose", pose)
+                #print("pose", pose)
                 self.listCoords = np.append(self.listCoords,[pose[:3]],axis=0)
-                ##print(j,"listCoords:", self.listCoords)
+                #print(j,"listCoords:", self.listCoords)
 
 
-        ##print("listCoords:", self.listCoords)
+        #print("listCoords:", self.listCoords)
         glPopMatrix()
 
     def makePointObject(self,block):
@@ -314,7 +339,7 @@ class GLWidget(QOpenGLWidget):
     def drawGrid(self):
         glLineWidth(1)
         glPushMatrix()
-        ##print("drawing grid")
+        #print("drawing grid")
         # color = [255.0/255, 57.0/255, 0.0/255]
         color = [8.0/255, 108.0/255, 162.0/255]
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);

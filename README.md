@@ -34,16 +34,18 @@ ___
     - [x] change tcp orientation
     - [x] connect button
     - [x] change units
+    - [ ] make first move a movej
+    - [ ] get velocity and acceleration settings in percent
     - [ ] add robot status
     - [ ] connect to robot button
     - [x] test unit change
     - [ ] thread / parallelise sending process to avoid freezing the program
 
 - [ ] other
-    - [ ] connect Tool length UI
-    - [ ] connect IP UI
-    - [ ] Connect UseColOpa UI + value
-    - [ ] connect speed / accell UI
+    - [x] connect Tool length UI
+    - [x] connect IP UI
+    - [x] Connect UseColOpa UI + value
+    - [x] connect speed / accell UI
     - [ ] logging
     - [ ] connect logging to UI
     - [ ] documentation
@@ -51,6 +53,8 @@ ___
     - [ ] wrap functions into try/except statements to prevent crashing
 
 - [ ] save
+    - [ ] write all settings to text file
+    - [ ] get all settings from text file
 
 - [ ] Package
     - [ ] create packages

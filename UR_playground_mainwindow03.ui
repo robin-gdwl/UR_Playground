@@ -42,7 +42,7 @@
        <item>
         <widget class="QFrame" name="frame">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="Maximum" vsizetype="Minimum">
+          <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
@@ -50,13 +50,13 @@
          <property name="minimumSize">
           <size>
            <width>200</width>
-           <height>100</height>
+           <height>80</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
            <width>350</width>
-           <height>500</height>
+           <height>140</height>
           </size>
          </property>
          <property name="frameShape">
@@ -83,7 +83,20 @@
             <item row="2" column="1">
              <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
-               <widget class="QLineEdit" name="lineEdit_2"/>
+               <widget class="QLineEdit" name="valToolLength">
+                <property name="maximumSize">
+                 <size>
+                  <width>16777215</width>
+                  <height>20</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>0</string>
+                </property>
+                <property name="alignment">
+                 <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QLabel" name="label_31">
@@ -140,7 +153,7 @@
              </widget>
             </item>
             <item row="1" column="1">
-             <widget class="QLineEdit" name="lineEdit">
+             <widget class="QLineEdit" name="valRobotIP">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -150,7 +163,7 @@
               <property name="maximumSize">
                <size>
                 <width>100</width>
-                <height>60</height>
+                <height>20</height>
                </size>
               </property>
               <property name="inputMethodHints">
@@ -173,6 +186,9 @@
               <property name="text">
                <string>0.1</string>
               </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+              </property>
              </widget>
             </item>
             <item row="0" column="0">
@@ -193,6 +209,9 @@
              <widget class="QLineEdit" name="valSpeed">
               <property name="text">
                <string>0.1</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
               </property>
              </widget>
             </item>
@@ -220,7 +239,7 @@
            </widget>
           </item>
           <item row="1" column="0" colspan="3">
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="btnApplyRobotSettings">
             <property name="text">
              <string>Apply Robot Settings</string>
             </property>
@@ -777,9 +796,9 @@
                </widget>
               </item>
               <item row="0" column="0">
-               <widget class="QCheckBox" name="checkBox">
+               <widget class="QCheckBox" name="checkUseColor">
                 <property name="text">
-                 <string>Use Colors</string>
+                 <string>Use Colors (rotation)</string>
                 </property>
                </widget>
               </item>
@@ -822,9 +841,9 @@
                </widget>
               </item>
               <item row="1" column="0">
-               <widget class="QCheckBox" name="checkBox_2">
+               <widget class="QCheckBox" name="checkUseOpacity">
                 <property name="text">
-                 <string>Use Opacity</string>
+                 <string>Use Opacity (depth)</string>
                 </property>
                </widget>
               </item>
@@ -865,7 +884,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="btnApplySettings">
+             <widget class="QPushButton" name="btnApplySVGSettings">
               <property name="text">
                <string>Apply SVG Settings</string>
               </property>
@@ -919,7 +938,7 @@
           <item row="0" column="0">
            <layout class="QGridLayout" name="gridLayout_4">
             <item row="3" column="1">
-             <widget class="QLabel" name="label_38">
+             <widget class="QLabel" name="labelCurrentAction">
               <property name="text">
                <string/>
               </property>
