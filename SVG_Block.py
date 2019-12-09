@@ -18,7 +18,7 @@ class svgBlock(Block):
 
         self.filepath = ""
         self.scale = 1
-        self.origin = []  # (x,y,z,rx,ry,rz) csys
+        #self.origin = []  # (x,y,z,rx,ry,rz) csys
         self.tolerance = 5
         self.travel_z = 0
         self.depth = 0

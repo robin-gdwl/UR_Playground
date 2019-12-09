@@ -47,14 +47,15 @@ ___
 
 - [ ] other
     - [x] connect Tool length UI
+    - [ ] add tool rotation value
     - [x] connect IP UI
     - [x] Connect UseColOpa UI + value
     - [x] connect speed / accell UI
     - [ ] add whatis to UI elements
-    - [ ] logging
-    - [ ] connect logging to UI
+    - [x] logging
+    - [x] connect logging to UI
     - [ ] documentation
-    - [ ] test rotation
+    - [x] test rotation
     - [ ] wrap functions into try/except statements to prevent crashing
 
 - [ ] save

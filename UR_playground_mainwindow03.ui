@@ -1120,7 +1120,7 @@
          <enum>QTabWidget::North</enum>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>0</number>
         </property>
         <property name="usesScrollButtons">
          <bool>true</bool>
@@ -1184,8 +1184,8 @@
            </item>
            <item>
             <layout class="QGridLayout" name="gridLayout_7">
-             <item row="0" column="0">
-              <widget class="QPushButton" name="pushButton_2">
+             <item row="1" column="0">
+              <widget class="QPushButton" name="btnPlay">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -1194,13 +1194,20 @@
                </property>
               </widget>
              </item>
-             <item row="0" column="1">
-              <widget class="QSlider" name="horizontalSlider">
+             <item row="1" column="1">
+              <widget class="QSlider" name="sliderPlay">
                <property name="enabled">
-                <bool>false</bool>
+                <bool>true</bool>
                </property>
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QPushButton" name="btnCheck">
+               <property name="text">
+                <string>Check Toolpath</string>
                </property>
               </widget>
              </item>
@@ -1335,10 +1342,10 @@
   <tabstop>btnApplySVGSettings</tabstop>
   <tabstop>btnSend</tabstop>
   <tabstop>tabWidget</tabstop>
-  <tabstop>horizontalSlider</tabstop>
+  <tabstop>sliderPlay</tabstop>
   <tabstop>comboBox_2</tabstop>
   <tabstop>btnConnect</tabstop>
-  <tabstop>pushButton_2</tabstop>
+  <tabstop>btnPlay</tabstop>
  </tabstops>
  <resources/>
  <connections/>

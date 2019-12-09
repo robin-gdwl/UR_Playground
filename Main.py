@@ -8,6 +8,7 @@ import logging
 from SVG_Block import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import *
+from Toolpath import Toolpath
 
 import OpenGLControl as DrawRB
 from Robot import *
@@ -38,6 +39,7 @@ class URPlayground(QMainWindow):
         self.RB = DrawRB.GLWidget(self, self.objRB)
         self.program = Program()
         self.svgblock = svgBlock()
+        self.toolpath = None
 
         self.setWindowTitle("UR_Playground")
 
@@ -68,20 +70,13 @@ class URPlayground(QMainWindow):
         self.ui.btnApplyRobotSettings.clicked.connect(self.update_robot)
         self.ui.btnApplySVGSettings.clicked.connect(self.update_SVG)
 
+        self.ui.btnCheck.clicked.connect(self.make_toolpath)
+        #self.ui.btnPlay.clicked.connect(self.play_toolpath)
+        self.ui.sliderPlay.valueChanged.connect(self.update_toolpath_position)
+
         self.ui.checkPlatform.stateChanged.connect(self.toggle_platform)
         self.ui.checkBoxes.stateChanged.connect(self.toggle_boxes)
         self.ui.checkGrid.stateChanged.connect(self.toggle_grid)
-
-        """self.valOriginX.textChanged.connect(self.updateSVG)
-        self.valOriginY.textChanged.connect(self.updateSVG)
-        self.valOriginZ.textChanged.connect(self.updateSVG)
-        self.valOriginRx.textChanged.connect(self.updateSVG)
-        self.valOriginRy.textChanged.connect(self.updateSVG)
-        self.valOriginRz.textChanged.connect(self.updateSVG)
-        self.valPlunge.textChanged.connect(self.updateSVG)
-        self.valMove.textChanged.connect(self.updateSVG)
-        self.valScale.textChanged.connect(self.updateSVG)
-        self.valTolerance.textChanged.connect(self.updateSVGtolerance)"""
         # other signals form linetext: returnPressed,
 
         self.update_SVG()
@@ -90,6 +85,76 @@ class URPlayground(QMainWindow):
 
         endtime = time.time() - self.starttime
         logging.info("Window loaded in " + str(endtime))
+
+    def check_toolpath(self):  # FIXME ... this is not done well at all fix this asap
+        print("checking toolpath")
+        toolpath = Toolpath(self.svgblock.coordinates_travel[0], self.program.tcp[2])
+        coordinates = copy.copy(self.svgblock.coordinates_travel)
+        previous_pose = self.objRB.q
+        for i, path in enumerate(coordinates):
+            for coord in path:
+                #convert coordinate to world coordinate system
+                csys = m3d.Transform(self.svgblock.csys)
+                tcp = m3d.Transform(self.program.tcp)
+
+                t = csys * m3d.Transform(coord)
+                t = t * tcp
+
+                #print("t" +str(t))
+
+                pose = t.pose_vector
+                #print("pose",pose)
+                #self.RB.specialPoints = np.append(self.RB.specialPoints, [pose[:3]], axis=0)
+                theta = pose[3:6]
+                rot_mat = toolpath.eulerAnglesToRotationMatrix(theta)
+
+                desired_pose = rot_mat
+                p_column = np.array([[pose[0]/1000],[pose[1]/1000],[pose[2]/1000]])
+                print(p_column)
+
+                full_matrix = np.append(rot_mat, p_column,axis=1)
+                full_matrix = np.append(full_matrix, [[0,0,0,1]],axis = 0)
+                print(full_matrix)
+                print(coord)
+
+                best_jpose = toolpath.invKine(full_matrix, previous_pose)
+                #self.objRB.JVars = best_jpose[:,1]
+                toolpath.poses.append(best_jpose)
+                previous_pose = best_jpose
+
+        self.toolpath = toolpath.poses
+        print("tp ", self.toolpath)
+            #return toolpath.poses
+
+        #self.objRB.JVars = best_jpose
+        #self.RB.update()
+
+    def play_toolpath(self):
+        for i in range(100):
+            if self.toolpath:
+
+                tp_position = len(self.toolpath) * i / 100
+                self.objRB.JVars = self.toolpath[int(tp_position)]
+                self.RB.update()
+                time.sleep(0.2)
+            else:
+                logging.info("No Toolpath. click check first")
+
+    def make_toolpath(self):
+        self.toolpath = None
+        self.check_toolpath()
+        tp_position = len(self.toolpath) * self.ui.sliderPlay.sliderPosition()/100
+        self.objRB.JVars = self.toolpath[int(tp_position)]
+        self.RB.update()
+
+    def update_toolpath_position(self):
+        #print("slider position: ", self.ui.sliderPlay.sliderPosition())
+        if self.toolpath:
+
+            tp_position = len(self.toolpath) * self.ui.sliderPlay.sliderPosition() / 100
+            self.objRB.JVars = self.toolpath[int(tp_position)]
+            self.RB.update()
+        else: logging.info("No Toolpath. click check first")
 
     def make_log(self):
         logTextBox = QTextEditLogger(self.ui.txtLog)
@@ -321,7 +386,7 @@ class Program:
         self.robot.set_csys(csys)
         logging.debug("CSYS set: " + str(csys))
 
-        coords_to_send = copy.copy(block.coordinates_travel)
+        coords_to_send = copy.copy(block.coordinates_travel) # FIXME: why does this not work? the second time the block is executed
 
         acceleration, velocity = self.convert_v_a(block.a, block.v)
 
