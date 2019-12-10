@@ -52,7 +52,7 @@ class Toolpath:
 
     # ************************************************** FORWARD KINEMATICS
 
-    def select(self,q_sols, q_d, w=[3, 1.5, 10, 5, 0.5, 0.5]):
+    def select(self,q_sols, q_d, w=[3, 1.5, 5, 5, 0.5, 0.5]):
         """Select the optimal solutions among a set of feasible joint value
            solutions.
         Args:

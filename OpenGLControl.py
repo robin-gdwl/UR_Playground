@@ -251,7 +251,7 @@ class GLWidget(QOpenGLWidget):
         glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color);
         glPointSize(size);
         for i,p in enumerate(self.specialPoints):
-            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [0, 0, 1.0]);
+            glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [1, 0, 0]);
             glBegin(GL_POINTS);
             glVertex3f(p[0], p[1], p[2])
             glEnd()
