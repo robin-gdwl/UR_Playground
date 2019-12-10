@@ -52,7 +52,7 @@ class Toolpath:
 
     # ************************************************** FORWARD KINEMATICS
 
-    def select(self,q_sols, q_d, w=[1, 1.5, 1.5, 1.5, 0.5, 0.5]):
+    def select(self,q_sols, q_d, w=[3, 1.5, 10, 5, 0.5, 0.5]):
         """Select the optimal solutions among a set of feasible joint value
            solutions.
         Args:
@@ -175,12 +175,12 @@ class Toolpath:
             T_34 = T_32 * T_21 * T_14
             th[3, c] = atan2(T_34[1, 0], T_34[0, 0])
         th = th.real
-        print("___" * 30)
-        print(th)
+        #print("___" * 30)
+        #print(th)
         th = np.transpose(th)
         th = th.tolist()
-        print(th)
-        print("___"*30)
+        #print(th)
+        #print("___"*30)
 
         best_th = th
         best_th = self.select(th, start_pos)
@@ -189,6 +189,7 @@ class Toolpath:
 
     # Calculates Rotation Matrix given euler angles.
     def eulerAnglesToRotationMatrix(self, theta):
+        print("euler angle calculation ")
         R_x = np.array([[1, 0, 0],
                         [0, math.cos(theta[0]), -math.sin(theta[0])],
                         [0, math.sin(theta[0]), math.cos(theta[0])]

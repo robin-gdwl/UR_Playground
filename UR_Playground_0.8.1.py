@@ -24,7 +24,7 @@ class BlockViewer():
 logging.basicConfig(filename= "UR_Playground.log", level=logging.DEBUG,
                     format = "%(asctime)s:%(levelname)s:%(message)s")
 logging.info("___"*45)
-logging.info("UR_PLAYGROUND")
+logging.info("UR_PLAYGROUND_0.8.1")
 
 class URPlayground(QMainWindow):
 
@@ -41,7 +41,7 @@ class URPlayground(QMainWindow):
         self.svgblock = svgBlock()
         self.toolpath = None
 
-        self.setWindowTitle("UR_Playground")
+        self.setWindowTitle("UR_Playground_0.8.1")
 
         self.initialise_blocks()
         #self.make_log()
@@ -91,11 +91,15 @@ class URPlayground(QMainWindow):
         toolpath = Toolpath(self.svgblock.coordinates_travel[0], self.program.tcp[2])
         coordinates = copy.copy(self.svgblock.coordinates_travel)
         previous_pose = self.objRB.q
+        csys = m3d.Transform(self.svgblock.csys)
+        tcp = m3d.Transform(self.program.tcp)
+        print("tcp and csys:")
+        print(tcp)
+        print(csys)
+        print("_____" * 25)
         for i, path in enumerate(coordinates):
             for coord in path:
                 #convert coordinate to world coordinate system
-                csys = m3d.Transform(self.svgblock.csys)
-                tcp = m3d.Transform(self.program.tcp)
 
                 t = csys * m3d.Transform(coord)
                 t = t * tcp
@@ -110,12 +114,12 @@ class URPlayground(QMainWindow):
 
                 desired_pose = rot_mat
                 p_column = np.array([[pose[0]/1000],[pose[1]/1000],[pose[2]/1000]])
-                print(p_column)
+                #print(p_column)
 
                 full_matrix = np.append(rot_mat, p_column,axis=1)
                 full_matrix = np.append(full_matrix, [[0,0,0,1]],axis = 0)
-                print(full_matrix)
-                print(coord)
+                #print(full_matrix)
+                #print(coord)
 
                 best_jpose = toolpath.invKine(full_matrix, previous_pose)
                 #self.objRB.JVars = best_jpose[:,1]
@@ -125,6 +129,7 @@ class URPlayground(QMainWindow):
         self.toolpath = toolpath.poses
         print("tp ", self.toolpath)
             #return toolpath.poses
+        del toolpath
 
         #self.objRB.JVars = best_jpose
         #self.RB.update()
@@ -137,15 +142,18 @@ class URPlayground(QMainWindow):
                 self.objRB.JVars = self.toolpath[int(tp_position)]
                 self.RB.update()
                 time.sleep(0.2)
-            else:
-                logging.info("No Toolpath. click check first")
+            #else:
+                #logging.info("No Toolpath. click check first")
 
     def make_toolpath(self):
-        self.toolpath = None
-        self.check_toolpath()
-        tp_position = len(self.toolpath) * self.ui.sliderPlay.sliderPosition()/100
-        self.objRB.JVars = self.toolpath[int(tp_position)]
-        self.RB.update()
+        if len(self.svgblock.coordinates_travel) >0:
+            self.toolpath = None
+            self.check_toolpath()
+            tp_position = len(self.toolpath) * self.ui.sliderPlay.sliderPosition()/100
+            self.objRB.JVars = self.toolpath[int(tp_position)]
+            self.RB.update()
+        else:
+            logging.info("No Toolpath. Load SVG File first")
 
     def update_toolpath_position(self):
         #print("slider position: ", self.ui.sliderPlay.sliderPosition())

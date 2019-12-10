@@ -39,7 +39,7 @@ class svgBlock(Block):
         # loads an svg file, puts the movements into self.path_movements
         # translates color and opacity values into the corresponding transformations
         start_time = time.time()
-        parsed_file = svg_parser.SVGParse(self.filepath, self.tolerance)
+        parsed_file = svg_parser.SVGParse(self.filepath, self.tolerance, self.scale)
         movements = parsed_file.convert_to_movements()
 
         self.path_movements = movements
