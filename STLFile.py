@@ -66,7 +66,7 @@ class Loader:
     def load_stl(self,filename):
         #read start of file to determine if its a binay stl file or a ascii stl file
 
-        filename = os.path.join(os.path.dirname(sys.executable), filename)  # https://stackoverflow.com/a/9554023/12210262
+        #filename = os.path.join(os.path.dirname(sys.executable), filename)  # https://stackoverflow.com/a/9554023/12210262
         #filename = os.path.join(os.environ['_MEIPASS'], filename)
         fp=open(filename,'rb')
         h=fp.read(80)
@@ -83,7 +83,7 @@ class Loader:
   
     #read text stl match keywords to grab the points to build the model
     def load_text_stl(self,filename):
-        filename = os.path.join(os.path.dirname(sys.executable), filename)  # https://stackoverflow.com/a/9554023/12210262
+        #filename = os.path.join(os.path.dirname(sys.executable), filename)  # https://stackoverflow.com/a/9554023/12210262
         #filename = os.path.join(os.environ['_MEIPASS'], filename)
         fp=open(filename,'r')
 
@@ -111,7 +111,7 @@ class Loader:
     #load binary stl file check wikipedia for the binary layout of the file
     #we use the struct library to read in and convert binary data into a format we can use
     def load_binary_stl(self,filename):
-        filename = os.path.join(os.path.dirname(sys.executable), filename)  # https://stackoverflow.com/a/9554023/12210262
+        #filename = os.path.join(os.path.dirname(sys.executable), filename)  # https://stackoverflow.com/a/9554023/12210262
         fp=open(filename,'rb')
         h=fp.read(80)
 

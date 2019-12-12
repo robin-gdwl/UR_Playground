@@ -52,6 +52,7 @@ class SVGParse:
         coords = []
         j = 0
         while j <= 1:
+            print(j)
             point = path.point(j)
             x =  - point.real
             y = point.imag

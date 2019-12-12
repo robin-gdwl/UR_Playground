@@ -103,26 +103,13 @@ class URPlayground(QMainWindow):
 
                 t = csys * m3d.Transform(coord)
                 t = t * tcp
-
-                #print("t" +str(t))
-
                 pose = t.pose_vector
-                #print("pose",pose)
-                #self.RB.specialPoints = np.append(self.RB.specialPoints, [pose[:3]], axis=0)
-                theta = pose[3:6]
-                rot_mat = toolpath.eulerAnglesToRotationMatrix(theta)
 
-                desired_pose = rot_mat
-                p_column = np.array([[pose[0]/1000],[pose[1]/1000],[pose[2]/1000]])
-                #print(p_column)
+                t = copy.copy(t) # ? is this necessary ????
+                t.pos /= 1000
+                rot_mat = t.matrix
 
-                full_matrix = np.append(rot_mat, p_column,axis=1)
-                full_matrix = np.append(full_matrix, [[0,0,0,1]],axis = 0)
-                #print(full_matrix)
-                #print(coord)
-
-                best_jpose = toolpath.invKine(full_matrix, previous_pose)
-                #self.objRB.JVars = best_jpose[:,1]
+                best_jpose = toolpath.invKine(rot_mat, previous_pose)
                 toolpath.poses.append(best_jpose)
                 previous_pose = best_jpose
 
@@ -219,8 +206,9 @@ class URPlayground(QMainWindow):
     def Run(self):
         #print("run")
         logging.info("running Program")
-        self.update_SVG()
         self.update_robot()
+        self.update_SVG()
+
 
         self.program.connectUR()
         time.sleep(1)

@@ -18,6 +18,8 @@ ___
     - [x] rotation values conversion
     - [ ] ~~reverse plunge / move direction~~
     - [ ] figure out how to parse inkscape svg files
+    - [ ] create follow path mode
+    - [ ] create stomp mode
 
 
 - [ ] visualise
@@ -26,24 +28,26 @@ ___
     - [X] change robot model
     - [x] make robot model responsive
     - [x] calibrate starting angles
-    - [ ] inverse kinematics
+    - [x] inverse kinematics
     - [x] load environment
     - [ ] give possibility to load own environments
 
 - [ ] simulate
-    - [ ] everything
+    - [x] create list of inverse kinematic positions
+    - [ ] add play function
 
 - [ ] send
     - [x] change tcp orientation
     - [x] connect button
     - [x] change units
     - [ ] make first move a movej
-    - [ ] get velocity and acceleration settings in percent
+    - [X] get velocity and acceleration settings in percent
     - [ ] add robot status
     - [ ] connect to robot button
     - [x] test unit change
     - [ ] thread / parallelise sending process to avoid freezing the program
     - [ ] add option to stop robot
+    - [ ] send first point
 
 - [ ] other
     - [x] connect Tool length UI

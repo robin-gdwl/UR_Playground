@@ -302,6 +302,8 @@ class GLWidget(QOpenGLWidget):
                 #print(coord)
                 #csys = m3d.Transform(block.csys)
                 t = csys * m3d.Transform(coord)
+
+
                 pose = t.pose_vector
                 #print("pose", pose)
                 self.listCoords = np.append(self.listCoords,[pose[:3]],axis=0)

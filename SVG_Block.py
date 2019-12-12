@@ -47,8 +47,8 @@ class svgBlock(Block):
         end_time = time.time() - start_time
 
         print(" loaded svg in ", end_time)
-        print(self.path_movements)
-        print(vars(self.path_movements[0]))
+        #print(self.path_movements)
+        #print(vars(self.path_movements[0])) #FIXME soem files throw and error here
 
         self.add_values()
         self.scale_xy()
@@ -143,7 +143,7 @@ class svgBlock(Block):
 
         if len(self.coordinates) > 0 :
             #print("coordintates found adding travel")
-            self.coordinates_travel = self.coordinates
+            self.coordinates_travel = copy.copy(self.coordinates)
 
             for motion in self.coordinates_travel:
                 start_coords = copy.copy(motion[0])

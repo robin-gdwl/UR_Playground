@@ -12,7 +12,7 @@ class Block():
         #self.tcp = [0,0,0,0,pi,0]  # this is not used atm, TCP is set inside the Program class
         self.a = 0.1
         self.v = 0.1
-        self.radius = 0.01
+        self.radius = 0.03
         self.command = "movel"
 
 
