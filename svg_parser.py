@@ -21,9 +21,15 @@ class SVGParse:
 
     def convert_to_movements(self):
         paths, attributes = svgpathtools.svg2paths(self.path)
+        print(paths)
 
         for p_index, p in enumerate(paths):
-            #print("----"*45)
+            print("----"*45)
+            print(p_index, "th path: ", p)
+            print("length: ",p.length())
+
+            if p.length() == 0:
+                continue
 
             p_attributes = attributes[p_index]  # current path's attributes
 
@@ -34,6 +40,7 @@ class SVGParse:
         return self.movements
 
     def interpolate_path(self,path,attributes):
+        print("interpolate path ",path )
         movement = MoveColOpa() # each path has one movement object
         length = path.length(error = self.tol)
         # TODO: if tolerance is very high amount = 0 and div throws an error
