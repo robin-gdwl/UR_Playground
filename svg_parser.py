@@ -1,4 +1,5 @@
 import svgpathtools
+import logging
 from xml.dom import minidom
 
 
@@ -20,15 +21,18 @@ class SVGParse:
         self.gradients = self.get_gradients()
 
     def convert_to_movements(self):
+        logging.debug("starting conversion svg to movements")
         paths, attributes = svgpathtools.svg2paths(self.path)
         print(paths)
+        logging.debug("Paths in SVG: " + str(paths))
 
         for p_index, p in enumerate(paths):
-            print("----"*45)
-            print(p_index, "th path: ", p)
-            print("length: ",p.length())
+            #print("----"*45)
+            #print(p_index, "th path: ", p)
+            logging.debug("length: " + str(p.length()))
 
             if p.length() == 0:
+                logging.debug("0-length path element found, no movement added")
                 continue
 
             p_attributes = attributes[p_index]  # current path's attributes
@@ -41,6 +45,7 @@ class SVGParse:
 
     def interpolate_path(self,path,attributes):
         print("interpolate path ",path )
+        logging.debug("interpolating path: ",path )
         movement = MoveColOpa() # each path has one movement object
         length = path.length(error = self.tol)
         # TODO: if tolerance is very high amount = 0 and div throws an error

@@ -201,7 +201,7 @@ class GLWidget(QOpenGLWidget):
     def drawEnv(self):
         glPushMatrix()
         glEnable(GL_BLEND)
-        self.setupColor([175 / 255, 58 / 255.0, 35 / 255])
+        self.setupColor([50 / 255, 58 / 255.0, 150 / 255])
         #glRotatef(180, 0, 0, 1);
         self.modelplatform.draw()
         glPopMatrix()
