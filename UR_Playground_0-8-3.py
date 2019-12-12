@@ -24,7 +24,7 @@ class BlockViewer():
 logging.basicConfig(filename= "UR_Playground.log", level=logging.DEBUG,
                     format = "%(asctime)s:%(levelname)s:%(message)s")
 logging.info("___"*45)
-logging.info("UR_PLAYGROUND_0.8.2")
+logging.info("UR_PLAYGROUND_0.8.3")
 
 class URPlayground(QMainWindow):
 
@@ -41,7 +41,7 @@ class URPlayground(QMainWindow):
         self.svgblock = svgBlock()
         self.toolpath = None
 
-        self.setWindowTitle("UR_Playground_0.8.2")
+        self.setWindowTitle("UR_Playground_0.8.3")
 
         self.initialise_blocks()
         #self.make_log()
