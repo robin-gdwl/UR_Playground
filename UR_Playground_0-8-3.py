@@ -9,6 +9,7 @@ from SVG_Block import *
 from PyQt5.QtWidgets import *
 from PyQt5.uic import *
 from Toolpath import Toolpath
+from rotation_rpy import convert_rpy
 
 import OpenGLControl as DrawRB
 from Robot import *
@@ -89,8 +90,8 @@ class URPlayground(QMainWindow):
     def check_toolpath(self):  # FIXME ... this is not done well at all fix this asap
         print("checking toolpath")
         toolpath = Toolpath(self.svgblock.coordinates_travel[0], self.program.tcp[2])
-        coordinates = copy.copy(self.svgblock.coordinates_travel)
-        previous_pose = self.objRB.q
+        coordinates = copy.deepcopy(self.svgblock.coordinates_travel)  # this is probably not a good way to handle this but I dont know any better atm
+        previous_pose = copy.deepcopy(self.objRB.q)
         csys = m3d.Transform(self.svgblock.csys)
         tcp = m3d.Transform(self.program.tcp)
         print("tcp and csys:")
@@ -114,7 +115,7 @@ class URPlayground(QMainWindow):
                 previous_pose = best_jpose
 
         self.toolpath = toolpath.poses
-        print("tp ", self.toolpath)
+        #print("tp ", self.toolpath)
             #return toolpath.poses
         del toolpath
 
@@ -212,9 +213,14 @@ class URPlayground(QMainWindow):
 
         self.program.connectUR()
         time.sleep(1)
-        if self.program.is_connected == True:
-            self.program.run()
+        if self.program.is_connected:
+
+
+            for b,block in enumerate(self.program.block_list):
+                self.program.runblockUR(block)
+
             self.program.disconnectUR()
+
         else:
             #logging.info("No Robot connected try again")
             pass
@@ -247,13 +253,19 @@ class URPlayground(QMainWindow):
         block.color_effect = self.update_text(self.ui.valColorFactor, 100) / 100
         block.opacity_effect = self.update_text(self.ui.valOpacityFactor, 100) / 100
 
+        new_origin = []
         new_origin = [self.update_text(self.ui.valOriginX),
                   self.update_text(self.ui.valOriginY),
                   self.update_text(self.ui.valOriginZ),
-                  self.update_text(self.ui.valOriginRx, deg_to_rad=True),
-                  self.update_text(self.ui.valOriginRy, deg_to_rad=True),
-                  self.update_text(self.ui.valOriginRz, deg_to_rad=True)]
+                  self.update_text(self.ui.valOriginRx,deg_to_rad=True),
+                  self.update_text(self.ui.valOriginRy,deg_to_rad=True),
+                  self.update_text(self.ui.valOriginRz,deg_to_rad=True)]
+        new_origin_rot = new_origin[3:]
+        print("new origin: ", new_origin, new_origin_rot)
+        new_origin_rot = convert_rpy(new_origin_rot)
+        new_origin = [new_origin[0],new_origin[1],new_origin[2],new_origin_rot[0],new_origin_rot[1],new_origin_rot[2]]
         block.csys = new_origin
+        print(block.csys)
 
         try:
             if block.tolerance != self.ui.valTolerance.text():
@@ -265,11 +277,13 @@ class URPlayground(QMainWindow):
         except:
             logging.warning("No file loaded (?) unable to apply SVG settings")
 
+        print(block.csys)
         logging.debug(" finished applying SVG settings ----------------------------------")
         #print(vars(self.svgblock))
 
     def update_text(self,textfield,default=0,deg_to_rad=False):
         logging.debug("Setting values from " + str(textfield.objectName()) + ": " + str(textfield.text()))
+        value = default
         try:
             if deg_to_rad:
                 value = DegToRad(float(textfield.text()))
@@ -326,13 +340,16 @@ class Program:
         #print("Blocklist:" + str(self.block_list))
         logging.debug("Blocklist:" + str(self.block_list))
 
-    def run(self):
+        """ Moved to Mainwindow class
+
+         def run(self):
         #print("running program")
         for block in self.block_list:
             self.runblockUR(block)
+        """
 
     def convert_tcp_units(self):
-        converted_tcp = copy.copy(self.tcp)
+        converted_tcp = copy.deepcopy(self.tcp)
         converted_tcp[0] /= self.units_in_meter
         converted_tcp[1] /= self.units_in_meter
         converted_tcp[2] /= self.units_in_meter
@@ -343,7 +360,7 @@ class Program:
         This method converts between the two.
         it is called inside of self.runblockUR right before the robot commands are sent"""
 
-        converted_path = copy.copy(path_to_conv) # TODO: figure out if this is the right way to do this- I have not yet understood how data should be handled here
+        converted_path = copy.deepcopy(path_to_conv) # TODO: figure out if this is the right way to do this- I have not yet understood how data should be handled here
 
         for i, coord in enumerate(converted_path):
             converted_path[i][0] = coord[0] / self.units_in_meter
@@ -369,12 +386,13 @@ class Program:
 
 
     def runblockUR(self, block):
+        logging.debug("executing runblockUR on " + str(block))
 
         conv_tcp = self.convert_tcp_units()
         self.robot.set_tcp(conv_tcp)
         logging.debug("TCP set: " +str(conv_tcp))
 
-        csys = copy.copy(block.csys) # TODO: figure out if this is the right way to do this- I have not yet understood how data should be handled here
+        csys = copy.deepcopy(block.csys) # TODO: figure out if this is the right way to do this- I have not yet understood how data should be handled here
         csys[0] /= self.units_in_meter
         csys[1] /= self.units_in_meter
         csys[2] /= self.units_in_meter
@@ -384,7 +402,7 @@ class Program:
         self.robot.set_csys(csys)
         logging.debug("CSYS set: " + str(csys))
 
-        coords_to_send = copy.copy(block.coordinates_travel) # FIXME: why does this not work? the second time the block is executed
+        coords_to_send = copy.deepcopy(block.coordinates_travel) # FIXME: why does this not work? the second time the block is executed
 
         acceleration, velocity = self.convert_v_a(block.a, block.v)
 
@@ -411,12 +429,16 @@ class Program:
                 logging.info("Something went wrong while sending commands to the robot")
                 break
 
+
+
     def connectUR(self, tries=1):
         max_tries = 3
         logging.info("Connecting to UR-Robot")
+
+
         try:
             self.robot = urx.Robot(self.robotIP)
-            logging.debug("successfully connected to robot")
+            logging.info("successfully connected to robot")
             self.is_connected = True
         except:
             #print("retrying to connect to robot")

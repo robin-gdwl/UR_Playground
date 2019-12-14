@@ -52,7 +52,7 @@ class Toolpath:
 
     # ************************************************** FORWARD KINEMATICS
 
-    def select(self,q_sols, q_d, w=[3, 1.5, 5, 5, 0.5, 0.5]):
+    def select(self,q_sols, q_d, w=[10, 9, 8, 7, 1, 1]):
         """Select the optimal solutions among a set of feasible joint value
            solutions.
         Args:
@@ -68,6 +68,29 @@ class Toolpath:
             error.append(sum([w[i] * (q[i] - q_d[i]) ** 2 for i in range(6)]))
 
         return q_sols[error.index(min(error))]
+
+    def get_closest_solution(self, q_sols, q_d):
+
+        closest_sol_index = 0
+        closest_diffs = 0.0
+        diffs = []
+        for q in q_sols: #qsols is 8 different solutions with 6 values each
+            current_diffs = []
+            for i, joint_val in enumerate(q):
+                current_diff = self.squared_diff(q_d[i],joint_val)
+                current_diffs.append(current_diff)
+            current = sum(current_diffs)
+            diffs.append(current)
+
+        return q_sols[diffs.index(min(diffs))]
+
+
+    def squared_diff(self, a,b):
+        difference = abs(a-b)
+        if difference > pi:
+            difference = pi * 2 -difference
+
+        return difference
 
     def AH(self, n, th, c):
         T_a = self.mat(np.identity(4), copy=False)
@@ -183,11 +206,13 @@ class Toolpath:
         #print("___"*30)
 
         best_th = th
-        best_th = self.select(th, start_pos)
+        #best_th = self.select(th, start_pos)
+        best_th = self.get_closest_solution(th, start_pos)
+
 
         return best_th
 
-    # Calculates Rotation Matrix given euler angles.
+    """# Calculates Rotation Matrix given euler angles.
     def eulerAnglesToRotationMatrix(self, theta):
         print("euler angle calculation ")
         R_x = np.array([[1, 0, 0],
@@ -208,3 +233,4 @@ class Toolpath:
         R = np.dot(R_z, np.dot(R_y, R_x))
 
         return R
+"""

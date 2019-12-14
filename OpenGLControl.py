@@ -291,8 +291,16 @@ class GLWidget(QOpenGLWidget):
 
         glPushMatrix()
         coordinates = block.coordinates_travel
+        print("____"*30)
+        print(block.csys)
+        csys = m3d.Transform()
 
         csys = m3d.Transform(block.csys)
+        print(csys.orient.rotation_vector)
+        print("CSYS:")
+        print(csys)
+        print(csys.pose_vector)
+
         csys_vector = csys.pose_vector
         self.specialPoints = np.append(self.specialPoints,[csys_vector[:3]],axis=0)
 
@@ -300,11 +308,11 @@ class GLWidget(QOpenGLWidget):
             #print("loading path",i,path)
             for j,coord in enumerate(path):
                 #print(coord)
-                #csys = m3d.Transform(block.csys)
                 t = csys * m3d.Transform(coord)
+                #print(csys)
+                #print(csys.pose_vector[3:])
 
-
-                pose = t.pose_vector
+                pose = t.pos
                 #print("pose", pose)
                 self.listCoords = np.append(self.listCoords,[pose[:3]],axis=0)
                 #print(j,"listCoords:", self.listCoords)

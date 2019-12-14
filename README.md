@@ -18,6 +18,8 @@ ___
     - [x] rotation values conversion
     - [ ] ~~reverse plunge / move direction~~
     - [ ] figure out how to parse inkscape svg files
+    - [ ] parse at least each gradient stop.
+    - [ ] create interpolation curve when interpolating gradients
     - [ ] create follow path mode
     - [ ] create stomp mode
 
@@ -35,6 +37,7 @@ ___
 - [ ] simulate
     - [x] create list of inverse kinematic positions
     - [ ] add play function
+    - [ ] time estimation
 
 - [ ] send
     - [x] change tcp orientation
@@ -44,12 +47,15 @@ ___
     - [X] get velocity and acceleration settings in percent
     - [ ] add robot status
     - [ ] connect to robot button
+    - [ ] progress bar
     - [x] test unit change
-    - [ ] thread / parallelise sending process to avoid freezing the program
+    - [ ] thread / multiprocess sending process to avoid freezing the program
     - [ ] add option to stop robot
-    - [ ] send first point
+    - [ ] send first point option
+    - [ ] give loop option
 
 - [ ] other
+    - [ ] Fix Rotation issues !!!
     - [x] connect Tool length UI
     - [ ] add tool rotation value
     - [x] connect IP UI
@@ -68,8 +74,8 @@ ___
 
 - [ ] Package
     - [ ] create packages
-      - [ ] Windows
-      - [ ] Mac
+      - [x] Windows
+      - [x] Mac
       - [ ] (Linux)
 
 - [x] TEST

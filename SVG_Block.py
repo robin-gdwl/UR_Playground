@@ -48,7 +48,7 @@ class svgBlock(Block):
 
         print(" loaded svg in ", end_time)
         #print(self.path_movements)
-        #print(vars(self.path_movements[0])) #FIXME soem files throw and error here
+        #print(vars(self.path_movements[0])) #FIXME some files throw and error here
 
         self.add_values()
         self.scale_xy()
