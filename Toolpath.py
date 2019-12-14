@@ -1,6 +1,6 @@
 #!/usr/bin/python2
 
-## UR5/UR10 Inverse Kinematics - Ryan Keating Johns Hopkins University
+# UR5/UR10 Inverse Kinematics - Ryan Keating Johns Hopkins University
 
 
 # ***** lib
@@ -214,7 +214,7 @@ class Toolpath:
 
     """# Calculates Rotation Matrix given euler angles.
     def eulerAnglesToRotationMatrix(self, theta):
-        print("euler angle calculation ")
+        #print("euler angle calculation ")
         R_x = np.array([[1, 0, 0],
                         [0, math.cos(theta[0]), -math.sin(theta[0])],
                         [0, math.sin(theta[0]), math.cos(theta[0])]

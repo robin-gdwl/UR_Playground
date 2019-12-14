@@ -24,7 +24,8 @@ class BlockViewer():
 
 logging.basicConfig(filename= "UR_Playground.log", level=logging.DEBUG,
                     format = "%(asctime)s:%(levelname)s:%(message)s")
-logging.info("___"*45)
+logging.info("")
+logging.info("###"*45)
 logging.info("UR_PLAYGROUND_0.8.3")
 
 class URPlayground(QMainWindow):
@@ -304,10 +305,9 @@ class URPlayground(QMainWindow):
 
         block = self.svgblock
         self.program.robotIP = self.ui.valRobotIP.text()  # does not use the self.update_text method as it is not a number
-        self.program.tcp[2] = self.update_text(self.ui.valToolLength)
-        self.RB.toollength = self.update_text(self.ui.valToolLength)
+        self.program.tcp[2] = self.RB.toollength = self.update_text(self.ui.valToolLength)
         block.v = self.update_text(self.ui.valSpeed) / 100
-        block.a = self.update_text(self.ui.valAccell) /100
+        block.a = self.update_text(self.ui.valAccell) / 100
 
         self.RB.update()
 

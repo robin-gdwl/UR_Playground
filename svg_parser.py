@@ -23,12 +23,12 @@ class SVGParse:
     def convert_to_movements(self):
         logging.debug("starting conversion svg to movements")
         paths, attributes = svgpathtools.svg2paths(self.path)
-        print(paths)
+        # print(paths)
         logging.debug("Paths in SVG: " + str(paths))
 
         for p_index, p in enumerate(paths):
-            #print("----"*45)
-            #print(p_index, "th path: ", p)
+            # print("----"*45)
+            # print(p_index, "th path: ", p)
             logging.debug("length: " + str(p.length()))
 
             if p.length() == 0:
@@ -44,7 +44,7 @@ class SVGParse:
         return self.movements
 
     def interpolate_path(self,path,attributes):
-        print("interpolate path ",path )
+        # print("interpolate path ",path )
         logging.debug("interpolating path: ",path )
         movement = MoveColOpa() # each path has one movement object
         length = path.length(error = self.tol)
@@ -64,7 +64,7 @@ class SVGParse:
         coords = []
         j = 0
         while j <= 1:
-            print(j)
+            # print(j)
             point = path.point(j)
             x =  - point.real
             y = point.imag
@@ -118,13 +118,13 @@ class SVGParse:
         # check if there is a gradient
         if "url" in p_stroke:
             grad_bool = True
-            #print("gradient in p")
+            # print("gradient in p")
             gradient_id = p_stroke[p_stroke.find("(") + 1: p_stroke.find(")")]
             gradient_id = gradient_id.strip("#")
 
         else:
             grad_bool = False
-            #print("no gradient")
+            # print("no gradient")
 
         if grad_bool:
             return "gradient",gradient_id
@@ -135,28 +135,28 @@ class SVGParse:
         # movement.stroke = p_stroke
 
     def color_at_param(self,gradient, param):
-        print("---"*25)
-        #print("looking for color at param ")
+        # print("---"*25)
+        # print("looking for color at param ")
         color = []
         stops = gradient.stop_offsets
-        print("stops:  ", stops)
+        # print("stops:  ", stops)
 
         clrs = gradient.colors
         for idx, offset in enumerate(stops) :
-            #print("parsing all offsets.... current offset: ", offset, "at index:  ", idx, "of: ", len(stops)-1)
-            #print("offset: ", offset)
-            #print("param: ", param)
-            #print(len(gradient.opacities))
-            #print(len(clrs))
-            #print(len(stops))
+            # print("parsing all offsets.... current offset: ", offset, "at index:  ", idx, "of: ", len(stops)-1)
+            # print("offset: ", offset)
+            # print("param: ", param)
+            # print(len(gradient.opacities))
+            # print(len(clrs))
+            # print(len(stops))
 
             if idx < (len(stops) - 1):
-                #print("next offset: ", stops[idx + 1])
+                # print("next offset: ", stops[idx + 1])
                 pass
 
             # TODO:add case if param is smaller than first stop
             if param == offset :
-                #print("param = offset")
+                # print("param = offset")
                 return clrs[idx]
             elif param >= offset and param >= stops[idx + 1]:
                 continue
@@ -165,7 +165,7 @@ class SVGParse:
                 para_1 = offset
                 para_2 = stops[idx +1]
                 position = (param - para_1) / (para_2 - para_1)
-                #print("pos: ", position)
+                # print("pos: ", position)
 
                 col_1 = clrs[idx]
                 col_2 = clrs[idx + 1]
@@ -174,14 +174,14 @@ class SVGParse:
                     startval = rgb_val
                     endval = col_2[val]
                     interm_val = ((endval - startval) * position) + startval
-                    #print(interm_val)
+                    # print(interm_val)
                     color.append(interm_val)
-                #print("param", param)
-                #print("colour at param: ", color)
+                # print("param", param)
+                # print("colour at param: ", color)
                 return color
 
             elif param == stops[idx + 1]:
-                #print("param = next offset")
+                # print("param = next offset")
                 return clrs[idx + 1]
 
     def opacities_on_path(self, path, attributes, stepsize, amount):
@@ -205,40 +205,40 @@ class SVGParse:
                 opacities.append(opacity)
                 j += stepsize
         else:
-            print("applying opacities this many times:  ", amount)
+            # print("applying opacities this many times:  ", amount)
             # TODO: find out why you need to add 1 to the amount
             opacities = [1] * (amount+1)
 
         adjusted_opa = [i * overall_opa for i in opacities]
-        #print(adjusted_opa)
+        # print(adjusted_opa)
         return adjusted_opa
 
     def get_path_opacity(self,path,attributes): # get the overall opacity of a path
         if "opacity" in attributes.keys():
             opacity = float(attributes["opacity"])
-            print("opacity value present: ", opacity)
+            # print("opacity value present: ", opacity)
         else:
-            print("no opacity value for path")
+            # print("no opacity value for path")
             opacity = 1
         return opacity
 
     def opacity_at_param(self,gradient, param):
-        #print("---" * 19)
-        #print("looking for opacity at param ")
+        # print("---" * 19)
+        # print("looking for opacity at param ")
 
         stops = gradient.stop_offsets
         opas = gradient.opacities
 
         for idx, offset in enumerate(stops):
-            #print("parsing all offsets.... current offset: ", offset, "at index:  ", idx, "of: ", len(stops) - 1)
-            #print("offset: ", offset)
-            #print("param: ", param)
+            # print("parsing all offsets.... current offset: ", offset, "at index:  ", idx, "of: ", len(stops) - 1)
+            # print("offset: ", offset)
+            # print("param: ", param)
 
             if idx < (len(stops) - 1):
-                #print("next offset: ", stops[idx + 1])
+                # print("next offset: ", stops[idx + 1])
                 pass
             if param == offset:
-                #print("param = offset")
+                # print("param = offset")
                 return opas[idx]
             elif param >= offset and param >= stops[idx + 1]:
                 continue
@@ -246,22 +246,17 @@ class SVGParse:
                 para_1 = offset
                 para_2 = stops[idx + 1]
                 position = (param - para_1) / (para_2 - para_1)
-                #print("pos: ", position)
+                # print("pos: ", position)
 
                 opa_1 = opas[idx] # this is one float
                 opa_2 = opas[idx + 1]
-                #print(type(opa_1))
-                #print(type(opa_2))
 
                 opacity = ((opa_2 - opa_1) * position) + opa_1
-
-                #print(type(opacity))
-               # print("current param opacity:  ", opacity)
 
                 return opacity
 
             elif param == stops[idx + 1]:
-                #print("param = next offset")
+                # print("param = next offset")
                 return opas[idx + 1]
 
     def get_gradients(self):
@@ -274,7 +269,6 @@ class SVGParse:
 
         if len(lin_gradients) > 0:
             for g in lin_gradients:
-                #print("g:", g)
                 id = g.attributes["id"].value
                 grad = Gradient(id)
 
@@ -297,7 +291,7 @@ class SVGParse:
 
                     grad.stop_offsets.append((offset))
                     grad.colors.append(color_rgb)
-                    print("color  ", color_rgb)
+                    # print("color  ", color_rgb)
 
 
                     opa_desc = "stop-opacity:"
@@ -308,30 +302,30 @@ class SVGParse:
                     else:
                         opa_val = 1
                     grad.opacities.append(opa_val)
-                    print("opacity  ",opa_val)
+                    # print("opacity  ",opa_val)
 
                     if i == 0 and offset != 0:
-                        print("first offset not at 0")
+                        # print("first offset not at 0")
                         grad.stop_offsets.append(0)
                         grad.colors.append(color_rgb)
                         grad.opacities.append(opa_val)
 
                     if i == (len(stops)-1) and offset < 1:
-                        print("last stop offset is not at 100% ")
+                        # print("last stop offset is not at 100% ")
 
                         grad.stop_offsets.append(1)
                         grad.opacities.append(opa_val)
                         grad.colors.append(color_rgb)
 
-                print(grad.check_lengths())
-                print("s: ", stops)
+                # print(grad.check_lengths())
+                # print("s: ", stops)
 
 
                 #stop = g.childNodes
-                print(g.attributes)
+                # print(g.attributes)
 
                 gradient_instances.append(grad)
-                print(gradient_instances)
+                # print(gradient_instances)
 
         if len(rad_gradients) > 0:
             """Radial gradients are parsed similarly to linear ones, with the difference that they mirrored once:
@@ -339,7 +333,7 @@ class SVGParse:
             """
             # make this a nice function so that it does not need to be repeated form above.
             for g in rad_gradients:
-                print("g:", g)
+                # print("g:", g)
                 id = g.attributes["id"].value
                 grad = Gradient(id)
 
@@ -360,7 +354,7 @@ class SVGParse:
 
                     color_rgb = tuple(int(color_val[i:i + 2], 16) for i in (0, 2, 4))
                     grad.colors.append(color_rgb)
-                    print("color  ", color_rgb)
+                    # print("color  ", color_rgb)
                     opa_desc = "stop-opacity:"
 
                     if style.find(opa_desc) != -1:
@@ -370,10 +364,10 @@ class SVGParse:
                     else:
                         opa_val = 1
                     grad.opacities.append(opa_val)
-                    print("opacity  ",opa_val)
+                    # print("opacity  ",opa_val)
 
                     if i == (len(stops)-1) and offset < 1:
-                        print("last stop offset is not at 100% ")
+                        # print("last stop offset is not at 100% ")
 
                         grad.stop_offsets.append(1)
                         grad.opacities.append(opa_val)
@@ -405,13 +399,13 @@ class SVGParse:
                 grad.opacities = mir_opac
                 grad.colors = mir_colors
 
-                print(grad.check_lengths())
-                print("s: ", stops)
+                # print(grad.check_lengths())
+                # print("s: ", stops)
 
-                #print(g.attributes)
+                # print(g.attributes)
 
                 gradient_instances.append(grad)
-                #print(gradient_instances)
+                # print(gradient_instances)
         return gradient_instances
 
 class MoveColOpa:
@@ -435,10 +429,10 @@ class MoveColOpa:
         if a == b and b == c:
             return True
         else:
-            print("different lengths detected")
-            print("coordinates: ", len(self.coordinates))
-            print("colors: ", len(self.colors))
-            print("opacities: ", len(self.opacities))
+            # print("different lengths detected")
+            # print("coordinates: ", len(self.coordinates))
+            # print("colors: ", len(self.colors))
+            # print("opacities: ", len(self.opacities))
             return False
 
 
@@ -465,14 +459,14 @@ parsed_file = SVGParse(testfile,20)
 movements = parsed_file.convert_to_movements()
 
 for movement in movements:
-    print("coordinates  ", movement.coordinates)
-    print("colors  ", movement.colors)
-    print("opacities  ", movement.opacities)
-    print("stroke  ", movement.strokewidth)
+    # print("coordinates  ", movement.coordinates)
+    # print("colors  ", movement.colors)
+    # print("opacities  ", movement.opacities)
+    # print("stroke  ", movement.strokewidth)
 
-    print(movement.check_lengths())
+    # print(movement.check_lengths())
 
-print(movements)
+# print(movements)
 x = []
 y = []
 """

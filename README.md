@@ -19,10 +19,10 @@ ___
     - [ ] ~~reverse plunge / move direction~~
     - [ ] figure out how to parse inkscape svg files
     - [ ] parse at least each gradient stop.
+    - [ ] make parsing dependent on path type (line / bezier curve)
     - [ ] create interpolation curve when interpolating gradients
     - [ ] create follow path mode
     - [ ] create stomp mode
-
 
 - [ ] visualise
     - [x] add origin point in visualisation
