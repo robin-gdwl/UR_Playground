@@ -88,7 +88,7 @@ class Toolpath:
     def squared_diff(self, a,b):
         difference = abs(a-b)
         if difference > pi:
-            difference = pi * 2 -difference
+            difference = pi * 2 - difference
 
         return difference
 

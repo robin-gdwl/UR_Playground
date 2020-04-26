@@ -18,3 +18,4 @@
 3DFiles/UR_lowres01_export_new.blend1
 *.blend
 Archive/*
+__pycache__/*
