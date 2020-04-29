@@ -1,14 +1,24 @@
 # UR_Playground
 
-![UR_Playground](UR_Playground_preview.jpg)
+![UR_Playground](images/UR_Playground_preview02.png)
  
 Simple software that takes svg files with colored paths and converts them to Robot commands.
 Meant to be used as an instructional tool for workshops with universal robots. Students can start to experiment directly without learning new software.
 SVG files created in illustrator or inkscape are used to control the robot. By specifying an origin coordinate these 2D files can be positioned in space.
 
-Acknowledgements:
-python-urx
-robot-simulator
+See the releases tab to download the newest version for Mac or Windows. After download click on UR_Playgroung_0.8.3 to start the program. 
+
+Builds ontop of:   
+[sintef-manufacturing/**python-urx**](https://github.com/SintefManufacturing/python-urx)  
+[khuongnguyen96/**robot-simulator**](https://github.com/khuongnguyen96/RobotSimulator)
+
+## Example Results: 
+Created during the "Robotic Texture Workshop 2019" at BURG University of Art and Design Halle, Germany. 
+
+![UR_Playground_inAction](Images/Example_Sand_01.jpeg)
+![UR_Playground_Formsand](Images/Example_Formsand_01.jpeg)
+![UR_Playground_Clay](Images/Example_Clay_01.jpeg)
+![UR_Playground_Sand](Images/Example_Sand_02.jpeg)
 
 ___
 
