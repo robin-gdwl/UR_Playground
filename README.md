@@ -1,6 +1,6 @@
 # UR_Playground
 
-![UR_Playground](images/UR_Playground_preview02.png)
+![UR_Playground](Images/UR_Playground_preview02.png)
  
 Simple software that takes svg files with colored paths and converts them to Robot commands.
 Meant to be used as an instructional tool for workshops with universal robots. Students can start to experiment directly without learning new software.
