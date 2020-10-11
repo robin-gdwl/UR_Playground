@@ -6,7 +6,7 @@ Simple software that takes svg files with colored paths and converts them to Rob
 Meant to be used as an instructional tool for workshops with universal robots. Students can start to experiment directly without learning new software.
 SVG files created in illustrator or inkscape are used to control the robot. By specifying an origin coordinate these 2D files can be positioned in space.
 
-See the releases tab to download the newest version for Mac or Windows. After download click on UR_Playgroung_0.8.3 to start the program. 
+See the releases tab to download the newest version for Mac or Windows. After download click on 'UR_Playground_0.8.3' to start the program. 
 
 Builds ontop of:   
 [sintef-manufacturing/**python-urx**](https://github.com/SintefManufacturing/python-urx)  
